@@ -27,8 +27,18 @@
         },
         methods: {
             handleButtonPress: function() {
-                let result =  this.weight / Math.pow(this.height / 100, 2);
-                alert('ค่า BMI ของคุณคือ ' + result);
+                let bmi =  this.weight / Math.pow(this.height / 100, 2);
+                let text = '';
+                if (bmi < 18.5) {
+                    text = 'ผอม';
+                } else if (bmi < 25) {
+                    text = 'ปกติ';
+                } else if (bmi < 30) {
+                    text = 'ท้วม';
+                } else if (bmi >= 30) {
+                    text = 'อ้วน';
+                }
+                alert('ค่า BMI ของคุณคือ ' + bmi + '\nเกณฑ์: ' + text);
             },
         }
     }
