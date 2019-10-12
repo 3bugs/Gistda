@@ -10,9 +10,11 @@
         <text-input v-model="weight"
                     :style="{height: 40, width: 150, borderColor: 'gray', borderWidth: 1, marginBottom: 20}"/>
 
-        <!--<text class="text-color-primary">{{bmi}}</text>-->
         <button title="คำนวณ BMI" v-bind:on-press="handleButtonPress"
-                :style="{height: 40, width: 200}"/>
+                class="button"
+                :style="{height: 40, width: 200, marginBottom: 20}"/>
+
+        <text class="text-color-primary">{{resultText}}</text>
     </view>
 </template>
 
@@ -20,7 +22,7 @@
     export default {
         data: () => {
             return {
-                bmi: '',
+                resultText: '',
                 height: '',
                 weight: '',
             };
@@ -38,7 +40,9 @@
                 } else if (bmi >= 30) {
                     text = 'อ้วน';
                 }
-                alert('ค่า BMI ของคุณคือ ' + bmi + '\nเกณฑ์: ' + text);
+                let resultText = 'ค่า BMI ของคุณคือ ' + bmi + '\nเกณฑ์: ' + text;
+                this.resultText = resultText;
+                alert(resultText);
             },
         }
     }
@@ -54,13 +58,19 @@
 
     .title {
         color: #666;
-        font-size: 20;
+        font-size: 20px;
         font-weight: bold;
         margin-bottom: 30;
     }
 
     .text-color-primary {
+        text-align: center;
         color: blue;
+        margin-bottom: 20;
+    }
+
+    .button {
+        width: 150;
         margin-bottom: 20;
     }
 </style>
