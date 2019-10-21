@@ -6,9 +6,25 @@
     import {
         createAppContainer,
         createStackNavigator,
+        createMaterialTopTabNavigator,
+        createBottomTabNavigator,
     } from "vue-native-router";
 
     import Home from './Home';
+
+    /*const MaterialTopTabNavigator = createMaterialTopTabNavigator(
+        {
+            Details: DetailsScreen,
+            Settings: SettingsScreen
+        }
+    );
+
+    const BottomTabNavigator = createBottomTabNavigator(
+        {
+            Details: DetailsScreen,
+            Settings: SettingsScreen
+        }
+    );*/
 
     const stackNavigator = createStackNavigator(
         {
