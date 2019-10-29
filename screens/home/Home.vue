@@ -1,7 +1,8 @@
 <template>
     <image-background :source="bg"
                       :style="{width: '100%', height: '100%'}"
-                      resizeMode="stretch">
+                      :fade-duration="500"
+                      resize-mode="stretch">
         <status-bar
                 background-color="transparent"
                 translucent
@@ -10,24 +11,39 @@
             <view :style="{marginLeft: 25, marginBottom: 25}">
                 <text class="province-name-en">{{provinceNameEn}}</text>
                 <text class="province-name-th">{{provinceNameTh}}</text>
-                <text class="temperature">{{temperature}}</text>
+                <text class="temperature"
+                      :on-layout="handleTemperatureLayoutChange">{{temperature}}
+                </text>
+                <text class="temperature-unit"
+                      :style="{marginLeft: temperatureUnitMarginLeft}">°C
+                </text>
                 <text class="status">{{status}}</text>
             </view>
 
             <view-pager class="view-pager"
-                        :initialPage="0"
-                        :pageMargin="-100"
-                        :onPageSelected="handlePageSelect">
+                        :initial-page="0"
+                        :page-margin="-100"
+                        :on-page-selected="handlePageSelect">
                 <view key="1">
-                    <image :source="imageNakhonPathom"
-                           class="image-nakhon-pathom"
-                           resizeMode="contain"
-                           :onLayout="handleLayoutChange"/>
+                    <touchable-opacity
+                            :activeOpacity="0.85"
+                            :on-press="() => this.props.navigation.navigate('BottomTabNavigator')"
+                            :style="{flex: 1}">
+                        <image :source="imageNakhonPathom"
+                               class="image-nakhon-pathom"
+                               resize-mode="contain"
+                               :on-layout="handleLayoutChange"/>
+                    </touchable-opacity>
                 </view>
                 <view key="2">
-                    <image :source="imageYasothon"
-                           class="image-yasothon"
-                           resizeMode="contain"/>
+                    <touchable-opacity
+                            :activeOpacity="0.85"
+                            :on-press="() => this.props.navigation.navigate('BottomTabNavigator')"
+                            :style="{flex: 1}">
+                        <image :source="imageYasothon"
+                               class="image-yasothon"
+                               resize-mode="contain"/>
+                    </touchable-opacity>
                 </view>
             </view-pager>
         </view>
@@ -80,11 +96,12 @@
                 imageWidth: 0,
                 imageHeight: 0,
                 viewPagerMargin: 0,
+                temperatureUnitMarginLeft: 0,
                 status: false,
             };
         },
         methods: {
-            handleLayoutChange: function(e) {
+            handleLayoutChange: function (e) {
                 if (this.status) {
                     return;
                 }
@@ -106,7 +123,11 @@
                 }
                 this.status = true;
             },
-            handlePageSelect: function(e) {
+            handleTemperatureLayoutChange: function (e) {
+                const {x, y, width, height} = e.nativeEvent.layout;
+                this.temperatureUnitMarginLeft = width + 3;
+            },
+            handlePageSelect: function (e) {
                 const selectedPageIndex = e.nativeEvent.position;
                 this.bg = provinceList[selectedPageIndex].bg;
                 this.provinceNameTh = provinceList[selectedPageIndex].nameTh;
@@ -134,6 +155,7 @@
         color: white;
         font-size: 18;
         margin-top: 60;
+        margin-left: 3;
     }
 
     .province-name-th {
@@ -152,19 +174,30 @@
         margin-top: 96;
     }
 
+    .temperature-unit {
+        position: absolute;
+        font-family: DBHeavent;
+        color: white;
+        font-size: 43;
+        margin-top: 133;
+    }
+
     .status {
         position: absolute;
         font-family: DBHeaventt-Light;
         color: white;
         font-size: 18;
         margin-top: 175;
+        margin-left: 3;
     }
+
     .image-nakhon-pathom {
         flex: 1;
         width: 100%;
         border-width: 0;
         border-color: red;
     }
+
     .image-yasothon {
         flex: 1;
         width: 100%;

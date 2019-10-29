@@ -14,14 +14,14 @@
 
     /*const MaterialTopTabNavigator = createMaterialTopTabNavigator(
         {
-            Details: DetailsScreen,
+            Details: Maps,
             Settings: SettingsScreen
         }
     );
 
     const BottomTabNavigator = createBottomTabNavigator(
         {
-            Details: DetailsScreen,
+            Details: Maps,
             Settings: SettingsScreen
         }
     );*/

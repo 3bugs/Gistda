@@ -1,9 +1,9 @@
 <template>
     <image-background :source="bg"
                       :style="{width: '100%', height: '100%'}"
-                      resizeMode="cover">
+                      resize-mode="cover">
         <status-bar
-                :hidden="true"
+                 :hidden="true"
         />
         <view class="main-container">
             <view class="logo-container" :style="{paddingBottom: bottomPadding}">
@@ -47,7 +47,7 @@
             startHomeDelay: function () {
                 const self = this;
                 setTimeout(function () {
-                    self.navigation.navigate('HomeIndex');
+                    self.navigation.navigate('StackNavigator');
                 }, delayInMilliseconds);
             }
         }
