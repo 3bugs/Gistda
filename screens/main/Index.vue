@@ -1,77 +1,125 @@
 <template>
-    <view class="container">
-        <map-view class="map-view"
-                  :initial-region="{
+    <!--https://blog.logrocket.com/how-to-use-refs-to-access-your-application-dom-in-vue-js/-->
+    <drawer ref="drawer"
+            :openDrawerOffset="80"
+            :open="false"
+            :acceptTap="true"
+            :on-open="handleOpenFilterPanel"
+            :on-close="handleCloseFilterPanel">
+        <view render-prop="content">
+            <FilterPanel/>
+        </view>
+
+        <view class="container">
+            <map-view class="map-view"
+                      :initial-region="{
             latitude: 13.8196,
             longitude: 100.04427,
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
         }"/>
-        <view class="header-container">
-            <linear-gradient class="header"
-                             :colors="['#09097e', '#4041da']">
-                <touchable-opacity class="menu-icon-touchable">
-                    <image :source="icMenuNakhonPathom"
-                           class="menu-icon"
-                           resize-mode="contain"/>
-                </touchable-opacity>
+            <view class="header-container">
+                <linear-gradient class="header"
+                                 :colors="['#09097e', '#4041da']">
+                    <touchable-opacity class="menu-icon-touchable"
+                                       :on-press="handleClickMenu">
+                        <image :source="icMenuNakhonPathom"
+                               class="menu-icon"
+                               resize-mode="contain"/>
+                    </touchable-opacity>
 
-                <text class="province-name">นครปฐม</text>
+                    <text class="province-name">นครปฐม</text>
 
-                <touchable-opacity class="alert-icon-touchable">
-                    <image :source="icAlertNakhonPathom"
-                           class="alert-icon"
-                           resize-mode="contain"/>
-                </touchable-opacity>
-            </linear-gradient>
-            <view class="search-input-container">
-                <image-background :style="{
+                    <touchable-opacity class="alert-icon-touchable">
+                        <image :source="icAlertNakhonPathom"
+                               class="alert-icon"
+                               resize-mode="contain"/>
+                    </touchable-opacity>
+                </linear-gradient>
+                <view class="search-input-container">
+                    <!--<image-background :style="{
+                    flexDirection: 'row',
+                    paddingTop: 8,
+                    paddingBottom: 8,
+                    paddingLeft: 15,
+                    paddingRight: 15,
+                    height: 50,
+                    backgroundColor: '#fff',
+                    shadowColor: '#808080',
+                    shadowRadius: 5,
+                    shadowOffset: { height: 0, width: 0},
+                    shadowOpacity: 0.75,
+                    elevation: 1,
+                    borderWidth: 1,
+                    borderRadius: 25,
+                    borderColor: '#e0e0e0'}">-->
+                    <card-view
+                            :card-elevation="4"
+                            :card-maxElevation="4"
+                            :corner-radius="25"
+                            :style="{
                 flexDirection: 'row',
-                paddingTop: 8,
-                paddingBottom: 8,
+                paddingTop: 6,
+                paddingBottom: 6,
                 paddingLeft: 15,
                 paddingRight: 15,
                 height: 50,
-                backgroundColor: '#fff',
-                shadowColor: '#808080',
-                shadowRadius: 5,
-                shadowOffset: { height: 0, width: 0},
-                shadowOpacity: 0.75,
-                elevation: 1,
-                borderWidth: 1,
-                borderRadius: 28,
-                borderColor: '#e0e0e0'}">
-                    <text-input class="search-input"
-                                placeholder="Search"
-                                placeholder-text-color="#aaa"/>
-                    <view class="divider"/>
-                    <touchable-opacity class="list-icon-touchable">
-                        <image :source="icListNakhonPathom"
-                               class="list-icon"
-                               resize-mode="contain"/>
-                    </touchable-opacity>
-                </image-background>
+                backgroundColor: '#fff'
+                }">
+                        <text-input class="search-input"
+                                    placeholder="Search"
+                                    placeholder-text-color="#aaa"/>
+
+                        <view class="divider"/>
+
+                        <touchable-opacity class="list-icon-touchable">
+                            <image :source="icListNakhonPathom"
+                                   class="list-icon"
+                                   resize-mode="contain"/>
+                        </touchable-opacity>
+                    </card-view>
+                    <!--</image-background>-->
+                </view>
             </view>
         </view>
-    </view>
+    </drawer>
 </template>
 
 <script>
     import MapView from 'react-native-maps';
     import LinearGradient from 'react-native-linear-gradient';
+    import CardView from 'react-native-cardview';
+    import Drawer from 'react-native-drawer';
+    import FilterPanel from './FilterPanel';
 
     import icListNakhonPathom from '../../assets/ic_list_nakhon_pathom.png';
     import icMenuNakhonPathom from '../../assets/ic_menu_nakhon_pathom.png';
     import icAlertNakhonPathom from '../../assets/ic_alert_nakhon_pathom.png';
 
     export default {
-        components: {MapView, LinearGradient},
+        components: {MapView, LinearGradient, CardView, Drawer, FilterPanel,},
         data: () => {
             return {
-                icListNakhonPathom, icMenuNakhonPathom, icAlertNakhonPathom
+                icListNakhonPathom, icMenuNakhonPathom, icAlertNakhonPathom,
             };
         },
-        methods: {},
+        methods: {
+            openFilterPanel: function () {
+                this.$refs['drawer'].open();
+            },
+            closeFilterPanel: function () {
+                this.$refs['drawer'].close();
+            },
+            handleClickMenu: function () {
+                this.openFilterPanel();
+            },
+            handleOpenFilterPanel: function () {
+
+            },
+            handleCloseFilterPanel: function () {
+
+            },
+        },
     }
 </script>
 
@@ -135,7 +183,7 @@
 
     .divider {
         width: 1;
-        background-color: #e0e0e0;
+        background-color: #d0d0d0;
         margin-left: 10;
         margin-right: 10;
     }

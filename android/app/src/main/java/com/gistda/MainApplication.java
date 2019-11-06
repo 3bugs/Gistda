@@ -3,6 +3,8 @@ package com.gistda;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.reactnativecommunity.slider.ReactSliderPackage;
+import com.kishanjvaghela.cardview.RNCardViewPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
 import com.reactnativecommunity.viewpager.RNCViewPagerPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -29,6 +31,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new ReactSliderPackage(),
+            new RNCardViewPackage(),
             new LinearGradientPackage(),
             new RNCViewPagerPackage(),
             new VectorIconsPackage(),
