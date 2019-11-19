@@ -55,10 +55,10 @@
     // https://github.com/react-native-community/react-native-geolocation/issues/39
 
     import ViewPager from '@react-native-community/viewpager';
-    import bgNakhonPathom from '../../assets/bg_nakhon_pathom.jpg';
-    import bgYasothon from '../../assets/bg_yasothon.jpg';
-    import imageNakhonPathom from '../../assets/bg_card_nakhon_pathom_w500.png';
-    import imageYasothon from '../../assets/bg_card_yasothon_w500.png';
+    import bgNakhonPathom from '../../../assets/bg_nakhon_pathom.jpg';
+    import bgYasothon from '../../../assets/bg_yasothon.jpg';
+    import imageNakhonPathom from '../../../assets/bg_card_nakhon_pathom_w500.png';
+    import imageYasothon from '../../../assets/bg_card_yasothon_w500.png';
 
     const provinceList = [
         {

@@ -9,10 +9,10 @@
                 paddingLeft: 0,
                 paddingRight: 10,
                 }">
-            <image :source="imageFilterAccident"
+            <image :source="item.filterIcon"
                    class="image-filter"
                    resize-mode="contain"/>
-            <text class="title">ตำแหน่งอุบัติเหตุ</text>
+            <text class="title">{{item.filterTitle}}</text>
         </view>
         <card-view
                 :card-elevation="1"
@@ -32,7 +32,10 @@
                    class="image-light"
                    resize-mode="contain"/>
             <slider class="slider"
-                    thumb-tint-color="#4041da"/>
+                    thumb-tint-color="#4041da"
+                    minimum-track-tint-color="#4041da"
+                    :value="item.markerOpacity"
+                    :on-value-change="(value) => onChangeOpacity(item.key, value)"/>
             <image :source="imageLightOn"
                    class="image-light"
                    resize-mode="contain"/>
@@ -41,22 +44,35 @@
 </template>
 
 <script>
+    import store from '../../store';
+
     import Slider from '@react-native-community/slider';
     import CardView from 'react-native-cardview';
-    import imageLightOff from '../../assets/ic_light_off.png';
-    import imageLightOn from '../../assets/ic_light_on.png';
-    import imageFilterAccident from '../../assets/ic_filter_accident.png';
+    import imageLightOff from '../../../assets/ic_light_off.png';
+    import imageLightOn from '../../../assets/ic_light_on.png';
+    import imageFilterAccident from '../../../assets/ic_filter/ic_filter_geo_accident.png';
 
     export default {
+        props: {
+            item: {
+                type: Object
+            },
+            onChangeOpacity: {
+                type: Function
+            }
+        },
         components: {Slider, CardView,},
-        props: {},
         data: () => {
             return {
                 imageLightOff, imageLightOn,
                 imageFilterAccident,
             };
         },
-        methods: {},
+        methods: {
+            handleSliderValueChange: function (value) {
+                //
+            },
+        },
     }
 </script>
 
@@ -68,6 +84,8 @@
 
     .slider {
         flex: 1;
+        padding-left: 0;
+        padding-right: 0;
     }
 
     .image-light {

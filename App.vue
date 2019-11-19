@@ -10,12 +10,12 @@
         createBottomTabNavigator,
     } from "vue-native-router";
 
-    import Splash from './screens/splash/Splash';
-    import Home from './screens/home/Home';
-    //import Main from './screens/main/Main';
-    import MainIndex from './screens/main/Index';
-    import SettingsScreen from './screens/main/SettingsScreen';
-    import TabBar from './screens/main/TabBar';
+    import Splash from './src/screens/splash/Splash';
+    import Home from './src/screens/home/Home';
+    //import Main from './src/screens/main/Main';
+    import MainIndex from './src/screens/main/Index';
+    import SettingsScreen from './src/screens/main/SettingsScreen';
+    import TabBar from './src/screens/main/TabBar';
 
     const bottomTabNavigator = createBottomTabNavigator(
         {

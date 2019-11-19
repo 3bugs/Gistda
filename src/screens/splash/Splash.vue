@@ -17,8 +17,8 @@
 
 <script>
     import {Dimensions} from 'react-native';
-    import bg from '../../assets/splash/bg_splash.jpg';
-    import logo from '../../assets/splash/ic_logo.png';
+    import bg from '../../../assets/splash/bg_splash.jpg';
+    import logo from '../../../assets/splash/ic_logo.png';
 
     const delayInMilliseconds = 3000;
     const title = 'ระบบภูมิสารสนเทศ\nด้านความปลอดภัยจังหวัด';
@@ -49,6 +49,9 @@
                 setTimeout(function () {
                     self.navigation.navigate('StackNavigator');
                 }, delayInMilliseconds);
+            },
+            loadData: function () {
+
             }
         }
     }
