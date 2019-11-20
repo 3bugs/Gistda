@@ -117,3 +117,9 @@ export function FETCH_MAP_DATA({commit, state}, {province}) {
         ], // mapDataList
     });
 }
+
+export function SET_MARKER_OPACITY({commit, state}, {key, opacity}) {
+    commit('SET_MARKER_OPACITY', {
+        key, opacity
+    });
+}

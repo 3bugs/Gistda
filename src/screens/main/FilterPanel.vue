@@ -12,8 +12,7 @@
                     :data="mapDataList">
                 <view render-prop-fn="renderItem">
                     <filter-item
-                            :item="args.item"
-                            :on-change-opacity="onChangeOpacity"/>
+                            :item="args.item"/>
                 </view>
             </flat-list>
         </linear-gradient>
@@ -31,9 +30,6 @@
     export default {
         components: {LinearGradient, FilterItem},
         props: {
-            /*mapDataList: {
-                type: Array
-            },*/
             onChangeOpacity: {
                 type: Function
             }

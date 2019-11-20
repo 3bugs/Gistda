@@ -26,3 +26,7 @@ export function SET_MAP_DATA(state, {mapDataList}) {
     state.mapDataList = mapDataList;
     state.loadingMapDataList = false;
 }
+
+export function SET_MARKER_OPACITY(state, {key, opacity}) {
+    state.mapDataList[key].markerOpacity = opacity;
+}

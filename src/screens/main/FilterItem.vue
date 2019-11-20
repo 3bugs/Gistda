@@ -35,7 +35,7 @@
                     thumb-tint-color="#4041da"
                     minimum-track-tint-color="#4041da"
                     :value="item.markerOpacity"
-                    :on-value-change="(value) => onChangeOpacity(item.key, value)"/>
+                    :on-value-change="handleSliderValueChange"/>
             <image :source="imageLightOn"
                    class="image-light"
                    resize-mode="contain"/>
@@ -57,9 +57,6 @@
             item: {
                 type: Object
             },
-            onChangeOpacity: {
-                type: Function
-            }
         },
         components: {Slider, CardView,},
         data: () => {
@@ -70,7 +67,10 @@
         },
         methods: {
             handleSliderValueChange: function (value) {
-                //
+                store.dispatch('SET_MARKER_OPACITY', {
+                    key: this.item.key,
+                    opacity: value
+                });
             },
         },
     }

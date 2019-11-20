@@ -8,9 +8,7 @@
             :on-open="handleOpenFilterPanel"
             :on-close="handleCloseFilterPanel">
         <view render-prop="content">
-            <FilterPanel
-                    :map-data-list="[]"
-                    :on-change-opacity="handleChangeOpacity"/>
+            <FilterPanel/>
         </view>
 
         <view class="container">
@@ -302,9 +300,9 @@
             }
         },
         created: function () {
-            store.dispatch('FETCH_MAP_DATA', {
+            /*store.dispatch('FETCH_MAP_DATA', {
                 province: 0
-            })
+            });*/
         }
     }
 </script>

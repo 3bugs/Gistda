@@ -27,7 +27,7 @@
                 <view key="1">
                     <touchable-opacity
                             :activeOpacity="0.85"
-                            :on-press="() => this.props.navigation.navigate('BottomTabNavigator')"
+                            :on-press="() => handleSelectProvince(0)"
                             :style="{flex: 1}">
                         <image :source="imageNakhonPathom"
                                class="image-nakhon-pathom"
@@ -38,7 +38,7 @@
                 <view key="2">
                     <touchable-opacity
                             :activeOpacity="0.85"
-                            :on-press="() => this.props.navigation.navigate('BottomTabNavigator')"
+                            :on-press="() => handleSelectProvince(1)"
                             :style="{flex: 1}">
                         <image :source="imageYasothon"
                                class="image-yasothon"
@@ -53,6 +53,8 @@
 <script>
     // แก้ปัญหาเรื่อง androidx
     // https://github.com/react-native-community/react-native-geolocation/issues/39
+
+    import store from '../../store';
 
     import ViewPager from '@react-native-community/viewpager';
     import bgNakhonPathom from '../../../assets/bg_nakhon_pathom.jpg';
@@ -134,6 +136,15 @@
                 this.provinceNameEn = provinceList[selectedPageIndex].nameEn;
                 this.temperature = provinceList[selectedPageIndex].temperature;
                 this.status = provinceList[selectedPageIndex].status;
+            },
+            handleSelectProvince: function (province) {
+                alert(province);
+
+                store.dispatch('FETCH_MAP_DATA', {
+                    province
+                });
+
+                this.navigation.navigate('BottomTabNavigator');
             }
         }
     }
