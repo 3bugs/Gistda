@@ -37,18 +37,19 @@ export function LOGOUT({commit, state}, callback) {
 }
 */
 
-import imageFilterAccident from '../../assets/ic_filter/ic_filter_geo_accident.png';
-import imageFilterRisk from '../../assets/ic_filter/ic_filter_geo_risk_area.png';
+import imageFilterGeoAccident from '../../assets/ic_filter/ic_filter_geo_accident.png';
+import imageFilterGeoRiskArea from '../../assets/ic_filter/ic_filter_geo_risk_area.png';
+import imageFilterGeoRoute from '../../assets/ic_filter/ic_filter_geo_route.png';
 
 export function FETCH_MAP_DATA({commit, state}, {province}) {
     commit('FETCHING_MAP_DATA');
     commit('SET_MAP_DATA', {
         mapDataList: [
             {
-                key: '0',
                 filterTitle: 'ตำแหน่งอุบัติเหตุ',
-                filterIcon: imageFilterAccident,
+                filterIcon: imageFilterGeoAccident,
                 markerOpacity: 1,
+                markerVisibility: false,
                 markerList: [
                     {
                         coordinate: {
@@ -57,7 +58,6 @@ export function FETCH_MAP_DATA({commit, state}, {province}) {
                         },
                         title: 'ทดสอบ 1',
                         description: 'รายละเอียด ทดสอบ 1',
-                        image: imageFilterAccident,
                     },
                     {
                         coordinate: {
@@ -66,7 +66,6 @@ export function FETCH_MAP_DATA({commit, state}, {province}) {
                         },
                         title: 'ทดสอบ 2',
                         description: 'รายละเอียด ทดสอบ 2',
-                        image: imageFilterAccident,
                     },
                     {
                         coordinate: {
@@ -75,15 +74,14 @@ export function FETCH_MAP_DATA({commit, state}, {province}) {
                         },
                         title: 'ทดสอบ 3',
                         description: 'รายละเอียด ทดสอบ 3',
-                        image: imageFilterAccident,
                     },
                 ]
             },
             {
-                key: '1',
                 filterTitle: 'พื้นที่เสี่ยงบนท้องถนน',
-                filterIcon: imageFilterRisk,
+                filterIcon: imageFilterGeoRiskArea,
                 markerOpacity: 1,
+                markerVisibility: true,
                 markerList: [
                     {
                         coordinate: {
@@ -92,7 +90,6 @@ export function FETCH_MAP_DATA({commit, state}, {province}) {
                         },
                         title: 'ทดสอบ 4',
                         description: 'รายละเอียด ทดสอบ 4',
-                        image: imageFilterRisk,
                     },
                     {
                         coordinate: {
@@ -101,7 +98,6 @@ export function FETCH_MAP_DATA({commit, state}, {province}) {
                         },
                         title: 'ทดสอบ 5',
                         description: 'รายละเอียด ทดสอบ 5',
-                        image: imageFilterRisk,
                     },
                     {
                         coordinate: {
@@ -110,7 +106,38 @@ export function FETCH_MAP_DATA({commit, state}, {province}) {
                         },
                         title: 'ทดสอบ 6',
                         description: 'รายละเอียด ทดสอบ 6',
-                        image: imageFilterRisk,
+                    },
+                ]
+            },
+            {
+                filterTitle: 'เส้นทางคมนาคม',
+                filterIcon: imageFilterGeoRoute,
+                markerOpacity: 0.5,
+                markerVisibility: true,
+                markerList: [
+                    {
+                        coordinate: {
+                            latitude: 13.8450,
+                            longitude: 100.01827,
+                        },
+                        title: 'ทดสอบ 4',
+                        description: 'รายละเอียด ทดสอบ 4',
+                    },
+                    {
+                        coordinate: {
+                            latitude: 13.8050,
+                            longitude: 100.02127,
+                        },
+                        title: 'ทดสอบ 5',
+                        description: 'รายละเอียด ทดสอบ 5',
+                    },
+                    {
+                        coordinate: {
+                            latitude: 13.7950,
+                            longitude: 100.02727,
+                        },
+                        title: 'ทดสอบ 6',
+                        description: 'รายละเอียด ทดสอบ 6',
                     },
                 ]
             },
@@ -121,5 +148,11 @@ export function FETCH_MAP_DATA({commit, state}, {province}) {
 export function SET_MARKER_OPACITY({commit, state}, {key, opacity}) {
     commit('SET_MARKER_OPACITY', {
         key, opacity
+    });
+}
+
+export function SET_MARKER_VISIBILITY({commit, state}, {key, visibility}) {
+    commit('SET_MARKER_VISIBILITY', {
+        key, visibility
     });
 }

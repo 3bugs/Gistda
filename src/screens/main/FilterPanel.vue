@@ -9,10 +9,13 @@
 
             <flat-list
                     class="list"
-                    :data="mapDataList">
+                    :data="mapDataList"
+                    :keyExtractor="(item, index) => index.toString()"
+                    :contentContainerStyle="{margin: 0}">
                 <view render-prop-fn="renderItem">
                     <filter-item
-                            :item="args.item"/>
+                            :item="args.item"
+                            :index="args.index"/>
                 </view>
             </flat-list>
         </linear-gradient>
@@ -41,7 +44,7 @@
         },
         data: () => {
             return {
-                //imageFilterAccident,
+                //imageFilterGeoAccident,
                 filterDataList: [
                     {key: 'a', title: 'ตำแหน่งอุบัติเหตุ', icon: imageFilterAccident},
                     {key: 'b', title: 'พื้นที่เสี่ยงบนท้องถนน', icon: imageFilterAccident},
@@ -75,8 +78,8 @@
 
     .list {
         flex: 1;
-        padding-left: 15;
-        padding-right: 15;
+        padding-left: 0;
+        padding-right: 0;
         margin-top: 20;
         border-width: 0;
         border-color: yellow;

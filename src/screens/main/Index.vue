@@ -19,12 +19,13 @@
                       latitudeDelta: 0.0922,
                       longitudeDelta: 0.0421,
                       }">
-                <view v-for="mapData in mapDataList">
-                    <marker v-for="marker in mapData.markerList"
+                <view v-for="(mapData, index1) in mapDataList">
+                    <marker v-for="(marker, index2) in mapData.markerList"
+                            v-if="mapData.markerVisibility"
                             :coordinate="marker.coordinate"
                             :title="marker.title"
                             :description="marker.description"
-                            :image="marker.image"
+                            :image="mapData.filterIcon"
                             :opacity="mapData.markerOpacity"
                     />
                 </view>
@@ -202,7 +203,7 @@
                     {
                         key: '0',
                         filterTitle: 'ตำแหน่งอุบัติเหตุ',
-                        filterIcon: imageFilterAccident,
+                        filterIcon: imageFilterGeoAccident,
                         markerOpacity: 1,
                         markerList: [
                             {
@@ -212,7 +213,7 @@
                                 },
                                 title: 'ทดสอบ 1',
                                 description: 'รายละเอียด ทดสอบ 1',
-                                image: imageFilterAccident,
+                                image: imageFilterGeoAccident,
                             },
                             {
                                 coordinate: {
@@ -221,7 +222,7 @@
                                 },
                                 title: 'ทดสอบ 2',
                                 description: 'รายละเอียด ทดสอบ 2',
-                                image: imageFilterAccident,
+                                image: imageFilterGeoAccident,
                             },
                             {
                                 coordinate: {
@@ -230,7 +231,7 @@
                                 },
                                 title: 'ทดสอบ 3',
                                 description: 'รายละเอียด ทดสอบ 3',
-                                image: imageFilterAccident,
+                                image: imageFilterGeoAccident,
                             },
                         ]
                     },

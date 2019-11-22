@@ -138,7 +138,7 @@
                 this.status = provinceList[selectedPageIndex].status;
             },
             handleSelectProvince: function (province) {
-                alert(province);
+                //alert(province);
 
                 store.dispatch('FETCH_MAP_DATA', {
                     province

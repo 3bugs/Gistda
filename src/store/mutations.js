@@ -30,3 +30,7 @@ export function SET_MAP_DATA(state, {mapDataList}) {
 export function SET_MARKER_OPACITY(state, {key, opacity}) {
     state.mapDataList[key].markerOpacity = opacity;
 }
+
+export function SET_MARKER_VISIBILITY(state, {key, visibility}) {
+    state.mapDataList[key].markerVisibility = visibility;
+}
