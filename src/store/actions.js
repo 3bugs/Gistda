@@ -78,10 +78,10 @@ export function FETCH_MAP_DATA({commit, state}, {province}) {
                 ]
             },
             {
-                filterTitle: 'พื้นที่เสี่ยงบนท้องถนน',
+                filterTitle: 'พื้นที่เสี่ยงบนท้องถนน พื้นที่เสี่ยงบนท้องถนน พื้นที่เสี่ยงบนท้องถนน ',
                 filterIcon: imageFilterGeoRiskArea,
                 markerOpacity: 1,
-                markerVisibility: true,
+                markerVisibility: false,
                 markerList: [
                     {
                         coordinate: {
@@ -154,5 +154,17 @@ export function SET_MARKER_OPACITY({commit, state}, {key, opacity}) {
 export function SET_MARKER_VISIBILITY({commit, state}, {key, visibility}) {
     commit('SET_MARKER_VISIBILITY', {
         key, visibility
+    });
+}
+
+export function OPEN_DRAWER({commit, state}, {}) {
+    commit('SET_DRAWER_OPEN', {
+        drawerOpen: true
+    });
+}
+
+export function CLOSE_DRAWER({commit, state}, {}) {
+    commit('SET_DRAWER_OPEN', {
+        drawerOpen: false
     });
 }

@@ -3,7 +3,8 @@
     <drawer ref="drawer"
             type="static"
             :openDrawerOffset="80"
-            :open="false"
+            :tapToClose="true"
+            :open="drawerOpen"
             :acceptTap="true"
             :on-open="handleOpenFilterPanel"
             :on-close="handleCloseFilterPanel">
@@ -191,6 +192,9 @@
         computed: {
             mapDataList() {
                 return store.state.mapDataList;
+            },
+            drawerOpen() {
+                return store.state.drawerOpen;
             }
         },
         data: () => {
@@ -198,79 +202,6 @@
                 icListNakhonPathom, icMenuNakhonPathom, icAlertNakhonPathom,
                 imageLightOff, imageLightOn,
                 imageFilterAccident,
-
-                /*mapDataList: [
-                    {
-                        key: '0',
-                        filterTitle: 'ตำแหน่งอุบัติเหตุ',
-                        filterIcon: imageFilterGeoAccident,
-                        markerOpacity: 1,
-                        markerList: [
-                            {
-                                coordinate: {
-                                    latitude: 13.8100,
-                                    longitude: 100.04427,
-                                },
-                                title: 'ทดสอบ 1',
-                                description: 'รายละเอียด ทดสอบ 1',
-                                image: imageFilterGeoAccident,
-                            },
-                            {
-                                coordinate: {
-                                    latitude: 13.8200,
-                                    longitude: 100.05627,
-                                },
-                                title: 'ทดสอบ 2',
-                                description: 'รายละเอียด ทดสอบ 2',
-                                image: imageFilterGeoAccident,
-                            },
-                            {
-                                coordinate: {
-                                    latitude: 13.8300,
-                                    longitude: 100.04227,
-                                },
-                                title: 'ทดสอบ 3',
-                                description: 'รายละเอียด ทดสอบ 3',
-                                image: imageFilterGeoAccident,
-                            },
-                        ]
-                    },
-                    {
-                        key: '1',
-                        filterTitle: 'พื้นที่เสี่ยงบนท้องถนน',
-                        filterIcon: imageFilterRisk,
-                        markerOpacity: 1,
-                        markerList: [
-                            {
-                                coordinate: {
-                                    latitude: 13.8400,
-                                    longitude: 100.01427,
-                                },
-                                title: 'ทดสอบ 4',
-                                description: 'รายละเอียด ทดสอบ 4',
-                                image: imageFilterRisk,
-                            },
-                            {
-                                coordinate: {
-                                    latitude: 13.8000,
-                                    longitude: 100.02627,
-                                },
-                                title: 'ทดสอบ 5',
-                                description: 'รายละเอียด ทดสอบ 5',
-                                image: imageFilterRisk,
-                            },
-                            {
-                                coordinate: {
-                                    latitude: 13.7900,
-                                    longitude: 100.03227,
-                                },
-                                title: 'ทดสอบ 6',
-                                description: 'รายละเอียด ทดสอบ 6',
-                                image: imageFilterRisk,
-                            },
-                        ]
-                    },
-                ],*/
             };
         },
         methods: {
@@ -281,13 +212,16 @@
                 this.$refs['drawer'].close();
             },
             handleClickMenu: function () {
-                this.openFilterPanel();
+                //this.openFilterPanel();
+                store.dispatch('OPEN_DRAWER', {
+                });
             },
             handleOpenFilterPanel: function () {
 
             },
             handleCloseFilterPanel: function () {
-
+                store.dispatch('CLOSE_DRAWER', {
+                });
             },
             handleSliderValueChange: function (value) {
                 this.markerOpacity = value;

@@ -17,6 +17,7 @@ const store = new Vuex.Store({
     state: {
         loadingMapDataList: false,
         mapDataList: [],
+        drawerOpen: false,
 
         /*activeType: 'posts',
         posts: [],

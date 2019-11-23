@@ -34,3 +34,7 @@ export function SET_MARKER_OPACITY(state, {key, opacity}) {
 export function SET_MARKER_VISIBILITY(state, {key, visibility}) {
     state.mapDataList[key].markerVisibility = visibility;
 }
+
+export function SET_DRAWER_OPEN(state, {drawerOpen}) {
+    state.drawerOpen = drawerOpen;
+}

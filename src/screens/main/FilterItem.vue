@@ -5,25 +5,33 @@
                 borderWidth: 0,
                 borderColor: 'yellow',
                 flexDirection: 'row',
-                alignItems: 'center',
+                alignItems: 'flex-start',
                 paddingTop: 0,
                 paddingBottom: 0,
                 paddingLeft: 15,
-                paddingRight: 20,
+                paddingRight: 0,
                 }">
             <image :source="item.filterIcon"
                    class="image-filter"
                    resize-mode="contain"/>
-            <text class="title">{{item.filterTitle}}</text>
+            <text class="title">{{item.filterTitle ? item.filterTitle.trim() : ''}}</text>
             <check-box class="check"
-                       :on-value-change="handleCheckChange"
-                       :value="item.markerVisibility">
-                <!--<view render-prop-fn="checkedIcon">
-                    <image :source="imageCheckOn"/>
+                       :container-style="{
+                       marginTop: 0,
+                       marginBottom: 0,
+                       paddingTop: 5,
+                       paddingBottom: 5
+                       }"
+                       :on-press="handleCheckChange"
+                       :checked="item.markerVisibility">
+                <view render-prop="checkedIcon">
+                    <image :style="{width: 15, height: 15}"
+                           :source="imageCheckOn"/>
                 </view>
-                <view render-prop-fn="uncheckedIcon">
-                    <image :source="imageCheckOff"/>
-                </view>-->
+                <view render-prop="uncheckedIcon">
+                    <image :style="{width: 15, height: 15}"
+                           :source="imageCheckOff"/>
+                </view>
             </check-box>
         </view>
         <card-view
@@ -71,12 +79,12 @@
 
     import Slider from '@react-native-community/slider';
     import CardView from 'react-native-cardview';
+    import {CheckBox} from 'react-native-elements';
+
     import imageLightOff from '../../../assets/ic_light_off.png';
     import imageLightOn from '../../../assets/ic_light_on.png';
     import imageCheckOff from '../../../assets/ic_check_off.png'
     import imageCheckOn from '../../../assets/ic_check_on.png'
-
-    import imageFilterAccident from '../../../assets/ic_filter/ic_filter_geo_accident.png';
 
     export default {
         props: {
@@ -87,12 +95,12 @@
                 type: Number
             }
         },
-        components: {Slider, CardView,},
+        components: {Slider, CardView, CheckBox},
         data: () => {
             return {
                 imageLightOff, imageLightOn,
                 imageCheckOff, imageCheckOn,
-                imageFilterAccident,
+                visibilityValue: false,
             };
         },
         methods: {
@@ -102,13 +110,19 @@
                     opacity: value
                 });
             },
-            handleCheckChange: function (value) {
+            handleCheckChange: function (e) {
+                //alert(e.target);
+                this.visibilityValue = !this.visibilityValue;
+
                 store.dispatch('SET_MARKER_VISIBILITY', {
                     key: this.index,
-                    visibility: value
+                    visibility: this.visibilityValue
                 });
             }
         },
+        created: function () {
+            this.visibilityValue = this.item.markerVisibility;
+        }
     }
 </script>
 
@@ -140,12 +154,15 @@
         font-family: DBHeavent;
         color: #b9bbff;
         font-size: 18;
-        letter-spacing: 1;
-        margin-bottom: 5;
+        letter-spacing: 0;
+        margin-top: 3;
+        margin-bottom: 7;
     }
 
     .check {
-        margin-bottom: 5;
-        color: white;
+        margin-top: 0;
+        margin-bottom: 0;
+        margin-left: 0;
+        margin-right: 0;
     }
 </style>
