@@ -1,7 +1,7 @@
 <template>
     <!--https://blog.logrocket.com/how-to-use-refs-to-access-your-application-dom-in-vue-js/-->
     <drawer ref="drawer"
-            type="static"
+            type="overlay"
             :openDrawerOffset="80"
             :tapToClose="true"
             :open="drawerOpen"
@@ -20,15 +20,17 @@
                       latitudeDelta: 0.0922,
                       longitudeDelta: 0.0421,
                       }">
-                <view v-for="(mapData, index1) in mapDataList">
-                    <marker v-for="(marker, index2) in mapData.markerList"
-                            v-if="mapData.markerVisibility"
-                            :coordinate="marker.coordinate"
-                            :title="marker.title"
-                            :description="marker.description"
-                            :image="mapData.filterIcon"
-                            :opacity="mapData.markerOpacity"
-                    />
+                <view v-for="(categoryType, index1) in mapDataList">
+                    <view v-for="(category, index2) in categoryType.list">
+                        <marker v-for="(marker, index3) in category.markerList"
+                                v-if="category.markerVisibility"
+                                :coordinate="marker.coordinate"
+                                :title="marker.title"
+                                :description="marker.description"
+                                :image="category.image"
+                                :opacity="category.markerOpacity"
+                        />
+                    </view>
                 </view>
             </map-view>
 
@@ -95,75 +97,6 @@
                     <!--</image-background>-->
                 </view>
             </view>
-
-            <!--<card-view
-                    :card-elevation="3"
-                    :card-maxElevation="3"
-                    :corner-radius="10"
-                    :style="{
-                    position: 'absolute',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    paddingTop: 0,
-                    paddingBottom: 0,
-                    paddingLeft: 10,
-                    paddingRight: 10,
-                    marginLeft: '10%',
-                    marginRight: '10%',
-                    top: 155,
-                    height: 20,
-                    width: '80%',
-                    backgroundColor: '#fff'
-                    }">
-                <image :source="imageLightOff"
-                       class="image-light"
-                       resize-mode="contain"/>
-                <slider class="slider"
-                        :value="1"
-                        :minimumValue="0"
-                        :maximumValue="1"
-                        thumb-tint-color="#4041da"
-                        minimum-track-tint-color="#4041da"
-                        :on-value-change="handleSliderValueChange"/>
-                <image :source="imageLightOn"
-                       class="image-light"
-                       resize-mode="contain"/>
-            </card-view>-->
-
-            <!--<card-view
-                    :card-elevation="3"
-                    :card-maxElevation="3"
-                    :corner-radius="10"
-                    :style="{
-                    position: 'absolute',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    paddingTop: 0,
-                    paddingBottom: 0,
-                    paddingLeft: 10,
-                    paddingRight: 10,
-                    marginLeft: '10%',
-                    marginRight: '10%',
-                    top: 190,
-                    height: 20,
-                    width: '80%',
-                    backgroundColor: '#fff'
-                    }">
-                <image :source="imageLightOff"
-                       class="image-light"
-                       resize-mode="contain"/>
-                <slider class="slider"
-                        :value="1"
-                        :minimumValue="0"
-                        :maximumValue="1"
-                        thumb-tint-color="#4041da"
-                        minimum-track-tint-color="#4041da"
-                        :on-value-change="handleSliderValueChange2"/>
-                <image :source="imageLightOn"
-                       class="image-light"
-                       resize-mode="contain"/>
-            </card-view>-->
-
         </view>
     </drawer>
 </template>
@@ -191,7 +124,7 @@
         components: {MapView, Marker, LinearGradient, CardView, Drawer, FilterPanel, Slider},
         computed: {
             mapDataList() {
-                return store.state.mapDataList;
+                return store.state.coordinateCategoryList;
             },
             drawerOpen() {
                 return store.state.drawerOpen;
@@ -213,15 +146,13 @@
             },
             handleClickMenu: function () {
                 //this.openFilterPanel();
-                store.dispatch('OPEN_DRAWER', {
-                });
+                store.dispatch('OPEN_DRAWER', {});
             },
             handleOpenFilterPanel: function () {
 
             },
             handleCloseFilterPanel: function () {
-                store.dispatch('CLOSE_DRAWER', {
-                });
+                store.dispatch('CLOSE_DRAWER', {});
             },
             handleSliderValueChange: function (value) {
                 this.markerOpacity = value;
@@ -273,6 +204,7 @@
         flex: 1;
         text-align: center;
         font-family: DBHeavent-Bold;
+        letter-spacing: 1;
         color: white;
         font-size: 24;
         border-width: 0;

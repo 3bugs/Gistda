@@ -18,21 +18,61 @@ export function LOGIN_SUCCESFULL(state, {userObj}) {
 }
 */
 
-export function FETCHING_MAP_DATA(state) {
-    state.loadingMapDataList = true;
+export function FETCHING_COORDINATE_CATEGORIES(state) {
+    state.loadingCoordinateCategories = true;
 }
 
-export function SET_MAP_DATA(state, {mapDataList}) {
-    state.mapDataList = mapDataList;
-    state.loadingMapDataList = false;
+export function SET_COORDINATE_CATEGORIES(state, {coordinateCategoryList}) {
+    loadMapDataPref(coordinateCategoryList);
+    state.coordinateCategoryList = coordinateCategoryList;
+    state.loadingCoordinateCategories = false;
 }
 
-export function SET_MARKER_OPACITY(state, {key, opacity}) {
-    state.mapDataList[key].markerOpacity = opacity;
+//todo: load map data pref
+function loadMapDataPref(coordinateCategoryList) {
+    coordinateCategoryList.forEach(categoryType => {
+        categoryType.list.forEach(category => {
+            category.markerOpacity = 1;
+            category.markerVisibility = true;
+        });
+    });
 }
 
-export function SET_MARKER_VISIBILITY(state, {key, visibility}) {
-    state.mapDataList[key].markerVisibility = visibility;
+export function FETCHING_COORDINATES(state) {
+    state.loadingCoordinates = true;
+}
+
+export function SET_COORDINATES(state, {coordinateList}) {
+    coordinateList.forEach(item => {
+        state.coordinateCategoryList.forEach(categoryTypeItem => {
+            categoryTypeItem.list.forEach(categoryItem => {
+                if (item.category_id === categoryItem.id) {
+                    categoryItem.markerList = item.list;
+                }
+            });
+        });
+    });
+    state.loadingCoordinates = false;
+}
+
+export function SET_MARKER_OPACITY(state, {id, opacity}) {
+    state.coordinateCategoryList.forEach(categoryType => {
+        categoryType.list.forEach(category => {
+            if (category.id === id) {
+                category.markerOpacity = opacity;
+            }
+        });
+    });
+}
+
+export function SET_MARKER_VISIBILITY(state, {id, visibility}) {
+    state.coordinateCategoryList.forEach(categoryType => {
+        categoryType.list.forEach(category => {
+            if (category.id === id) {
+                category.markerVisibility = visibility;
+            }
+        });
+    });
 }
 
 export function SET_DRAWER_OPEN(state, {drawerOpen}) {

@@ -6,14 +6,13 @@
             <text>
                 Control Panel
             </text>
-
             <flat-list
                     class="list"
-                    :data="mapDataList"
+                    :data="coordinateCategoryList"
                     :keyExtractor="(item, index) => index.toString()"
                     :contentContainerStyle="{margin: 0}">
                 <view render-prop-fn="renderItem">
-                    <filter-item
+                    <filter-category
                             :item="args.item"
                             :index="args.index"/>
                 </view>
@@ -26,18 +25,21 @@
     import store from '../../store';
 
     import LinearGradient from 'react-native-linear-gradient';
-    import FilterItem from './FilterItem';
+    import FilterCategory from './FilterCategory';
 
     import imageFilterAccident from '../../../assets/ic_filter/ic_filter_geo_accident.png';
 
     export default {
-        components: {LinearGradient, FilterItem},
+        components: {LinearGradient, FilterCategory},
         props: {
             onChangeOpacity: {
                 type: Function
             }
         },
         computed: {
+            coordinateCategoryList() {
+                return store.state.coordinateCategoryList;
+            },
             mapDataList() {
                 return store.state.mapDataList;
             }
@@ -81,7 +83,5 @@
         padding-left: 0;
         padding-right: 0;
         margin-top: 20;
-        border-width: 0;
-        border-color: yellow;
     }
 </style>

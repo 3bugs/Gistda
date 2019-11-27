@@ -37,14 +37,39 @@ export function LOGOUT({commit, state}, callback) {
 }
 */
 
+import {fetchCoordinateCategories, fetchCoordinates} from './fetch';
+
 import imageFilterGeoAccident from '../../assets/ic_filter/ic_filter_geo_accident.png';
 import imageFilterGeoRiskArea from '../../assets/ic_filter/ic_filter_geo_risk_area.png';
 import imageFilterGeoRoute from '../../assets/ic_filter/ic_filter_geo_route.png';
 
-export function FETCH_MAP_DATA({commit, state}, {province}) {
-    commit('FETCHING_MAP_DATA');
-    commit('SET_MAP_DATA', {
-        mapDataList: [
+export async function FETCH_COORDINATE_CATEGORIES({commit, state}, {province, callback}) {
+    commit('FETCHING_COORDINATE_CATEGORIES');
+
+    const apiResult = await fetchCoordinateCategories();
+    if (apiResult.success) {
+        commit('SET_COORDINATE_CATEGORIES', {
+            coordinateCategoryList: apiResult.data.list
+        });
+
+        FETCH_COORDINATE({commit, state}, {});
+
+        callback(true, null);
+    } else {
+        commit('SET_COORDINATE_CATEGORIES', {
+            coordinateCategoryList: []
+        });
+        callback(false, apiResult.message);
+    }
+}
+
+export function FETCH_COORDINATE({commit, state}, {}) {
+    commit('FETCHING_COORDINATES');
+
+    const coordinateList = fetchCoordinates();
+    commit('SET_COORDINATES', {
+        coordinateList,
+        _coordinateList: [
             {
                 filterTitle: 'ตำแหน่งอุบัติเหตุ',
                 filterIcon: imageFilterGeoAccident,
@@ -78,7 +103,7 @@ export function FETCH_MAP_DATA({commit, state}, {province}) {
                 ]
             },
             {
-                filterTitle: 'พื้นที่เสี่ยงบนท้องถนน พื้นที่เสี่ยงบนท้องถนน พื้นที่เสี่ยงบนท้องถนน ',
+                filterTitle: 'พื้นที่เสี่ยงบนท้องถนน พื้นที่เสี่ยงบนท้องถนน ',
                 filterIcon: imageFilterGeoRiskArea,
                 markerOpacity: 1,
                 markerVisibility: false,
@@ -145,15 +170,15 @@ export function FETCH_MAP_DATA({commit, state}, {province}) {
     });
 }
 
-export function SET_MARKER_OPACITY({commit, state}, {key, opacity}) {
+export function SET_MARKER_OPACITY({commit, state}, {id, opacity}) {
     commit('SET_MARKER_OPACITY', {
-        key, opacity
+        id, opacity
     });
 }
 
-export function SET_MARKER_VISIBILITY({commit, state}, {key, visibility}) {
+export function SET_MARKER_VISIBILITY({commit, state}, {id, visibility}) {
     commit('SET_MARKER_VISIBILITY', {
-        key, visibility
+        id, visibility
     });
 }
 

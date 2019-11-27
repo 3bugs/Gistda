@@ -5,8 +5,7 @@
                       resize-mode="stretch">
         <status-bar
                 background-color="transparent"
-                translucent
-        />
+                translucent/>
         <view class="main-container">
             <view :style="{marginLeft: 25, marginBottom: 25}">
                 <text class="province-name-en">{{provinceNameEn}}</text>
@@ -19,7 +18,6 @@
                 </text>
                 <text class="status">{{status}}</text>
             </view>
-
             <view-pager class="view-pager"
                         :initial-page="0"
                         :page-margin="-100"
@@ -47,6 +45,11 @@
                 </view>
             </view-pager>
         </view>
+        <activity-indicator
+                class="progress"
+                size="large"
+                color="#ffffff"
+                v-if="loadingCoordinateCategories"/>
     </image-background>
 </template>
 
@@ -100,7 +103,14 @@
                 viewPagerMargin: 0,
                 temperatureUnitMarginLeft: 0,
                 status: false,
+
+                test: false,
             };
+        },
+        computed: {
+            loadingCoordinateCategories() {
+                return store.state.loadingCoordinateCategories;
+            }
         },
         methods: {
             handleLayoutChange: function (e) {
@@ -138,19 +148,34 @@
                 this.status = provinceList[selectedPageIndex].status;
             },
             handleSelectProvince: function (province) {
-                //alert(province);
+                if (this.loadingCoordinateCategories) {
+                    return;
+                }
 
-                store.dispatch('FETCH_MAP_DATA', {
-                    province
+                store.dispatch('FETCH_COORDINATE_CATEGORIES', {
+                    province,
+                    callback: (success, message) => {
+                        if (success) {
+                            this.navigation.navigate('BottomTabNavigator');
+                        } else {
+                            alert(message);
+                        }
+                    }
                 });
-
-                this.navigation.navigate('BottomTabNavigator');
             }
         }
     }
 </script>
 
 <style>
+    .progress {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-width: 0;
+        border-color: yellow;
+    }
+
     .main-container {
         flex: 1;
     }
@@ -163,6 +188,7 @@
     .province-name-en {
         position: absolute;
         font-family: DBHeaventt-Light;
+        letter-spacing: 1;
         color: white;
         font-size: 18;
         margin-top: 60;
@@ -172,6 +198,7 @@
     .province-name-th {
         position: absolute;
         font-family: DBHeavent-Bold;
+        letter-spacing: 1;
         color: white;
         font-size: 55;
         margin-top: 68;

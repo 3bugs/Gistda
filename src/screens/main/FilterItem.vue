@@ -11,14 +11,17 @@
                 paddingLeft: 15,
                 paddingRight: 0,
                 }">
-            <image :source="item.filterIcon"
+            <image :source="{uri: item.image}"
                    class="image-filter"
                    resize-mode="contain"/>
-            <text class="title">{{item.filterTitle ? item.filterTitle.trim() : ''}}</text>
+            <text class="title">
+                {{title}}
+            </text>
             <check-box class="check"
                        :container-style="{
                        marginTop: 0,
                        marginBottom: 0,
+                       marginTop: 3,
                        paddingTop: 5,
                        paddingBottom: 5
                        }"
@@ -66,7 +69,7 @@
                 :style="{
                 width: '100%',
                 marginTop: 15,
-                marginBottom: 12,
+                marginBottom: 10,
                 marginLeft: 20,
                 marginRight: 0,
                 borderBottomWidth: 1,
@@ -88,7 +91,7 @@
 
     export default {
         props: {
-            item: { // ข้อมูล filter
+            item: { // filter item
                 type: Object
             },
             index: { // index บอกลำดับของ filter
@@ -96,17 +99,29 @@
             }
         },
         components: {Slider, CardView, CheckBox},
+        computed: {
+            title() {
+                let title = '';
+                if (this.item.name) {
+                    title = this.item.name.trim();
+                    if (this.item.markerList) {
+                        title += ` (${this.item.markerList.length})`;
+                    }
+                }
+                return title;
+            }
+        },
         data: () => {
             return {
                 imageLightOff, imageLightOn,
                 imageCheckOff, imageCheckOn,
-                visibilityValue: false,
+                visibilityValue: true,
             };
         },
         methods: {
             handleSliderValueChange: function (value) {
                 store.dispatch('SET_MARKER_OPACITY', {
-                    key: this.index,
+                    id: this.item.id,
                     opacity: value
                 });
             },
@@ -115,7 +130,7 @@
                 this.visibilityValue = !this.visibilityValue;
 
                 store.dispatch('SET_MARKER_VISIBILITY', {
-                    key: this.index,
+                    id: this.item.id,
                     visibility: this.visibilityValue
                 });
             }
@@ -144,19 +159,19 @@
     }
 
     .image-filter {
-        width: 32;
-        height: 35;
-        margin-right: 5;
+        width: 35;
+        height: 38;
+        margin-right: 6;
     }
 
     .title {
         flex: 1;
         font-family: DBHeavent;
         color: #b9bbff;
-        font-size: 18;
+        font-size: 19;
         letter-spacing: 0;
-        margin-top: 3;
-        margin-bottom: 7;
+        margin-top: 5;
+        margin-bottom: 10;
     }
 
     .check {

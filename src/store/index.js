@@ -15,15 +15,16 @@ const store = new Vuex.Store({
     mutations,
 
     state: {
-        loadingMapDataList: false,
-        mapDataList: [],
+        province: 0,
+
+        loadingCoordinateCategories: false,
+        coordinateCategoryList: [],
+
+        loadingCoordinates: false,
         drawerOpen: false,
 
-        /*activeType: 'posts',
-        posts: [],
-        logging_in: false,
-        userObj: {},
-        loadingPosts: false*/
+        loadingMapDataList: false,
+        mapDataList: [],
     }
 });
 
