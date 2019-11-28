@@ -94,7 +94,10 @@
             item: { // filter item
                 type: Object
             },
-            index: { // index บอกลำดับของ filter
+            index: { // index บอกลำดับของ filter ใน type
+                type: Number
+            },
+            typeIndex: { // index บอกลำดับของ filter type
                 type: Number
             }
         },
@@ -122,6 +125,8 @@
             handleSliderValueChange: function (value) {
                 store.dispatch('SET_MARKER_OPACITY', {
                     id: this.item.id,
+                    index: this.index,
+                    typeIndex: this.typeIndex,
                     opacity: value
                 });
             },
@@ -131,6 +136,8 @@
 
                 store.dispatch('SET_MARKER_VISIBILITY', {
                     id: this.item.id,
+                    index: this.index,
+                    typeIndex: this.typeIndex,
                     visibility: this.visibilityValue
                 });
             }
@@ -168,9 +175,9 @@
         flex: 1;
         font-family: DBHeavent;
         color: #b9bbff;
-        font-size: 19;
+        font-size: 20;
         letter-spacing: 0;
-        margin-top: 5;
+        margin-top: 4;
         margin-bottom: 10;
     }
 

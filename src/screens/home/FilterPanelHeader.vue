@@ -1,0 +1,125 @@
+<template>
+    <view class="container">
+        <linear-gradient
+                class="gradient-background"
+                :colors="['#38097e', '#11128a']">
+            <view class="profile-image-container">
+                <image :source="imageProfilePromlert"
+                       class="profile-image"
+                       resize-mode="contain"/>
+            </view>
+            <view class="profile-name-container">
+                <text class="profile-name">
+                    Hello Guest !
+                </text>
+                <text class="login-text">
+                    Login / Sign Up
+                </text>
+            </view>
+            <touchable-opacity class="bell-icon-touchable"
+                               :on-press="null">
+                <image :source="imageBell"
+                       class="bell-icon"
+                       resize-mode="contain"/>
+                <text class="badge">
+                    {{8}}
+                </text>
+            </touchable-opacity>
+        </linear-gradient>
+    </view>
+</template>
+
+<script>
+    import LinearGradient from 'react-native-linear-gradient';
+
+    import imageProfilePromlert from '../../../assets/profile_promlert.jpg';
+    import imageProfileDummy from '../../../assets/ic_profile_dummy.png';
+    import imageBell from '../../../assets/ic_bell.png';
+
+    export default {
+        components: {LinearGradient},
+        props: {},
+        data: () => {
+            return {
+                imageProfilePromlert, imageProfileDummy, imageBell
+            };
+        },
+        methods: {},
+    }
+</script>
+
+<style>
+    .container {
+        width: 100%;
+        height: 118;
+        border-width: 0;
+        border-color: yellow;
+    }
+
+    .gradient-background {
+        flex: 1;
+        flex-direction: row;
+        align-items: center;
+        padding-left: 20;
+        padding-right: 20;
+        padding-top: 30;
+    }
+
+    .profile-image-container {
+        width: 49;
+        height: 49;
+        border-radius: 24;
+        border-width: 0;
+        border-color: 'rgba(255, 255, 255, 0.25)';
+        overflow: hidden;
+    }
+
+    .profile-image {
+        width: 100%;
+        height: 100%;
+    }
+
+    .bell-icon {
+        width: 34;
+        height: 34;
+    }
+
+    .bell-icon-touchable {
+        width: 40;
+        height: 49;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .badge {
+        position: absolute;
+        top: 4;
+        left: 25;
+        font-family: DBHeavent-Bold;
+        color: white;
+        font-size: 16;
+        background-color: black;
+        padding-left: 6;
+        padding-right: 6;
+        border-radius: 6;
+    }
+
+    .profile-name-container {
+        flex: 1;
+        justify-content: center;
+        padding-left: 12;
+    }
+
+    .profile-name {
+        font-family: DBHeavent;
+        color: white;
+        font-size: 20;
+    }
+
+    .login-text {
+        font-family: DBHeavent;
+        font-size: 18;
+        color: 'rgba(255, 255, 255, 0.30)';
+        margin-top: 2;
+    }
+</style>

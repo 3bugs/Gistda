@@ -39,9 +39,9 @@ export function LOGOUT({commit, state}, callback) {
 
 import {fetchCoordinateCategories, fetchCoordinates} from './fetch';
 
-import imageFilterGeoAccident from '../../assets/ic_filter/ic_filter_geo_accident.png';
-import imageFilterGeoRiskArea from '../../assets/ic_filter/ic_filter_geo_risk_area.png';
-import imageFilterGeoRoute from '../../assets/ic_filter/ic_filter_geo_route.png';
+import imageFilterGeoAccident from '../../assets/sidebar/ic_filter_geo_accident.png';
+import imageFilterGeoRiskArea from '../../assets/sidebar/ic_filter_geo_risk_area.png';
+import imageFilterGeoRoute from '../../assets/sidebar/ic_filter_geo_route.png';
 
 export async function FETCH_COORDINATE_CATEGORIES({commit, state}, {province, callback}) {
     commit('FETCHING_COORDINATE_CATEGORIES');
@@ -170,15 +170,15 @@ export function FETCH_COORDINATE({commit, state}, {}) {
     });
 }
 
-export function SET_MARKER_OPACITY({commit, state}, {id, opacity}) {
+export function SET_MARKER_OPACITY({commit, state}, {id, index, typeIndex, opacity}) {
     commit('SET_MARKER_OPACITY', {
-        id, opacity
+        id, index, typeIndex, opacity
     });
 }
 
-export function SET_MARKER_VISIBILITY({commit, state}, {id, visibility}) {
+export function SET_MARKER_VISIBILITY({commit, state}, {id, index, typeIndex, visibility}) {
     commit('SET_MARKER_VISIBILITY', {
-        id, visibility
+        id, index, typeIndex, visibility
     });
 }
 

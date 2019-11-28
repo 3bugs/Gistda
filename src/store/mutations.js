@@ -55,24 +55,28 @@ export function SET_COORDINATES(state, {coordinateList}) {
     state.loadingCoordinates = false;
 }
 
-export function SET_MARKER_OPACITY(state, {id, opacity}) {
-    state.coordinateCategoryList.forEach(categoryType => {
+export function SET_MARKER_OPACITY(state, {id, index, typeIndex, opacity}) {
+    state.coordinateCategoryList[typeIndex].list[index].markerOpacity = opacity;
+
+    /*state.coordinateCategoryList.forEach(categoryType => {
         categoryType.list.forEach(category => {
             if (category.id === id) {
                 category.markerOpacity = opacity;
             }
         });
-    });
+    });*/
 }
 
-export function SET_MARKER_VISIBILITY(state, {id, visibility}) {
-    state.coordinateCategoryList.forEach(categoryType => {
+export function SET_MARKER_VISIBILITY(state, {id, index, typeIndex, visibility}) {
+    state.coordinateCategoryList[typeIndex].list[index].markerVisibility = visibility;
+
+    /*state.coordinateCategoryList.forEach(categoryType => {
         categoryType.list.forEach(category => {
             if (category.id === id) {
                 category.markerVisibility = visibility;
             }
         });
-    });
+    });*/
 }
 
 export function SET_DRAWER_OPEN(state, {drawerOpen}) {

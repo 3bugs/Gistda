@@ -11,16 +11,15 @@
     } from "vue-native-router";
 
     import Splash from './src/screens/splash/Splash';
+    import SelectProvince from './src/screens/select_province/SelectProvince';
     import Home from './src/screens/home/Home';
-    //import Main from './src/screens/main/Main';
-    import MainIndex from './src/screens/main/Index';
-    import SettingsScreen from './src/screens/main/SettingsScreen';
-    import TabBar from './src/screens/main/TabBar';
+    import SettingsScreen from './src/screens/home/SettingsScreen';
+    import TabBar from './src/screens/home/TabBar';
 
     const bottomTabNavigator = createBottomTabNavigator(
         {
-            MainIndex: {
-                screen: MainIndex,
+            Home: {
+                screen: Home,
                 navigationOptions: {
 
                 }
@@ -28,15 +27,15 @@
             Settings: SettingsScreen,
         },
         {
-            initialRouteName: 'MainIndex',
+            initialRouteName: 'Home',
             tabBarComponent: TabBar,
         }
     );
 
     const stackNavigator = createStackNavigator(
         {
-            Home: {
-                screen: Home,
+            SelectProvince: {
+                screen: SelectProvince,
                 navigationOptions: {
                     header: null,
                 }
@@ -49,7 +48,7 @@
             },
         },
         {
-            initialRouteName: 'Home',
+            initialRouteName: 'SelectProvince',
         }
     );
 

@@ -52,12 +52,12 @@
 <script>
     import {Dimensions} from 'react-native';
 
-    import bg from '../../../assets/bg_tab_bar_nakhon_pathom.png';
-    import button from '../../../assets/button_tab_bar.png';
-    import icHome from '../../../assets/ic_home.png';
-    import icNews from '../../../assets/ic_news.png';
-    import icCctv from '../../../assets/ic_cctv.png';
-    import icReport from '../../../assets/ic_report.png';
+    import bg from '../../../assets/bottom_nav/bg_tab_bar_nakhon_pathom.png';
+    import button from '../../../assets/bottom_nav/button_add_nakhon_pathom.png';
+    import icHome from '../../../assets/bottom_nav/ic_home_off.png';
+    import icNews from '../../../assets/bottom_nav/ic_news_off.png';
+    import icCctv from '../../../assets/bottom_nav/ic_cctv_off.png';
+    import icReport from '../../../assets/bottom_nav/ic_report_off.png';
 
     const iconSize = 20;
     const tabBarHeight = 100;

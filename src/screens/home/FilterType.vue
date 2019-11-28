@@ -14,7 +14,9 @@
         </flat-list>-->
         <filter-item
                 v-for="(filter, index) in item.list"
-                :item="filter"/>
+                :item="filter"
+                :index="index"
+                :typeIndex="typeIndex"/>
     </view>
 </template>
 
@@ -26,18 +28,20 @@
     export default {
         components: {FilterItem},
         props: {
-            item: { // filter category item
+            item: { // filter type item
                 type: Object
+            },
+            typeIndex: {
+                type: Number
             }
         },
-        computed: {},
+        computed: {
+        },
         data: () => {
             return {
-
             };
         },
         methods: {
-
         },
     }
 </script>
