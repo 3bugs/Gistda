@@ -72,7 +72,7 @@
                 marginBottom: 10,
                 marginLeft: 20,
                 marginRight: 0,
-                borderBottomWidth: 1,
+                borderBottomWidth: StyleSheet.hairlineWidth,
                 borderBottomColor: 'rgba(255, 255, 255, 0.2)'}"/>
     </view>
 </template>
@@ -80,6 +80,7 @@
 <script>
     import store from '../../store';
 
+    import {StyleSheet} from 'react-native';
     import Slider from '@react-native-community/slider';
     import CardView from 'react-native-cardview';
     import {CheckBox} from 'react-native-elements';
@@ -116,6 +117,7 @@
         },
         data: () => {
             return {
+                StyleSheet,
                 imageLightOff, imageLightOn,
                 imageCheckOff, imageCheckOn,
                 visibilityValue: true,

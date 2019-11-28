@@ -14,7 +14,7 @@
     import SelectProvince from './src/screens/select_province/SelectProvince';
     import Home from './src/screens/home/Home';
     import SettingsScreen from './src/screens/home/SettingsScreen';
-    import TabBar from './src/screens/home/TabBar';
+    import TabBar from './src/components/TabBar';
 
     const bottomTabNavigator = createBottomTabNavigator(
         {
