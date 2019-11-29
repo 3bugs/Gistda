@@ -60,10 +60,10 @@
     import store from '../../store';
 
     import ViewPager from '@react-native-community/viewpager';
-    import bgNakhonPathom from '../../../assets/bg_nakhon_pathom.jpg';
-    import bgYasothon from '../../../assets/bg_yasothon.jpg';
-    import imageNakhonPathom from '../../../assets/bg_card_nakhon_pathom_w500.png';
-    import imageYasothon from '../../../assets/bg_card_yasothon_w500.png';
+    import bgNakhonPathom from '../../../assets/images/screen_province/bg_nakhon_pathom.jpg';
+    import bgYasothon from '../../../assets/images/screen_province/bg_yasothon.jpg';
+    import imageNakhonPathom from '../../../assets/images/screen_province/bg_card_nakhon_pathom_w500.png';
+    import imageYasothon from '../../../assets/images/screen_province/bg_card_yasothon_w500.png';
 
     const provinceList = [
         {
@@ -152,7 +152,8 @@
                     return;
                 }
 
-                store.dispatch('FETCH_COORDINATE_CATEGORIES', {
+                // Set province + load coordinate categories data / coordinates data
+                store.dispatch('SET_PROVINCE', {
                     province,
                     callback: (success, message) => {
                         if (success) {

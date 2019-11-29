@@ -19,14 +19,17 @@
 </template>
 
 <script>
-    import icHomeOff from '../../assets/bottom_nav/ic_home_off.png';
-    import icNewsOff from '../../assets/bottom_nav/ic_news_off.png';
-    import icCctvOff from '../../assets/bottom_nav/ic_cctv_off.png';
-    import icReportOff from '../../assets/bottom_nav/ic_report_off.png';
-    import icHomeOn from '../../assets/bottom_nav/ic_home_on.png';
-    import icNewsOn from '../../assets/bottom_nav/ic_news_on.png';
-    import icCctvOn from '../../assets/bottom_nav/ic_cctv_on.png';
-    import icReportOn from '../../assets/bottom_nav/ic_report_on.png';
+    import store from '../store';
+    import {DEBUG, BOTTOM_NAV} from '../constants';
+
+    import icHomeOff from '../../assets/images/bottom_nav/ic_home_off.png';
+    import icNewsOff from '../../assets/images/bottom_nav/ic_news_off.png';
+    import icCctvOff from '../../assets/images/bottom_nav/ic_cctv_off.png';
+    import icReportOff from '../../assets/images/bottom_nav/ic_report_off.png';
+    import icHomeOn from '../../assets/images/bottom_nav/ic_home_on.png';
+    import icNewsOn from '../../assets/images/bottom_nav/ic_news_on.png';
+    import icCctvOn from '../../assets/images/bottom_nav/ic_cctv_on.png';
+    import icReportOn from '../../assets/images/bottom_nav/ic_report_on.png';
 
     const iconSize = 20;
     const dataList = [
@@ -66,6 +69,9 @@
             }
         },
         computed: {
+            province() {
+                return store.state.province;
+            },
             text() {
                 return dataList[this.itemIndex].text;
             },
@@ -76,7 +82,7 @@
             },
             lineColor() {
                 return this.state
-                    ? '#ea4431'
+                    ? BOTTOM_NAV.lineColor[this.province]
                     : 'rgba(255, 255, 255, 0)';
             },
             icon() {
@@ -87,6 +93,7 @@
         },
         data: () => {
             return {
+                DEBUG, BOTTOM_NAV,
                 iconSize,
             };
         },

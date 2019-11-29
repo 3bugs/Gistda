@@ -16,15 +16,14 @@ const store = new Vuex.Store({
 
     state: {
         province: 0,
-
-        loadingCoordinateCategories: false,
         coordinateCategoryList: [],
 
+        loadingCoordinateCategories: false,
         loadingCoordinates: false,
         drawerOpen: false,
 
-        loadingMapDataList: false,
-        mapDataList: [],
+        /*loadingMapDataList: false,
+        mapDataList: [],*/
     }
 });
 

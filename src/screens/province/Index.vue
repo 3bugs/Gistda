@@ -10,7 +10,7 @@
         createBottomTabNavigator,
     } from "vue-native-router";
 
-    import Home from './SelectProvince';
+    import Home from './Province';
 
     /*const MaterialTopTabNavigator = createMaterialTopTabNavigator(
         {

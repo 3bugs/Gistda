@@ -1,6 +1,6 @@
 <template>
     <view :style="{position: 'absolute', width: '100%', height: '100%', justifyContent: 'flex-end'}">
-        <image-background :source="bg"
+        <image-background :source="BOTTOM_NAV.background[province]"
                           :style="{height: tabBarHeight}"
                           resize-mode="cover">
             <view class="container"
@@ -16,7 +16,7 @@
                 <touchable-opacity class="item-container-touchable"
                                    :on-press="null">
                     <view class="item-container">
-                        <image :source="button"
+                        <image :source="BOTTOM_NAV.addIcon[province]"
                                :style="{width: 56, height: 56}"
                                resize-mode="contain"/>
                         <text class="item-text-highlight">แจ้งเหตุ</text>
@@ -33,11 +33,11 @@
 </template>
 
 <script>
+    import store from '../store';
+    import {DEBUG, BOTTOM_NAV} from '../constants';
+
     import {Dimensions} from 'react-native';
     import TabBarItem from './TabBarItem';
-
-    import bg from '../../assets/bottom_nav/bg_tab_bar_nakhon_pathom.png';
-    import button from '../../assets/bottom_nav/button_add_nakhon_pathom.png';
 
     const tabBarHeight = 100;
 
@@ -48,9 +48,14 @@
                 type: Object
             }
         },
+        computed: {
+            province() {
+                return store.state.province;
+            },
+        },
         data: () => {
             return {
-                bg, button,
+                DEBUG, BOTTOM_NAV,
                 tabBarHeight,
                 paddingHorizontal: 0,
                 tabBarTopPosition: 0,

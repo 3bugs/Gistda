@@ -3,7 +3,10 @@
         <linear-gradient
                 class="gradient-background"
                 old_colors="['#09097e', '#4041da']"
-                :colors="['#090963', '#4041da']">
+                :colors="[
+                SIDEBAR.background[province].startColor,
+                SIDEBAR.background[province].endColor
+                ]">
             <flat-list
                     class="list"
                     :data="coordinateCategoryList"
@@ -24,6 +27,7 @@
 
 <script>
     import store from '../../store';
+    import {DEBUG, SIDEBAR} from '../../constants';
 
     import LinearGradient from 'react-native-linear-gradient';
     import FilterPanelHeader from './FilterPanelHeader';
@@ -37,16 +41,19 @@
             }
         },
         computed: {
+            province() {
+                return store.state.province;
+            },
             coordinateCategoryList() {
                 return store.state.coordinateCategoryList;
             },
         },
         data: () => {
             return {
+                SIDEBAR
             };
         },
-        methods: {
-        },
+        methods: {},
     }
 </script>
 

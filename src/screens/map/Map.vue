@@ -12,14 +12,16 @@
             <FilterPanel/>
         </view>
 
-        <view class="container">
+        <view class="container"
+              :style="{marginBottom: BOTTOM_NAV_HEIGHT}">
             <map-view class="map-view"
                       :initial-region="{
                       latitude: 13.8196,
                       longitude: 100.04427,
                       latitudeDelta: 0.0922,
                       longitudeDelta: 0.0421,
-                      }">
+                      }"
+                      :style="{marginTop: MAP_HEADER.height}">
                 <view v-for="(categoryType, categoryTypeIndex) in mapDataList">
                     <view v-for="(category, categoryIndex) in categoryType.list">
                         <marker v-for="(marker, markerIndex) in category.markerList"
@@ -35,10 +37,14 @@
 
             <view class="header-container">
                 <linear-gradient class="header"
-                                 :colors="['#09097e', '#4041da']">
+                                 :colors="[
+                                 MAP_HEADER.background[province].startColor,
+                                 MAP_HEADER.background[province].endColor
+                                 ]"
+                                 :style="{height: MAP_HEADER.height}">
                     <touchable-opacity class="menu-icon-touchable"
                                        :on-press="handleClickMenu">
-                        <image :source="icMenuNakhonPathom"
+                        <image :source="imageMenu"
                                v-if="!drawerOpen"
                                class="menu-icon"
                                resize-mode="contain"/>
@@ -48,10 +54,12 @@
                                resize-mode="contain"/>
                     </touchable-opacity>
 
-                    <text class="province-name">นครปฐม</text>
+                    <text class="province-name">
+                        {{MAP_HEADER.title[province]}}
+                    </text>
 
                     <touchable-opacity class="alert-icon-touchable">
-                        <image :source="icAlertNakhonPathom"
+                        <image :source="MAP_HEADER.alertIcon[province]"
                                class="alert-icon"
                                resize-mode="contain"/>
                     </touchable-opacity>
@@ -76,14 +84,14 @@
                     <card-view
                             :card-elevation="4"
                             :card-maxElevation="4"
-                            :corner-radius="27"
+                            :corner-radius="25"
                             :style="{
                 flexDirection: 'row',
                 paddingTop: 6,
                 paddingBottom: 6,
                 paddingLeft: 15,
                 paddingRight: 15,
-                height: 54,
+                height: 50,
                 backgroundColor: '#fff'
                 }">
                         <text-input class="search-input"
@@ -93,7 +101,7 @@
                         <view class="divider"/>
 
                         <touchable-opacity class="list-icon-touchable">
-                            <image :source="icListNakhonPathom"
+                            <image :source="MAP_HEADER.listIcon[province]"
                                    class="list-icon"
                                    resize-mode="contain"/>
                         </touchable-opacity>
@@ -107,6 +115,7 @@
 
 <script>
     import store from '../../store';
+    import {DEBUG, MAP_HEADER, BOTTOM_NAV_HEIGHT} from '../../constants';
 
     import MapView, {Marker} from 'react-native-maps';
     import LinearGradient from 'react-native-linear-gradient';
@@ -115,17 +124,18 @@
     import FilterPanel from './FilterPanel';
     import Slider from '@react-native-community/slider';
 
-    import icListNakhonPathom from '../../../assets/ic_list_nakhon_pathom.png';
-    import icMenuNakhonPathom from '../../../assets/ic_menu_nakhon_pathom.png';
-    import icAlertNakhonPathom from '../../../assets/ic_alert_nakhon_pathom.png';
+    import imageMenu from '../../../assets/images/screen_map/ic_menu.png';
     import imageBack from '../../../assets/ic_back.png';
 
-    import imageLightOff from '../../../assets/ic_light_off.png';
-    import imageLightOn from '../../../assets/ic_light_on.png';
+    import imageLightOff from '../../../assets/images/sidebar/ic_light_off.png';
+    import imageLightOn from '../../../assets/images/sidebar/ic_light_on.png';
 
     export default {
         components: {MapView, Marker, LinearGradient, CardView, Drawer, FilterPanel, Slider},
         computed: {
+            province() {
+                return store.state.province;
+            },
             mapDataList() {
                 return store.state.coordinateCategoryList;
             },
@@ -135,8 +145,8 @@
         },
         data: () => {
             return {
-                icListNakhonPathom, icMenuNakhonPathom, icAlertNakhonPathom,
-                imageBack, imageLightOff, imageLightOn,
+                DEBUG, MAP_HEADER, BOTTOM_NAV_HEIGHT,
+                imageMenu, imageBack, imageLightOff, imageLightOn,
             };
         },
         methods: {
@@ -178,15 +188,14 @@
 <style>
     .container {
         flex: 1;
-        margin-bottom: 64;
         border-width: 0;
         border-color: red;
     }
 
     .header-container {
         position: absolute;
-        height: 144;
         width: 100%;
+        height: 142;
         top: 0;
         left: 0;
         justify-content: flex-start;
@@ -196,7 +205,6 @@
 
     .header {
         flex-direction: row;
-        height: 118;
         align-items: center;
         padding-left: 20;
         padding-right: 20;
@@ -272,7 +280,7 @@
     }
 
     .back-icon {
-        width: 27;
+        width: 24;
         height: 18;
     }
 
@@ -283,7 +291,6 @@
 
     .map-view {
         flex: 1;
-        margin-top: 116;
         border-width: 0;
         border-color: orangered;
     }

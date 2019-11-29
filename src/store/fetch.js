@@ -1,4 +1,4 @@
-import ApiResult from '../modal/ApiResult';
+import ApiResult from '../model/ApiResult';
 
 const baseURL = 'https://fenrir.studio/d/gistda_dev';
 

@@ -18,6 +18,10 @@ export function LOGIN_SUCCESFULL(state, {userObj}) {
 }
 */
 
+export function SET_PROVINCE(state, {province}) {
+    state.province = province;
+}
+
 export function FETCHING_COORDINATE_CATEGORIES(state) {
     state.loadingCoordinateCategories = true;
 }

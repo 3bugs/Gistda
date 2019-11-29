@@ -1,6 +1,7 @@
 <template>
     <view class="container">
-        <text class="title">
+        <text class="title"
+              :style="{color: SIDEBAR.filterTypeTextColor[province]}">
             {{item.name}}
         </text>
         <!--<flat-list
@@ -22,6 +23,7 @@
 
 <script>
     import store from '../../store';
+    import {DEBUG, SIDEBAR} from '../../constants';
 
     import FilterItem from './FilterItem';
 
@@ -36,9 +38,13 @@
             }
         },
         computed: {
+            province() {
+                return store.state.province;
+            },
         },
         data: () => {
             return {
+                DEBUG, SIDEBAR
             };
         },
         methods: {
@@ -53,7 +59,6 @@
     }
     .title {
         font-family: DBHeavent;
-        color: #2cc3f8;
         font-size: 20;
         letter-spacing: 0;
         margin-top: 20;

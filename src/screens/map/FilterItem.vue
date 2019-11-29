@@ -57,8 +57,8 @@
                    class="image-light"
                    resize-mode="contain"/>
             <slider class="slider"
-                    thumb-tint-color="#4041da"
-                    minimum-track-tint-color="#4041da"
+                    :thumb-tint-color="SIDEBAR.sliderColor[province]"
+                    :minimum-track-tint-color="SIDEBAR.sliderColor[province]"
                     :value="item.markerOpacity"
                     :on-value-change="handleSliderValueChange"/>
             <image :source="imageLightOn"
@@ -79,16 +79,17 @@
 
 <script>
     import store from '../../store';
+    import {DEBUG, SIDEBAR} from '../../constants';
 
     import {StyleSheet} from 'react-native';
     import Slider from '@react-native-community/slider';
     import CardView from 'react-native-cardview';
     import {CheckBox} from 'react-native-elements';
 
-    import imageLightOff from '../../../assets/ic_light_off.png';
-    import imageLightOn from '../../../assets/ic_light_on.png';
-    import imageCheckOff from '../../../assets/ic_check_off.png'
-    import imageCheckOn from '../../../assets/ic_check_on.png'
+    import imageLightOff from '../../../assets/images/sidebar/ic_light_off.png';
+    import imageLightOn from '../../../assets/images/sidebar/ic_light_on.png';
+    import imageCheckOff from '../../../assets/images/sidebar/ic_check_off.png'
+    import imageCheckOn from '../../../assets/images/sidebar/ic_check_on.png'
 
     export default {
         props: {
@@ -104,11 +105,14 @@
         },
         components: {Slider, CardView, CheckBox},
         computed: {
+            province() {
+                return store.state.province;
+            },
             title() {
                 let title = '';
                 if (this.item.name) {
                     title = this.item.name.trim();
-                    if (this.item.markerList) {
+                    if (DEBUG && this.item.markerList) {
                         title += ` (${this.item.markerList.length})`;
                     }
                 }
@@ -117,7 +121,7 @@
         },
         data: () => {
             return {
-                StyleSheet,
+                DEBUG, SIDEBAR, StyleSheet,
                 imageLightOff, imageLightOn,
                 imageCheckOff, imageCheckOn,
                 visibilityValue: true,
@@ -176,7 +180,8 @@
     .title {
         flex: 1;
         font-family: DBHeavent;
-        color: #b9bbff;
+        /*color: #b9bbff;*/
+        color: 'rgba(255, 255, 255, 0.7)';
         font-size: 20;
         letter-spacing: 0;
         margin-top: 4;

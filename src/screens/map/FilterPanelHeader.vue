@@ -2,7 +2,10 @@
     <view class="container">
         <linear-gradient
                 class="gradient-background"
-                :colors="['#38097e', '#11128a']">
+                :colors="[
+                SIDEBAR.headerBackground[province].startColor,
+                SIDEBAR.headerBackground[province].endColor
+                ]">
             <view class="profile-image-container">
                 <image :source="imageProfilePromlert"
                        class="profile-image"
@@ -30,17 +33,26 @@
 </template>
 
 <script>
+    import store from '../../store';
+    import {DEBUG, SIDEBAR} from '../../constants';
+
     import LinearGradient from 'react-native-linear-gradient';
 
-    import imageProfilePromlert from '../../../assets/profile_promlert.jpg';
-    import imageProfileDummy from '../../../assets/ic_profile_dummy.png';
-    import imageBell from '../../../assets/ic_bell.png';
+    import imageProfilePromlert from '../../../assets/images/sidebar/profile_promlert.jpg';
+    import imageProfileDummy from '../../../assets/images/sidebar/ic_profile_dummy.png';
+    import imageBell from '../../../assets/images/sidebar/ic_bell.png';
 
     export default {
         components: {LinearGradient},
         props: {},
+        computed: {
+            province() {
+                return store.state.province;
+            },
+        },
         data: () => {
             return {
+                SIDEBAR,
                 imageProfilePromlert, imageProfileDummy, imageBell
             };
         },
@@ -95,7 +107,7 @@
         position: absolute;
         top: 4;
         left: 25;
-        font-family: DBHeavent-Bold;
+        font-family: DBHeavent-Med;
         color: white;
         font-size: 16;
         background-color: black;

@@ -39,13 +39,15 @@ export function LOGOUT({commit, state}, callback) {
 
 import {fetchCoordinateCategories, fetchCoordinates} from './fetch';
 
-import imageFilterGeoAccident from '../../assets/sidebar/ic_filter_geo_accident.png';
-import imageFilterGeoRiskArea from '../../assets/sidebar/ic_filter_geo_risk_area.png';
-import imageFilterGeoRoute from '../../assets/sidebar/ic_filter_geo_route.png';
+import imageFilterGeoAccident from '../../assets/images/sidebar/ic_filter_geo_accident.png';
+import imageFilterGeoRiskArea from '../../assets/images/sidebar/ic_filter_geo_risk_area.png';
+import imageFilterGeoRoute from '../../assets/images/sidebar/ic_filter_geo_route.png';
 
-export async function FETCH_COORDINATE_CATEGORIES({commit, state}, {province, callback}) {
+export async function SET_PROVINCE({commit, state}, {province, callback}) {
+    commit('SET_PROVINCE', {province});
     commit('FETCHING_COORDINATE_CATEGORIES');
 
+    //todo: รเบุ province
     const apiResult = await fetchCoordinateCategories();
     if (apiResult.success) {
         commit('SET_COORDINATE_CATEGORIES', {
