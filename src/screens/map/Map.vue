@@ -132,6 +132,11 @@
 
     export default {
         components: {MapView, Marker, LinearGradient, CardView, Drawer, FilterPanel, Slider},
+        props: {
+            navigation: { // stack navigator
+                type: Object
+            }
+        },
         computed: {
             province() {
                 return store.state.province;
@@ -178,6 +183,9 @@
             }
         },
         created: function () {
+            //this.navigation.state.params.header = null;
+            //this.navigation.navigate('News');
+
             /*store.dispatch('FETCH_MAP_DATA', {
                 province: 0
             });*/

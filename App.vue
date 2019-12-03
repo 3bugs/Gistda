@@ -1,3 +1,5 @@
+<!--Coded by Promlert Lovichit (promlert@gmail.com)-->
+
 <template>
     <app-container></app-container>
 </template>
@@ -8,23 +10,51 @@
         createSwitchNavigator,
         createStackNavigator,
         createBottomTabNavigator,
+        createMaterialTopTabNavigator,
     } from "vue-native-router";
 
     import Splash from './src/screens/splash/Splash';
     import Province from './src/screens/province/Province';
     import Map from './src/screens/map/Map';
+    import News from './src/screens/news/News';
     import SettingsScreen from './src/screens/map/SettingsScreen';
     import TabBar from './src/components/TabBar';
+
+    const newsNavigator = createMaterialTopTabNavigator(
+        {
+            Settings: SettingsScreen,
+            Settings2: SettingsScreen,
+            Settings3: SettingsScreen,
+            Settings4: SettingsScreen,
+        },
+        {
+            initialRouteName: 'Settings',
+            backBehavior: 'none',
+            swipeEnabled: true,
+            tabBarOptions: {
+                labelStyle: {
+                    color: 'black',
+                    fontFamily: 'DBHeavent',
+                    fontSize: 16,
+                },
+                style: {
+                    backgroundColor: 'white',
+                }
+            }
+        }
+    );
 
     const bottomTabNavigator = createBottomTabNavigator(
         {
             Map: {
                 screen: Map,
-                navigationOptions: {
-
-                }
             },
-            Settings: SettingsScreen,
+            News: {
+                screen: News,
+            },
+            News2: {
+                screen: newsNavigator,
+            },
         },
         {
             initialRouteName: 'Map',

@@ -1,3 +1,5 @@
+<!--https://dev.to/hrastnik/lets-create-a-custom-animated-tab-bar-with-react-native-3496-->
+
 <template>
     <view :style="{position: 'absolute', width: '100%', height: '100%', justifyContent: 'flex-end'}">
         <image-background :source="BOTTOM_NAV.background[province]"
@@ -11,7 +13,7 @@
                 <tab-bar-item
                         v-for="itemIndex in [0, 1]"
                         :itemIndex="itemIndex"
-                        :state="activeItem === itemIndex"
+                        :state="currentRouteIndex === itemIndex"
                         :callback="handleClickItem"/>
                 <touchable-opacity class="item-container-touchable"
                                    :on-press="null">
@@ -25,7 +27,7 @@
                 <tab-bar-item
                         v-for="itemIndex in [2, 3]"
                         :itemIndex="itemIndex"
-                        :state="activeItem === itemIndex"
+                        :state="currentRouteIndex === itemIndex"
                         :callback="handleClickItem"/>
             </view>
         </image-background>
@@ -44,7 +46,7 @@
     export default {
         components: {TabBarItem},
         props: {
-            navigation: { // stack navigator
+            navigation: {
                 type: Object
             }
         },
@@ -52,6 +54,9 @@
             province() {
                 return store.state.province;
             },
+            currentRouteIndex() {
+                return this.navigation.state.index;
+            }
         },
         data: () => {
             return {
@@ -59,43 +64,42 @@
                 tabBarHeight,
                 paddingHorizontal: 0,
                 tabBarTopPosition: 0,
-                activeItem: 0,
+                //activeItem: 0,
             }
         },
         created: function () {
             const {height, width} = Dimensions.get('window');
             this.tabBarTopPosition = height - this.tabBarHeight;
             this.paddingHorizontal = (width * 2) / 100;
+
+            //alert(this.navigation.state.index);
         },
         methods: {
             handleClickItem: function (itemIndex) {
-                this.activeItem = itemIndex;
-                /*this.resetItemsIcon();
+                //this.activeItem = itemIndex;
 
                 let routeName = null;
                 switch (itemIndex) {
-                    case ITEM_HOME:
-                        routeName = 'Settings';
-                        this.homeIcon = icHomeOn;
+                    case 0:
+                        /*routeName = 'Settings';
+                        this.homeIcon = icHomeOn;*/
                         break;
-                    case ITEM_NEWS:
-                        routeName = 'Settings';
-                        this.newsIcon = icNewsOn;
+                    case 1:
+                        routeName = 'News';
                         break;
-                    case ITEM_CCTV:
-                        routeName = 'Settings';
-                        this.cctvIcon = icCctvOn;
+                    case 2:
+                        routeName = 'News2';
+                        //routeName = 'CctvNavigator';
                         break;
-                    case ITEM_REPORT:
-                        routeName = 'Settings';
-                        this.reportIcon = icReportOn;
+                    case 3:
+                        //routeName = 'ReportNavigator';
                         break;
                 }
                 if (routeName) {
                     this.navigation.navigate(routeName);
                 } else {
                     alert('No route to go!');
-                }*/
+                }
             },
         }
     }
