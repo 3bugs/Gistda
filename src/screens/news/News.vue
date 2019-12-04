@@ -1,28 +1,7 @@
 <template>
     <view class="container">
-        <linear-gradient class="header"
-                         :colors="[
-                                 MAP_HEADER.background[province].startColor,
-                                 MAP_HEADER.background[province].endColor
-                                 ]"
-                         :style="{paddingTop: STATUS_BAR_HEIGHT}">
-            <touchable-opacity class="menu-icon-touchable"
-                               :on-press="handleClickMap">
-                <image :source="imageMap"
-                       resize-mode="contain"
-                       :style="{width: 22, height: 22}"/>
-            </touchable-opacity>
-
-            <text class="title">ข่าว</text>
-
-            <view :style="{width: 22, height: 22}"/>
-
-            <!--<touchable-opacity class="alert-icon-touchable">
-                <image :source="MAP_HEADER.alertIcon[province]"
-                       class="alert-icon"
-                       resize-mode="contain"/>
-            </touchable-opacity>-->
-        </linear-gradient>
+        <header title="ข่าว"
+                :leftIcon="{icon: imageMap, width: 22, height: 22, callback: handleClickMap}"/>
 
         <tab-view :navigation-state="state"
                   :render-scene="SceneMap({
@@ -45,13 +24,11 @@
 
 <script>
     import store from '../../store';
-    import {DEBUG, MAP_HEADER} from '../../constants';
+    import Header from '../../components/Header';
 
     import {Dimensions} from 'react-native';
     //import {TabView, TabBar, SceneMap} from 'react-native-tab-view';
     import {TabView, TabBar, SceneMap} from '../../modules/my-react-native-tab-view/src';
-    import LinearGradient from 'react-native-linear-gradient';
-    import { getStatusBarHeight } from 'react-native-status-bar-height';
     import NewsPr from './News-Pr';
     import NewsSafety from './News-Safety';
     import NewsGuide from './News-Guide';
@@ -65,22 +42,15 @@
     ];
 
     export default {
-        components: {TabView, TabBar, LinearGradient},
+        components: {Header, TabView, TabBar},
         props: {
             navigation: { // stack navigator
                 type: Object
             }
         },
-        computed: {
-            province() {
-                return store.state.province;
-            },
-        },
         data: () => {
             return {
-                DEBUG, MAP_HEADER,
                 Dimensions,
-                STATUS_BAR_HEIGHT: getStatusBarHeight(),
                 state: {
                     index: 0,
                     routes,
@@ -122,34 +92,5 @@
 <style>
     .container {
         flex: 1;
-    }
-
-    .header {
-        height: 93;
-        flex-direction: row;
-        align-items: center;
-        padding-left: 20;
-        padding-right: 20;
-        border-width: 0;
-        border-color: yellow;
-    }
-
-    .title {
-        flex: 1;
-        text-align: center;
-        font-family: DBHeavent-Bold;
-        letter-spacing: 0;
-        color: white;
-        font-size: 24;
-        border-width: 0;
-        border-color: yellow;
-    }
-
-    .menu-icon-touchable {
-        align-self: center;
-        padding-left: 0;
-        padding-right: 8;
-        padding-top: 8;
-        padding-bottom: 8;
     }
 </style>

@@ -83,18 +83,19 @@
                 let routeName = null;
                 switch (itemIndex) {
                     case 0:
-                        /*const stackNavigation = this.navigation.getParam('stackNavigation', null);
+                        const stackNavigation = this.navigation.getParam('stackNavigation', null);
                         if (stackNavigation) {
-                            stackNavigation.goBack();
-                        }*/
+                            //stackNavigation.goBack(null);
+                            stackNavigation.navigate('Province');
+                        }
 
-                        if (this.navigation.state.params) {
+                        /*if (this.navigation.state.params) {
                             const {stackNavigation} = this.navigation.state.params;
                             if (stackNavigation) {
                                 //stackNavigation.goBack(null);
                                 stackNavigation.navigate('Province');
                             }
-                        }
+                        }*/
                         return;
                     case 1:
                         routeName = 'News';
