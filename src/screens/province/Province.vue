@@ -157,7 +157,12 @@
                     province,
                     callback: (success, message) => {
                         if (success) {
-                            this.navigation.navigate('BottomTabNavigator');
+                            this.navigation.navigate(
+                                'BottomTabNavigator',
+                                {
+                                    stackNavigation: this.navigation,
+                                }
+                            );
                         } else {
                             alert(message);
                         }

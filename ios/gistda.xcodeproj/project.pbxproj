@@ -68,6 +68,7 @@
 		4863F0E46B1542B6BF1DC1BE /* libRNCViewpager.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DC30C10DDB7E4779A463E38F /* libRNCViewpager.a */; };
 		CCFB2618314B456FBEC63720 /* libBVLinearGradient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C58B2A2637B34E659141AF02 /* libBVLinearGradient.a */; };
 		CAD72C80AA6341C4AECA82A3 /* libRNCSlider.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A0FF818876DA44DF8DA5D9BB /* libRNCSlider.a */; };
+		82044CB9516A492DA507931D /* libAirMaps.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2103AEDD54074BF1B4FBCFEF /* libAirMaps.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -410,6 +411,8 @@
 		C58B2A2637B34E659141AF02 /* libBVLinearGradient.a */ = {isa = PBXFileReference; name = "libBVLinearGradient.a"; path = "libBVLinearGradient.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		CF37D3B8CF8B4803AD8951E5 /* RNCSlider.xcodeproj */ = {isa = PBXFileReference; name = "RNCSlider.xcodeproj"; path = "../node_modules/@react-native-community/slider/ios/RNCSlider.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		A0FF818876DA44DF8DA5D9BB /* libRNCSlider.a */ = {isa = PBXFileReference; name = "libRNCSlider.a"; path = "libRNCSlider.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		2E6A294751C64CDEB2E3994A /* AirMaps.xcodeproj */ = {isa = PBXFileReference; name = "AirMaps.xcodeproj"; path = "../node_modules/react-native-maps/lib/ios/AirMaps.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		2103AEDD54074BF1B4FBCFEF /* libAirMaps.a */ = {isa = PBXFileReference; name = "libAirMaps.a"; path = "libAirMaps.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -444,6 +447,7 @@
 				4863F0E46B1542B6BF1DC1BE /* libRNCViewpager.a in Frameworks */,
 				CCFB2618314B456FBEC63720 /* libBVLinearGradient.a in Frameworks */,
 				CAD72C80AA6341C4AECA82A3 /* libRNCSlider.a in Frameworks */,
+				82044CB9516A492DA507931D /* libAirMaps.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -642,6 +646,7 @@
 				4914AD09488B496086B2A2CF /* RNCViewpager.xcodeproj */,
 				5357CC9A7EE9441DB70A4B87 /* BVLinearGradient.xcodeproj */,
 				CF37D3B8CF8B4803AD8951E5 /* RNCSlider.xcodeproj */,
+				2E6A294751C64CDEB2E3994A /* AirMaps.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1327,6 +1332,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1336,6 +1342,7 @@
 					"$(SRCROOT)/../node_modules/@react-native-community/viewpager/ios",
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
 					"$(SRCROOT)/../node_modules/@react-native-community/slider/ios",
+					"$(SRCROOT)/../node_modules/react-native-maps/lib/ios/**",
 				);
 			};
 			name = Debug;
@@ -1366,6 +1373,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1375,6 +1383,7 @@
 					"$(SRCROOT)/../node_modules/@react-native-community/viewpager/ios",
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
 					"$(SRCROOT)/../node_modules/@react-native-community/slider/ios",
+					"$(SRCROOT)/../node_modules/react-native-maps/lib/ios/**",
 				);
 			};
 			name = Release;
@@ -1403,6 +1412,7 @@
 					"$(SRCROOT)/../node_modules/@react-native-community/viewpager/ios",
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
 					"$(SRCROOT)/../node_modules/@react-native-community/slider/ios",
+					"$(SRCROOT)/../node_modules/react-native-maps/lib/ios/**",
 				);
 			};
 			name = Debug;
@@ -1430,6 +1440,7 @@
 					"$(SRCROOT)/../node_modules/@react-native-community/viewpager/ios",
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
 					"$(SRCROOT)/../node_modules/@react-native-community/slider/ios",
+					"$(SRCROOT)/../node_modules/react-native-maps/lib/ios/**",
 				);
 			};
 			name = Release;
@@ -1468,6 +1479,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1477,6 +1489,7 @@
 					"$(SRCROOT)/../node_modules/@react-native-community/viewpager/ios",
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
 					"$(SRCROOT)/../node_modules/@react-native-community/slider/ios",
+					"$(SRCROOT)/../node_modules/react-native-maps/lib/ios/**",
 				);
 			};
 			name = Debug;
@@ -1515,6 +1528,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1524,6 +1538,7 @@
 					"$(SRCROOT)/../node_modules/@react-native-community/viewpager/ios",
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
 					"$(SRCROOT)/../node_modules/@react-native-community/slider/ios",
+					"$(SRCROOT)/../node_modules/react-native-maps/lib/ios/**",
 				);
 			};
 			name = Release;
@@ -1561,6 +1576,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1570,6 +1586,7 @@
 					"$(SRCROOT)/../node_modules/@react-native-community/viewpager/ios",
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
 					"$(SRCROOT)/../node_modules/@react-native-community/slider/ios",
+					"$(SRCROOT)/../node_modules/react-native-maps/lib/ios/**",
 				);
 			};
 			name = Debug;
@@ -1607,6 +1624,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1616,6 +1634,7 @@
 					"$(SRCROOT)/../node_modules/@react-native-community/viewpager/ios",
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
 					"$(SRCROOT)/../node_modules/@react-native-community/slider/ios",
+					"$(SRCROOT)/../node_modules/react-native-maps/lib/ios/**",
 				);
 			};
 			name = Release;

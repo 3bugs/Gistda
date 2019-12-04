@@ -116,7 +116,7 @@ export default class Pager<T extends Route> extends React.Component<Props<T>> {
     const { index, routes } = navigationState;
 
     if (
-      // Check for index in state to avoid unintended transition if component updates during swipe
+      // Check for index in state to avoid unintended transition if component updates during swipeStart
       (index !== prevProps.navigationState.index &&
         index !== this.currentIndexValue) ||
       // Check if the user updated the index correctly after an update
@@ -222,12 +222,12 @@ export default class Pager<T extends Route> extends React.Component<Props<T>> {
   // Whether the user is currently dragging the screen
   private isSwiping: Animated.Value<Binary> = new Value(FALSE);
 
-  // Whether the update was due to swipe gesture
+  // Whether the update was due to swipeStart gesture
   // This controls whether the transition will use a spring or timing animation
   // Remember to set it before transition needs to occur
   private isSwipeGesture: Animated.Value<Binary> = new Value(FALSE);
 
-  // Track the index value when a swipe gesture has ended
+  // Track the index value when a swipeStart gesture has ended
   // This lets us know if a gesture end triggered a tab switch or not
   private indexAtSwipeEnd: Animated.Value<number> = new Value(
     this.props.navigationState.index
@@ -312,7 +312,7 @@ export default class Pager<T extends Route> extends React.Component<Props<T>> {
   // This will ensure smoother animation and avoid weird glitches
   private currentIndexValue = this.props.navigationState.index;
 
-  // The pending index value as result of state update caused by swipe gesture
+  // The pending index value as result of state update caused by swipeStart gesture
   // We need to set it when state changes from inside this component
   // It also needs to be reset right after componentDidUpdate fires
   private pendingIndexValue: number | undefined = undefined;
@@ -404,7 +404,7 @@ export default class Pager<T extends Route> extends React.Component<Props<T>> {
       ]),
       cond(
         this.isSwipeGesture,
-        // Animate the values with a spring for swipe
+        // Animate the values with a spring for swipeStart
         [
           cond(
             not(clockRunning(this.clock)),
@@ -577,8 +577,8 @@ export default class Pager<T extends Route> extends React.Component<Props<T>> {
         this.transitionTo(
           cond(
             and(
-              // We should consider velocity and gesture distance only when a swipe ends
-              // The gestureX value will be non-zero when swipe has happened
+              // We should consider velocity and gesture distance only when a swipeStart ends
+              // The gestureX value will be non-zero when swipeStart has happened
               // We check against a minimum distance instead of 0 because `activeOffsetX` doesn't seem to be respected on Android
               // For other factors such as state update, the velocity and gesture distance don't matter
               greaterThan(abs(this.gestureX), SWIPE_DISTANCE_MINIMUM),
@@ -587,7 +587,7 @@ export default class Pager<T extends Route> extends React.Component<Props<T>> {
                 divide(this.layoutWidth, 2)
               )
             ),
-            // For swipe gesture, to calculate the index, determine direction and add to index
+            // For swipeStart gesture, to calculate the index, determine direction and add to index
             // When the user swipes towards the left, we transition to the next tab
             // When the user swipes towards the right, we transition to the previous tab
             round(

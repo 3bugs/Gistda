@@ -9,13 +9,14 @@
             <touchable-opacity class="menu-icon-touchable"
                                :on-press="handleClickMap">
                 <image :source="imageMap"
-                       class="menu-icon"
-                       resize-mode="contain"/>
+                       resize-mode="contain"
+                       :style="{width: 22, height: 22}"/>
             </touchable-opacity>
 
             <text class="title">ข่าว</text>
 
-            <view class="menu-icon"/>
+            <view :style="{width: 22, height: 22}"/>
+
             <!--<touchable-opacity class="alert-icon-touchable">
                 <image :source="MAP_HEADER.alertIcon[province]"
                        class="alert-icon"
@@ -31,7 +32,8 @@
                   })"
                   :_initial-layout="{width: Dimensions.get('window').width}"
                   :on-index-change="handlePageChange"
-                  :style="{backgroundColor: 'white'}">
+                  :on-swipe-start="() => {swipeStart = true}"
+                  :swipeEnabled="true">
             <!--<view render-prop-fn="renderTabBar">
                 <tab-bar
                         :indicator-style="{backgroundColor: 'white'}"
@@ -64,7 +66,11 @@
 
     export default {
         components: {TabView, TabBar, LinearGradient},
-        props: {},
+        props: {
+            navigation: { // stack navigator
+                type: Object
+            }
+        },
         computed: {
             province() {
                 return store.state.province;
@@ -82,18 +88,32 @@
                 SceneMap,
                 NewsPr, NewsSafety, NewsGuide,
                 imageMap,
+                swipeStart: false,
             };
         },
         methods: {
             handlePageChange: function (index) {
-                // ถ้ากำหนดแค่ state.index จะไม่ work (กด tab จะไม่เปลี่ยนหน้า)
-                this.state = {
+                // ถ้ากำหนด index แบบนี้ ต้องกดแท็บ 2 ทีถึงจะเปลี่ยนหน้า แต่ swipeStart ไม่มีปัญหา
+                //this.state.index = index;
+
+                // ถ้ากำหนด index แบบนี้ เวลา swipeStart จะเด้งไปมาไม่หยุด แต่กดแท็บเปลี่ยนหน้าได้
+                /*this.state = {
                     index,
                     routes,
-                };
+                };*/
+
+                if (this.swipeStart) {
+                    this.state.index = index;
+                    this.swipeStart = false;
+                } else {
+                    this.state = {
+                        index,
+                        routes,
+                    };
+                }
             },
             handleClickMap: function () {
-                //todo:
+                this.navigation.goBack();
             }
         },
     }
@@ -114,11 +134,6 @@
         border-color: yellow;
     }
 
-    .menu-icon {
-        width: 22;
-        height: 22;
-    }
-
     .title {
         flex: 1;
         text-align: center;
@@ -128,5 +143,13 @@
         font-size: 24;
         border-width: 0;
         border-color: yellow;
+    }
+
+    .menu-icon-touchable {
+        align-self: center;
+        padding-left: 0;
+        padding-right: 8;
+        padding-top: 8;
+        padding-bottom: 8;
     }
 </style>

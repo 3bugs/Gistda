@@ -46,7 +46,7 @@
     export default {
         components: {TabBarItem},
         props: {
-            navigation: {
+            navigation: { // bottom nav
                 type: Object
             }
         },
@@ -55,7 +55,9 @@
                 return store.state.province;
             },
             currentRouteIndex() {
-                return this.navigation.state.index;
+                return this.navigation.state.index === 0
+                    ? -1
+                    : this.navigation.state.index;
             }
         },
         data: () => {
@@ -81,9 +83,19 @@
                 let routeName = null;
                 switch (itemIndex) {
                     case 0:
-                        /*routeName = 'Settings';
-                        this.homeIcon = icHomeOn;*/
-                        break;
+                        /*const stackNavigation = this.navigation.getParam('stackNavigation', null);
+                        if (stackNavigation) {
+                            stackNavigation.goBack();
+                        }*/
+
+                        if (this.navigation.state.params) {
+                            const {stackNavigation} = this.navigation.state.params;
+                            if (stackNavigation) {
+                                //stackNavigation.goBack(null);
+                                stackNavigation.navigate('Province');
+                            }
+                        }
+                        return;
                     case 1:
                         routeName = 'News';
                         break;

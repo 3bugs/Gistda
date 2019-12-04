@@ -133,7 +133,7 @@
     export default {
         components: {MapView, Marker, LinearGradient, CardView, Drawer, FilterPanel, Slider},
         props: {
-            navigation: { // stack navigator
+            navigation: { // bottom nav
                 type: Object
             }
         },
