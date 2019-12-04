@@ -37,7 +37,7 @@ export function LOGOUT({commit, state}, callback) {
 }
 */
 
-import {fetchCoordinateCategories, fetchCoordinates} from './fetch';
+import {fetchCoordinateCategories, fetchCoordinates, fetchNews} from './fetch';
 
 import imageFilterGeoAccident from '../../assets/images/sidebar/ic_filter_geo_accident.png';
 import imageFilterGeoRiskArea from '../../assets/images/sidebar/ic_filter_geo_risk_area.png';
@@ -170,6 +170,23 @@ export function FETCH_COORDINATE({commit, state}, {}) {
             },
         ], // mapDataList
     });
+}
+
+export async function FETCH_NEWS({commit, state}, {province, callback}) {
+    commit('FETCHING_NEWS');
+
+    const apiResult = await fetchNews(province);
+    if (apiResult.success) {
+        commit('SET_NEWS', {
+            newsList: apiResult.data.list
+        });
+        callback(true, null);
+    } else {
+        commit('SET_NEWS', {
+            newsList: null
+        });
+        callback(false, apiResult.message);
+    }
 }
 
 export function SET_MARKER_OPACITY({commit, state}, {id, index, typeIndex, opacity}) {

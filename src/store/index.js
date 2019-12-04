@@ -24,6 +24,9 @@ const store = new Vuex.Store({
 
         /*loadingMapDataList: false,
         mapDataList: [],*/
+
+        loadingNews: false,
+        newsList: null,
     }
 });
 

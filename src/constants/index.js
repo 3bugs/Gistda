@@ -11,6 +11,10 @@ export const DEBUG = true;
 
 export const PROVINCE_NAME_TH = ['นครปฐม', 'ยโสธร'];
 export const PROVINCE_NAME_EN = ['Nakhon Pathom', 'Yasothon'];
+
+export const COLOR_PRIMARY = ['#4041da', '#f47442'];
+export const COLOR_PRIMARY_DARK = ['#09097e', '#ed4100'];
+
 export const MAP_HEADER = {
     height: 118,
     title: [
@@ -19,13 +23,13 @@ export const MAP_HEADER = {
     ],
     background: [
         {
-            startColor: '#09097e',
-            endColor: '#4041da',
+            startColor: COLOR_PRIMARY_DARK[0],
+            endColor: COLOR_PRIMARY[0],
         },
         {
-            startColor: '#ed4100',
+            startColor: COLOR_PRIMARY_DARK[1],
             old_endColor: '#ff7946',
-            endColor: '#f47442',
+            endColor: COLOR_PRIMARY[1],
         },
     ],
     alertIcon: [
@@ -51,12 +55,12 @@ export const SIDEBAR = {
     background: [
         {
             startColor: '#090963',
-            endColor: '#4041da',
+            endColor: COLOR_PRIMARY[0],
         },
         {
             startColor: '#d93d00',
             old_endColor: '#ff7946',
-            endColor: '#f47442',
+            endColor: COLOR_PRIMARY[1],
         },
     ],
     filterTypeTextColor: [
@@ -64,8 +68,8 @@ export const SIDEBAR = {
         '#ffd668'
     ],
     sliderColor: [
-        '#4041da',
-        '#ff7946'
+        COLOR_PRIMARY[0],
+        COLOR_PRIMARY[1]
     ]
 };
 export const BOTTOM_NAV = {

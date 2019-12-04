@@ -5,7 +5,7 @@
                                  MAP_HEADER.background[province].endColor
                                  ]"
                      :style="{paddingTop: STATUS_BAR_HEIGHT}">
-        <touchable-opacity class="menu-icon-touchable"
+        <touchable-opacity class="left-icon-touchable"
                            :on-press="leftIcon.callback">
             <image :source="leftIcon.icon"
                    resize-mode="contain"
@@ -14,13 +14,14 @@
 
         <text class="title">{{title}}</text>
 
-        <view :style="{width: 22, height: 22}"/>
+        <!--<view :style="{width: 22, height: 22}"/>-->
 
-        <!--<touchable-opacity class="alert-icon-touchable">
-            <image :source="MAP_HEADER.alertIcon[province]"
-                   class="alert-icon"
-                   resize-mode="contain"/>
-        </touchable-opacity>-->
+        <touchable-opacity class="right-icon-touchable"
+                           :on-press="rightIcon.callback">
+            <image :source="rightIcon.icon"
+                   resize-mode="contain"
+                   :style="{width: leftIcon.width, height: leftIcon.height}"/>
+        </touchable-opacity>
     </linear-gradient>
 </template>
 
@@ -39,7 +40,10 @@
             },
             leftIcon: {
                 type: Object
-            }
+            },
+            rightIcon: {
+                type: Object
+            },
         },
         computed: {
             province() {
@@ -78,10 +82,18 @@
         border-color: yellow;
     }
 
-    .menu-icon-touchable {
+    .left-icon-touchable {
         align-self: center;
         padding-left: 0;
         padding-right: 8;
+        padding-top: 8;
+        padding-bottom: 8;
+    }
+
+    .right-icon-touchable {
+        align-self: center;
+        padding-left: 8;
+        padding-right: 0;
         padding-top: 8;
         padding-bottom: 8;
     }

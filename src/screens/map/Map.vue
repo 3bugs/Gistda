@@ -13,7 +13,7 @@
         </view>
 
         <view class="container"
-              :style="{marginBottom: BOTTOM_NAV_HEIGHT}">
+              :style="{marginBottom: BOTTOM_NAV.height}">
             <map-view class="map-view"
                       :initial-region="{
                       latitude: 13.8196,
@@ -115,7 +115,7 @@
 
 <script>
     import store from '../../store';
-    import {DEBUG, MAP_HEADER, BOTTOM_NAV_HEIGHT} from '../../constants';
+    import {DEBUG, MAP_HEADER, BOTTOM_NAV} from '../../constants';
 
     import MapView, {Marker} from 'react-native-maps';
     import LinearGradient from 'react-native-linear-gradient';
@@ -150,7 +150,7 @@
         },
         data: () => {
             return {
-                DEBUG, MAP_HEADER, BOTTOM_NAV_HEIGHT,
+                DEBUG, MAP_HEADER, BOTTOM_NAV,
                 imageMenu, imageBack, imageLightOff, imageLightOn,
             };
         },

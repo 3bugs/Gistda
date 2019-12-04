@@ -1,23 +1,3 @@
-/*
-export function SET_POSTS(state, {posts}) {
-    state.loadingPosts = false;
-    state.posts = posts;
-}
-
-export function FETCHING_LISTS(state) {
-    state.loadingPosts = true;
-}
-
-export function LOGGING_IN(state, status) {
-    state.logging_in = status;
-}
-
-export function LOGIN_SUCCESFULL(state, {userObj}) {
-    state.userObj = userObj;
-    state.logging_in = false;
-}
-*/
-
 export function SET_PROVINCE(state, {province}) {
     state.province = province;
 }
@@ -57,6 +37,15 @@ export function SET_COORDINATES(state, {coordinateList}) {
         });
     });
     state.loadingCoordinates = false;
+}
+
+export function FETCHING_NEWS(state) {
+    state.loadingNews = true;
+}
+
+export function SET_NEWS(state, {newsList}) {
+    state.newsList = newsList;
+    state.loadingNews = false;
 }
 
 export function SET_MARKER_OPACITY(state, {id, index, typeIndex, opacity}) {

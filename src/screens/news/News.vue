@@ -1,7 +1,8 @@
 <template>
     <view class="container">
         <header title="ข่าว"
-                :leftIcon="{icon: imageMap, width: 22, height: 22, callback: handleClickMap}"/>
+                :left-icon="{icon: imageMap, width: 22, height: 22, callback: handleClickMap}"
+                :right-icon="{icon: null, width: 22, height: 22, callback: null}"/>
 
         <tab-view :navigation-state="state"
                   :render-scene="SceneMap({
