@@ -6,38 +6,40 @@
                 :card-maxElevation="7"
                 :corner-radius="12"
                 :style="{}">
-            <touchable-opacity
+            <ripple
                     class="content-touchable"
-                    :active-opacity="0.5"
+                    :ripple-color="COLOR_PRIMARY[province]"
+                    :ripple-opacity="0.2"
+                    :ripple-duration="500"
+                    :_active-opacity="0.5"
                     :on-press="null">
                 <view class="content">
                     <text class="title">{{item.name}}</text>
                     <text class="detail">{{item.detail}}</text>
                 </view>
                 <view class="icon-container">
-                    <image :source="imagePhone"
+                    <image :source="SCREEN_NEWS.phoneIcon[province]"
                            class="icon"
                            resize-mode="cover"/>
                     <text class="phone">{{item.phone}}</text>
                 </view>
-            </touchable-opacity>
-
-
+            </ripple>
         </card-view>
     </view>
 </template>
 
 <script>
     import store from '../../store';
-    import {DEBUG} from '../../constants';
+    import {DEBUG, COLOR_PRIMARY, SCREEN_NEWS} from '../../constants';
 
     import {StyleSheet} from 'react-native';
     import CardView from 'react-native-cardview';
+    import Ripple from 'react-native-material-ripple';
 
-    import imagePhone from '../../../assets/images/screen_news/ic_phone.png';
+    import imagePhone from '../../../assets/images/screen_news/ic_phone_nakhon_pathom.png';
 
     export default {
-        components: {CardView},
+        components: {CardView, Ripple},
         props: {
             item: {
                 type: Object
@@ -46,9 +48,14 @@
                 type: Number
             },
         },
+        computed: {
+            province() {
+                return store.state.province;
+            },
+        },
         data: () => {
             return {
-                StyleSheet,
+                StyleSheet, COLOR_PRIMARY, SCREEN_NEWS,
                 imagePhone,
             };
         },

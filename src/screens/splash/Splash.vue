@@ -20,7 +20,7 @@
     import bg from '../../../assets/images/screen_splash/bg_splash.jpg';
     import logo from '../../../assets/images/screen_splash/ic_logo.png';
 
-    const delayInMilliseconds = 3000;
+    const delayInMilliseconds = 1000;
     const title = 'ระบบภูมิสารสนเทศ\nด้านความปลอดภัยจังหวัด';
     const poweredBy = 'POWERED BY GISTDA';
     const {height, width} = Dimensions.get('window');

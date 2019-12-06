@@ -17,6 +17,7 @@
     import Province from './src/screens/province/Province';
     import Map from './src/screens/map/Map';
     import News from './src/screens/news/News';
+    import NewsDetails from './src/screens/news/NewsDetails';
     import SettingsScreen from './src/screens/map/SettingsScreen';
     import TabBar from './src/components/TabBar';
 
@@ -72,6 +73,12 @@
             },
             BottomTabNavigator: {
                 screen: bottomTabNavigator,
+                navigationOptions: {
+                    header: null,
+                }
+            },
+            NewsDetails: {
+                screen: NewsDetails,
                 navigationOptions: {
                     header: null,
                 }

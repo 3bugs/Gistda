@@ -96,11 +96,11 @@
 
                 switch (route.key) {
                     case 'news':
-                        return <NewsPage page={0}/>;
+                        return <NewsPage page={0} navigation={this.navigation}/>;
                     case 'er':
-                        return <NewsPage page={1}/>;
+                        return <NewsPage page={1} navigation={this.navigation}/>;
                     case 'suggest':
-                        return <NewsPage page={2}/>;
+                        return <NewsPage page={2} navigation={this.navigation}/>;
                 }
             },
         },

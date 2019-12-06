@@ -2,10 +2,14 @@ import imageListNakhonPathom from '../../assets/images/screen_map/ic_list_nakhon
 import imageAlertNakhonPathom from '../../assets/images/screen_map/ic_alert_nakhon_pathom.png';
 import imageListYasothon from '../../assets/images/screen_map/ic_list_yasothon.png';
 import imageAlertYasothon from '../../assets/images/screen_map/ic_alert_yasothon.png';
+
 import buttonAddNakhonPathom from '../../assets/images/bottom_nav/button_add_nakhon_pathom.png';
 import buttonAddYasothon from '../../assets/images/bottom_nav/button_add_yasothon.png';
 import bgBottomNavNakhonPathom from '../../assets/images/bottom_nav/bg_tab_bar_nakhon_pathom.png';
 import bgBottomNavYasothon from '../../assets/images/bottom_nav/bg_tab_bar_yasothon.png';
+
+import imagePhoneNakhonPathom from '../../assets/images/screen_news/ic_phone_nakhon_pathom.png';
+import imagePhoneYasothon from '../../assets/images/screen_news/ic_phone_yasothon.png';
 
 export const DEBUG = true;
 
@@ -85,5 +89,11 @@ export const BOTTOM_NAV = {
     lineColor: [
         '#ea4431',
         '#393abf'
+    ],
+};
+export const SCREEN_NEWS = {
+    phoneIcon: [
+        imagePhoneNakhonPathom,
+        imagePhoneYasothon
     ],
 };

@@ -11,7 +11,8 @@
                 <news-item
                         v-if="page === 0 || page === 2"
                         :item="args.item"
-                        :index="args.index"/>
+                        :index="args.index"
+                        :on-click="handleClickItem"/>
                 <er-item
                         v-if="page === 1"
                         :item="args.item"
@@ -57,6 +58,9 @@
     export default {
         components: {NewsItem, ErItem},
         props: {
+            navigation: {
+                type: Object
+            },
             page: {
                 type: Number
             }
@@ -92,6 +96,10 @@
             };
         },
         methods: {
+            //todo: add method's param
+            handleClickItem: function () {
+                this.navigation.navigate('NewsDetails');
+            },
         },
         created: function () {
             let storeAction = null;
@@ -125,6 +133,7 @@
 <style>
     .container {
         flex: 1;
+        background-color: #f4f6fa;
     }
 
     .list {

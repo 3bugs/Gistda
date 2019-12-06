@@ -1,9 +1,12 @@
 <template>
     <view>
-        <touchable-opacity
+        <ripple
                 class="container"
-                :active-opacity="0.5"
-                :on-press="null">
+                :ripple-color="COLOR_PRIMARY[province]"
+                :ripple-opacity="0.2"
+                :ripple-duration="500"
+                :_active-opacity="0.5"
+                :on-press="() => {onClick(/* todo: send arg */)}">
             <card-view
                     class="cover-image-container"
                     :card-elevation="10"
@@ -27,10 +30,10 @@
                     {{'20/20/2020'}}
                 </text>
             </view>
-        </touchable-opacity>
+        </ripple>
         <view
                 :style="{
-                marginTop: 5,
+                marginTop: 0,
                 marginBottom: 0,
                 marginLeft: 20,
                 marginRight: 20,
@@ -41,13 +44,14 @@
 
 <script>
     import store from '../../store';
-    import {DEBUG} from '../../constants';
+    import {DEBUG, COLOR_PRIMARY} from '../../constants';
 
     import {StyleSheet} from 'react-native';
     import CardView from 'react-native-cardview';
+    import Ripple from 'react-native-material-ripple';
 
     export default {
-        components: {CardView},
+        components: {CardView, Ripple},
         props: {
             item: {
                 type: Object
@@ -55,10 +59,18 @@
             index: {
                 type: Number
             },
+            onClick: {
+                type: Function
+            },
+        },
+        computed: {
+            province() {
+                return store.state.province;
+            },
         },
         data: () => {
             return {
-                StyleSheet,
+                StyleSheet, COLOR_PRIMARY
             };
         },
         methods: {},
@@ -70,9 +82,12 @@
         flex: 1;
         flex-direction: row;
         padding-top: 15;
-        padding-bottom: 15;
+        padding-bottom: 20;
         padding-left: 20;
         padding-right: 20;
+        border-width: 0;
+        border-color: red;
+        background-color: white;
     }
 
     .cover-image-container {
