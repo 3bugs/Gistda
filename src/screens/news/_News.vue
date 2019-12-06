@@ -12,7 +12,7 @@
 
 <script>
     import ScrollableTabView from 'react-native-scrollable-tab-view';
-    import NewsPr from './News-Pr';
+    import NewsPr from './NewsPage';
 
     export default {
         components: {ScrollableTabView, NewsPr},

@@ -43,9 +43,27 @@ export function FETCHING_NEWS(state) {
     state.loadingNews = true;
 }
 
-export function SET_NEWS(state, {newsList}) {
-    state.newsList = newsList;
+export function SET_NEWS(state, {dataList}) {
+    state.newsList = dataList;
     state.loadingNews = false;
+}
+
+export function FETCHING_ER(state) {
+    state.loadingEr = true;
+}
+
+export function SET_ER(state, {dataList}) {
+    state.erList = dataList;
+    state.loadingEr = false;
+}
+
+export function FETCHING_SUGGEST(state) {
+    state.loadingSuggest = true;
+}
+
+export function SET_SUGGEST(state, {dataList}) {
+    state.suggestList = dataList;
+    state.loadingSuggest = false;
 }
 
 export function SET_MARKER_OPACITY(state, {id, index, typeIndex, opacity}) {

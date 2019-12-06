@@ -1,19 +1,25 @@
 <template>
     <view class="container">
         <header title="ข่าว"
-                :left-icon="{icon: imageMap, width: 22, height: 22, callback: handleClickMap}"
-                :right-icon="{icon: null, width: 22, height: 22, callback: null}"/>
-
+                :left-icon="{
+                    icon: imageMap,
+                    width: 22,
+                    height: 22,
+                    callback: handleClickMap
+                }"
+                :right-icon="{
+                    icon: null,
+                    width: 22,
+                    height: 22,
+                    callback: null
+                }"/>
         <tab-view :navigation-state="state"
-                  :render-scene="SceneMap({
-                  pr: NewsPr,
-                  safety: NewsSafety,
-                  guide: NewsGuide,
-                  })"
+                  :render-scene="renderScene"
                   :_initial-layout="{width: Dimensions.get('window').width}"
                   :on-index-change="handlePageChange"
                   :on-swipe-start="() => {swipeStart = true}"
-                  :swipeEnabled="true">
+                  :swipeEnabled="true"
+                  :lazy="false">
             <!--<view render-prop-fn="renderTabBar">
                 <tab-bar
                         :indicator-style="{backgroundColor: 'white'}"
@@ -27,25 +33,24 @@
     import store from '../../store';
     import Header from '../../components/Header';
 
+    import React from 'react';
     import {Dimensions} from 'react-native';
     //import {TabView, TabBar, SceneMap} from 'react-native-tab-view';
     import {TabView, TabBar, SceneMap} from '../../modules/my-react-native-tab-view/src';
-    import NewsPr from './News-Pr';
-    import NewsSafety from './News-Safety';
-    import NewsGuide from './News-Guide';
+    import NewsPage from './NewsPage';
 
     import imageMap from '../../../assets/images/screen_map/ic_map.png';
 
     const routes = [
-        {key: 'pr', title: 'ประชาสัมพันธ์'},
-        {key: 'safety', title: 'ความปลอดภัย'},
-        {key: 'guide', title: 'คำแนะนำ'},
+        {key: 'news', title: 'ประชาสัมพันธ์'},
+        {key: 'er', title: 'ความปลอดภัย'},
+        {key: 'suggest', title: 'คำแนะนำ'},
     ];
 
     export default {
-        components: {Header, TabView, TabBar},
+        components: {Header, TabView, TabBar, NewsPage},
         props: {
-            navigation: { // stack navigator
+            navigation: { // bottom nav
                 type: Object
             }
         },
@@ -57,7 +62,7 @@
                     routes,
                 },
                 SceneMap,
-                NewsPr, NewsSafety, NewsGuide,
+                //NewsPage, NewsSafety, NewsGuide,
                 imageMap,
                 swipeStart: false,
             };
@@ -85,7 +90,19 @@
             },
             handleClickMap: function () {
                 this.navigation.goBack();
-            }
+            },
+            renderScene: function ({route}) {
+                if (!route.key) return null;
+
+                switch (route.key) {
+                    case 'news':
+                        return <NewsPage page={0}/>;
+                    case 'er':
+                        return <NewsPage page={1}/>;
+                    case 'suggest':
+                        return <NewsPage page={2}/>;
+                }
+            },
         },
     }
 </script>

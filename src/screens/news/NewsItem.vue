@@ -2,6 +2,7 @@
     <view>
         <touchable-opacity
                 class="container"
+                :active-opacity="0.5"
                 :on-press="null">
             <card-view
                     class="cover-image-container"
@@ -14,8 +15,17 @@
                        resize-mode="cover"/>
             </card-view>
             <view class="content">
-                <text class="title">{{item.title}}</text>
-                <text class="caption">{{item.caption}}</text>
+                <text class="title"
+                      :numberOfLines="1">
+                    {{item.title}}
+                </text>
+                <text class="caption"
+                      :numberOfLines="2">
+                    {{item.caption}}
+                </text>
+                <text class="date">
+                    {{'20/20/2020'}}
+                </text>
             </view>
         </touchable-opacity>
         <view
@@ -93,5 +103,12 @@
         font-family: DBHeavent;
         font-size: 18;
         color: #626b80;
+        margin-bottom: 5;
+    }
+
+    .date {
+        font-family: DBHeavent;
+        font-size: 18;
+        color: #dadada;
     }
 </style>

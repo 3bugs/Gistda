@@ -1,6 +1,10 @@
 import ApiResult from '../model/ApiResult';
 
 const baseURL = 'https://fenrir.studio/d/gistda_dev';
+const provinceCode = [
+    35, //73, // นครปฐม
+    35, // ยโสธร
+];
 
 export async function _fetch(path) {
     const url = `${baseURL}/${path}`;
@@ -105,8 +109,21 @@ export function fetchCoordinates() {
 
 export async function fetchNews(province) {
     //news/pr?province_code=35&limit=20&offset=0
-    province = 35; //todo: ***********************************
     const LIMIT = 20;
     const OFFSET = 0;
-    return await _fetch(`news/pr?province_code=${province}&limit=${LIMIT}&offset=${OFFSET}`);
+    return await _fetch(`news/pr?province_code=${provinceCode[province]}&limit=${LIMIT}&offset=${OFFSET}`);
+}
+
+export async function fetchEr(province) {
+    //er?province_code=35
+    const LIMIT = 20;
+    const OFFSET = 0;
+    return await _fetch(`er?province_code=${provinceCode[province]}&limit=${LIMIT}&offset=${OFFSET}`);
+}
+
+export async function fetchSuggest(province) {
+    //news/suggest?province_code=35&limit=20&offset=0
+    const LIMIT = 20;
+    const OFFSET = 0;
+    return await _fetch(`news/suggest?province_code=${provinceCode[province]}&limit=${LIMIT}&offset=${OFFSET}`);
 }

@@ -27,6 +27,10 @@ const store = new Vuex.Store({
 
         loadingNews: false,
         newsList: null,
+        loadingEr: false,
+        erList: null,
+        loadingSuggest: false,
+        suggestList: null,
     }
 });
 

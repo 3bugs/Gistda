@@ -1,4 +1,4 @@
-import {fetchPosts} from './fetch';
+import {fetchPosts, fetchSuggest} from './fetch';
 import {AsyncStorage} from 'react-native';
 
 // ensure data for rendering given list type
@@ -37,7 +37,12 @@ export function LOGOUT({commit, state}, callback) {
 }
 */
 
-import {fetchCoordinateCategories, fetchCoordinates, fetchNews} from './fetch';
+import {
+    fetchCoordinateCategories,
+    fetchCoordinates,
+    fetchNews,
+    fetchEr,
+} from './fetch';
 
 import imageFilterGeoAccident from '../../assets/images/sidebar/ic_filter_geo_accident.png';
 import imageFilterGeoRiskArea from '../../assets/images/sidebar/ic_filter_geo_risk_area.png';
@@ -178,12 +183,63 @@ export async function FETCH_NEWS({commit, state}, {province, callback}) {
     const apiResult = await fetchNews(province);
     if (apiResult.success) {
         commit('SET_NEWS', {
-            newsList: apiResult.data.list
+            dataList: apiResult.data.list
         });
         callback(true, null);
     } else {
         commit('SET_NEWS', {
-            newsList: null
+            dataList: null
+        });
+        callback(false, apiResult.message);
+    }
+}
+
+export async function FETCH_ER({commit, state}, {province, callback}) {
+    commit('FETCHING_ER');
+
+    const apiResult = await fetchEr(province);
+    if (apiResult.success) {
+
+        const tempList = [];
+        if (apiResult.data.list.length > 0) {
+            tempList.push(apiResult.data.list[0]);
+            tempList.push(apiResult.data.list[0]);
+            tempList.push(apiResult.data.list[0]);
+            tempList.push(apiResult.data.list[0]);
+            tempList.push(apiResult.data.list[0]);
+            tempList.push(apiResult.data.list[0]);
+            tempList.push(apiResult.data.list[0]);
+            tempList.push(apiResult.data.list[0]);
+            tempList.push(apiResult.data.list[0]);
+            tempList.push(apiResult.data.list[0]);
+            tempList.push(apiResult.data.list[0]);
+            tempList.push(apiResult.data.list[0]);
+        }
+
+        commit('SET_ER', {
+            dataList: tempList //apiResult.data.list
+        });
+        callback(true, null);
+    } else {
+        commit('SET_ER', {
+            dataList: null
+        });
+        callback(false, apiResult.message);
+    }
+}
+
+export async function FETCH_SUGGEST({commit, state}, {province, callback}) {
+    commit('FETCHING_SUGGEST');
+
+    const apiResult = await fetchSuggest(province);
+    if (apiResult.success) {
+        commit('SET_SUGGEST', {
+            dataList: apiResult.data.list
+        });
+        callback(true, null);
+    } else {
+        commit('SET_SUGGEST', {
+            dataList: null
         });
         callback(false, apiResult.message);
     }
