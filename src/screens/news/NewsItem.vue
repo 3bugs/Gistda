@@ -6,7 +6,11 @@
                 :ripple-opacity="0.2"
                 :ripple-duration="500"
                 :_active-opacity="0.5"
-                :on-press="() => {onClick(item)}">
+                :on-press="() => {onClick(item)}"
+                :style="{
+                    paddingLeft: DIMENSION.horizontal_margin,
+                    paddingRight: DIMENSION.horizontal_margin
+                }">
             <card-view
                     class="cover-image-container"
                     :card-elevation="10"
@@ -31,20 +35,20 @@
                 </text>
             </view>
         </ripple>
-        <view
-                :style="{
-                marginTop: 0,
-                marginBottom: 0,
-                marginLeft: 20,
-                marginRight: 20,
-                borderBottomWidth: StyleSheet.hairlineWidth,
-                borderBottomColor: '#999999'}"/>
+        <view :style="{
+                    marginTop: 0,
+                    marginBottom: 0,
+                    marginLeft: DIMENSION.horizontal_margin,
+                    marginRight: DIMENSION.horizontal_margin,
+                    borderBottomWidth: StyleSheet.hairlineWidth,
+                    borderBottomColor: '#999999'
+        }"/>
     </view>
 </template>
 
 <script>
     import store from '../../store';
-    import {DEBUG, COLOR_PRIMARY} from '../../constants';
+    import {DEBUG, COLOR_PRIMARY, DIMENSION} from '../../constants';
 
     import {StyleSheet} from 'react-native';
     import CardView from 'react-native-cardview';
@@ -70,7 +74,7 @@
         },
         data: () => {
             return {
-                StyleSheet, COLOR_PRIMARY
+                StyleSheet, COLOR_PRIMARY, DIMENSION
             };
         },
         methods: {},
@@ -83,8 +87,6 @@
         flex-direction: row;
         padding-top: 15;
         padding-bottom: 20;
-        padding-left: 20;
-        padding-right: 20;
         border-width: 0;
         border-color: red;
         background-color: white;
@@ -124,6 +126,6 @@
     .date {
         font-family: DBHeavent;
         font-size: 18;
-        color: #dadada;
+        color: #cccccc;
     }
 </style>

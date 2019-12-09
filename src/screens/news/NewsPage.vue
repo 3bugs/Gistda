@@ -12,11 +12,12 @@
                         v-if="page === 0 || page === 2"
                         :item="args.item"
                         :index="args.index"
-                        :on-click="handleClickItem"/>
+                        :on-click="handleClickNewsItem"/>
                 <er-item
                         v-if="page === 1"
                         :item="args.item"
-                        :index="args.index"/>
+                        :index="args.index"
+                        :on-click="handleClickErItem"/>
             </view>
             <!--<view render-prop="ListEmptyComponent"
                   :style="{width: '100%', height: '100%', borderWidth: 1, borderColor: 'blue'}">
@@ -38,25 +39,21 @@
                 class="progress"
                 size="large"
                 :color="COLOR_PRIMARY[province]"
-                v-if="isLoading"/>
+                v-if="isLoading || isLoadingNewsDetails"/>
 
-        <view v-if="dataList && dataList.length === 0"
-              :style="{flex: 1, justifyContent: 'center', alignItems: 'center'}">
-            <text :style="{fontFamily: 'DBHeaventt-Light', fontSize: 24, color: '#333333'}">
-                ไม่มีข้อมูล
-            </text>
-        </view>
+        <no-data v-if="dataList && dataList.length === 0"/>
     </view>
 </template>
 
 <script>
     import store from '../../store';
     import {DEBUG, PROVINCE_NAME_EN, BOTTOM_NAV, COLOR_PRIMARY} from '../../constants';
+    import NoData from '../../components/NoData';
     import NewsItem from './NewsItem';
     import ErItem from './ErItem';
 
     export default {
-        components: {NewsItem, ErItem},
+        components: {NewsItem, ErItem, NoData},
         props: {
             navigation: {
                 type: Object
@@ -89,6 +86,9 @@
                         return store.state.suggestList[PROVINCE_NAME_EN[this.province]];
                 }
             },
+            isLoadingNewsDetails() {
+                return store.state.loadingNewsDetails[PROVINCE_NAME_EN[this.province]];
+            },
             newsDetailsList() {
                 return store.state.newsDetailsList[PROVINCE_NAME_EN[this.province]];
             }
@@ -99,7 +99,7 @@
             };
         },
         methods: {
-            handleClickItem: function (item) {
+            handleClickNewsItem: function (item) {
                 let cachedItem = null;
                 this.newsDetailsList.forEach(newsDetails => {
                     if (item.id === newsDetails.id) {
@@ -132,6 +132,9 @@
                     });
                 }
             },
+            handleClickErItem: function () {
+                // todo:
+            }
         },
         created: function () {
             let storeAction = null;

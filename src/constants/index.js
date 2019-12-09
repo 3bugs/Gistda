@@ -19,6 +19,9 @@ export const PROVINCE_NAME_EN = ['Nakhon Pathom', 'Yasothon'];
 export const COLOR_PRIMARY = ['#4041da', '#f47442'];
 export const COLOR_PRIMARY_DARK = ['#09097e', '#ed4100'];
 
+export const DIMENSION = {
+    horizontal_margin: 20,
+};
 export const MAP_HEADER = {
     height: 118,
     title: [

@@ -1,9 +1,13 @@
 <template>
-    <view class="container">
+    <view class="container"
+          :style="{
+                paddingLeft: DIMENSION.horizontal_margin,
+                paddingRight: DIMENSION.horizontal_margin
+          }">
         <card-view
                 class="card"
-                :card-elevation="7"
-                :card-maxElevation="7"
+                :card-elevation="6"
+                :card-maxElevation="6"
                 :corner-radius="12"
                 :style="{}">
             <ripple
@@ -39,7 +43,7 @@
 
 <script>
     import store from '../../store';
-    import {DEBUG, COLOR_PRIMARY, SCREEN_NEWS} from '../../constants';
+    import {DEBUG, COLOR_PRIMARY, SCREEN_NEWS, DIMENSION} from '../../constants';
 
     import {StyleSheet} from 'react-native';
     import CardView from 'react-native-cardview';
@@ -64,7 +68,7 @@
         },
         data: () => {
             return {
-                StyleSheet, COLOR_PRIMARY, SCREEN_NEWS,
+                StyleSheet, COLOR_PRIMARY, SCREEN_NEWS, DIMENSION,
                 imagePhone,
             };
         },
@@ -76,8 +80,6 @@
     .container {
         padding-top: 5;
         padding-bottom: 10;
-        padding-left: 20;
-        padding-right: 20;
         border-width: 0;
         border-color: orangered;
     }
