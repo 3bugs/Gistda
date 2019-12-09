@@ -6,7 +6,7 @@
                 :ripple-opacity="0.2"
                 :ripple-duration="500"
                 :_active-opacity="0.5"
-                :on-press="() => {onClick(/* todo: send arg */)}">
+                :on-press="() => {onClick(item)}">
             <card-view
                     class="cover-image-container"
                     :card-elevation="10"

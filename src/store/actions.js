@@ -53,7 +53,7 @@ export async function SET_PROVINCE({commit, state}, {province, callback}) {
     commit('FETCHING_COORDINATE_CATEGORIES');
 
     //todo: รเบุ province
-    const apiResult = await fetchCoordinateCategories();
+    const apiResult = await fetchCoordinateCategories(province);
     if (apiResult.success) {
         commit('SET_COORDINATE_CATEGORIES', {
             coordinateCategoryList: apiResult.data.list
@@ -199,25 +199,8 @@ export async function FETCH_ER({commit, state}, {province, callback}) {
 
     const apiResult = await fetchEr(province);
     if (apiResult.success) {
-
-        const tempList = [];
-        if (apiResult.data.list.length > 0) {
-            tempList.push(apiResult.data.list[0]);
-            tempList.push(apiResult.data.list[0]);
-            tempList.push(apiResult.data.list[0]);
-            tempList.push(apiResult.data.list[0]);
-            tempList.push(apiResult.data.list[0]);
-            tempList.push(apiResult.data.list[0]);
-            tempList.push(apiResult.data.list[0]);
-            tempList.push(apiResult.data.list[0]);
-            tempList.push(apiResult.data.list[0]);
-            tempList.push(apiResult.data.list[0]);
-            tempList.push(apiResult.data.list[0]);
-            tempList.push(apiResult.data.list[0]);
-        }
-
         commit('SET_ER', {
-            dataList: tempList //apiResult.data.list
+            dataList: apiResult.data.list
         });
         callback(true, null);
     } else {

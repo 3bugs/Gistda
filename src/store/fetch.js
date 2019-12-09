@@ -2,7 +2,7 @@ import ApiResult from '../model/ApiResult';
 
 const baseURL = 'https://fenrir.studio/d/gistda_dev';
 const provinceCode = [
-    35, //73, // นครปฐม
+    73, // นครปฐม
     35, // ยโสธร
 ];
 
@@ -41,6 +41,7 @@ export async function _fetch(path) {
 }
 
 export async function fetchCoordinateCategories(province) {
+    //todo: รเบุ province
     return await _fetch(`coords/categories`);
 }
 

@@ -13,6 +13,13 @@
                     height: 18,
                     callback: null
                 }"/>
+
+        <!--todo: Compose UI-->
+
+        <text>ID: {{item.id}}</text>
+        <text>Title: {{item.title}}</text>
+        <text>Caption: {{item.caption}}</text>
+        <text>Image URL: {{item.image}}</text>
     </view>
 </template>
 
@@ -27,11 +34,18 @@
 
     export default {
         components: {Header},
-        props: {},
+        props: {
+            navigation: {
+                type: Object
+            },
+        },
         computed: {
             province() {
                 return store.state.province;
             },
+            item() {
+                return this.navigation.getParam('item');
+            }
         },
         data: () => {
             return {
@@ -42,9 +56,14 @@
         },
         methods: {
             handleClickBack: function () {
-                //todo:
+                this.navigation.goBack();
             },
         },
+        created: function () {
+            //alert(this.item.id);
+            //todo: Get details by ID (this.item.id) from API
+
+        }
     }
 </script>
 

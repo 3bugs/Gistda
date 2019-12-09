@@ -115,7 +115,7 @@
 
 <script>
     import store from '../../store';
-    import {DEBUG, MAP_HEADER, BOTTOM_NAV} from '../../constants';
+    import {DEBUG, MAP_HEADER, BOTTOM_NAV, PROVINCE_NAME_EN} from '../../constants';
 
     import MapView, {Marker} from 'react-native-maps';
     import LinearGradient from 'react-native-linear-gradient';
@@ -142,7 +142,7 @@
                 return store.state.province;
             },
             mapDataList() {
-                return store.state.coordinateCategoryList;
+                return store.state.coordinateCategoryList[PROVINCE_NAME_EN[this.province]];
             },
             drawerOpen() {
                 return store.state.drawerOpen;

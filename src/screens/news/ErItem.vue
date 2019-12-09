@@ -12,16 +12,25 @@
                     :ripple-opacity="0.2"
                     :ripple-duration="500"
                     :_active-opacity="0.5"
+                    :ripple-sequential="false"
                     :on-press="null">
                 <view class="content">
-                    <text class="title">{{item.name}}</text>
-                    <text class="detail">{{item.detail}}</text>
+                    <text class="title"
+                          :numberOfLines="1">
+                        {{item.name}}
+                    </text>
+                    <text class="detail"
+                          :numberOfLines="1">
+                        {{item.detail}}
+                    </text>
                 </view>
                 <view class="icon-container">
                     <image :source="SCREEN_NEWS.phoneIcon[province]"
                            class="icon"
                            resize-mode="cover"/>
-                    <text class="phone">{{item.phone}}</text>
+                    <text class="phone">
+                        {{item.phone}}
+                    </text>
                 </view>
             </ripple>
         </card-view>

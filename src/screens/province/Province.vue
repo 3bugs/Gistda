@@ -160,6 +160,7 @@
                             this.navigation.navigate(
                                 'BottomTabNavigator',
                                 {
+                                    // todo: refactor, คิดว่าไม่จำเป็นต้องส่ง stack navigation ไป
                                     stackNavigation: this.navigation,
                                 }
                             );

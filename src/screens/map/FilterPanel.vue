@@ -27,7 +27,7 @@
 
 <script>
     import store from '../../store';
-    import {DEBUG, SIDEBAR} from '../../constants';
+    import {DEBUG, SIDEBAR, PROVINCE_NAME_EN} from '../../constants';
 
     import LinearGradient from 'react-native-linear-gradient';
     import FilterPanelHeader from './FilterPanelHeader';
@@ -45,7 +45,7 @@
                 return store.state.province;
             },
             coordinateCategoryList() {
-                return store.state.coordinateCategoryList;
+                return store.state.coordinateCategoryList[PROVINCE_NAME_EN[this.province]];
             },
         },
         data: () => {

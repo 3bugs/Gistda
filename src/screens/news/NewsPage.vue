@@ -51,7 +51,7 @@
 
 <script>
     import store from '../../store';
-    import {DEBUG, BOTTOM_NAV, COLOR_PRIMARY} from '../../constants';
+    import {DEBUG, PROVINCE_NAME_EN, BOTTOM_NAV, COLOR_PRIMARY} from '../../constants';
     import NewsItem from './NewsItem';
     import ErItem from './ErItem';
 
@@ -72,21 +72,21 @@
             isLoading() {
                 switch (this.page) {
                     case 0: // News
-                        return store.state.loadingNews;
+                        return store.state.loadingNews[PROVINCE_NAME_EN[this.province]];
                     case 1: // ER
-                        return store.state.loadingEr;
+                        return store.state.loadingEr[PROVINCE_NAME_EN[this.province]];
                     case 2: // Suggest
-                        return store.state.loadingSuggest;
+                        return store.state.loadingSuggest[PROVINCE_NAME_EN[this.province]];
                 }
             },
             dataList() {
                 switch (this.page) {
                     case 0: // News
-                        return store.state.newsList;
+                        return store.state.newsList[PROVINCE_NAME_EN[this.province]];
                     case 1: // Er
-                        return store.state.erList;
+                        return store.state.erList[PROVINCE_NAME_EN[this.province]];
                     case 2: // Suggest
-                        return store.state.suggestList;
+                        return store.state.suggestList[PROVINCE_NAME_EN[this.province]];
                 }
             },
         },
@@ -97,8 +97,14 @@
         },
         methods: {
             //todo: add method's param
-            handleClickItem: function () {
-                this.navigation.navigate('NewsDetails');
+            handleClickItem: function (item) {
+                //alert(newsItem.title);
+                this.navigation.navigate(
+                    'NewsDetails',
+                    {
+                        item
+                    }
+                );
             },
         },
         created: function () {
