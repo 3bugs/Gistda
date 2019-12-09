@@ -115,6 +115,11 @@ export async function fetchNews(province) {
     return await _fetch(`news/pr?province_code=${provinceCode[province]}&limit=${LIMIT}&offset=${OFFSET}`);
 }
 
+export async function fetchNewsDetails(newsId) {
+    //news/1
+    return await _fetch(`news/${newsId}`);
+}
+
 export async function fetchEr(province) {
     //er?province_code=35
     const LIMIT = 20;

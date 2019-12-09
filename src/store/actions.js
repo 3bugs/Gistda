@@ -1,4 +1,4 @@
-import {fetchPosts, fetchSuggest} from './fetch';
+import {fetchNewsDetails, fetchPosts, fetchSuggest} from './fetch';
 import {AsyncStorage} from 'react-native';
 
 // ensure data for rendering given list type
@@ -189,6 +189,27 @@ export async function FETCH_NEWS({commit, state}, {province, callback}) {
     } else {
         commit('SET_NEWS', {
             dataList: null
+        });
+        callback(false, apiResult.message);
+    }
+}
+
+export async function FETCH_NEWS_DETAILS({commit, state}, {newsId, callback}) {
+    commit('FETCHING_NEWS_DETAILS');
+
+    const apiResult = await fetchNewsDetails(newsId);
+    if (apiResult.success) {
+        const newsDetails = apiResult.data;
+        // ใส่ id เพิ่มเข้าไปเอง เพื่อจำ id ของแต่ละ news details (api ไม่ได้ส่ง id กลับมาให้)
+        newsDetails.id = newsId;
+
+        commit('SET_NEWS_DETAILS', {
+            newsDetails
+        });
+        callback(true, newsDetails);
+    } else {
+        commit('SET_NEWS_DETAILS', {
+            newsDetails: null
         });
         callback(false, apiResult.message);
     }

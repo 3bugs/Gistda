@@ -22,6 +22,7 @@ const store = new Vuex.Store({
         drawerOpen: false,
         loadingCoordinateCategories: false,
 
+        //กำหนดเป็น array แล้วมีปัญหากับ data binding, view ไม่อัพเดท
         coordinateCategoryList: {
             [PROVINCE_NAME_EN[0]]: [],
             [PROVINCE_NAME_EN[1]]: [],
@@ -58,6 +59,15 @@ const store = new Vuex.Store({
         suggestList: {
             [PROVINCE_NAME_EN[0]]: null,
             [PROVINCE_NAME_EN[1]]: null,
+        },
+
+        loadingNewsDetails: {
+            [PROVINCE_NAME_EN[0]]: false,
+            [PROVINCE_NAME_EN[1]]: false,
+        },
+        newsDetailsList: {
+            [PROVINCE_NAME_EN[0]]: [],
+            [PROVINCE_NAME_EN[1]]: [],
         },
     }
 });

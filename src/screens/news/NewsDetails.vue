@@ -20,6 +20,7 @@
         <text>Title: {{item.title}}</text>
         <text>Caption: {{item.caption}}</text>
         <text>Image URL: {{item.image}}</text>
+        <text>Detail: {{item.detail}}</text>
     </view>
 </template>
 

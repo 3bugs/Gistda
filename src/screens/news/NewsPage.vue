@@ -89,6 +89,9 @@
                         return store.state.suggestList[PROVINCE_NAME_EN[this.province]];
                 }
             },
+            newsDetailsList() {
+                return store.state.newsDetailsList[PROVINCE_NAME_EN[this.province]];
+            }
         },
         data: () => {
             return {
@@ -96,15 +99,38 @@
             };
         },
         methods: {
-            //todo: add method's param
             handleClickItem: function (item) {
-                //alert(newsItem.title);
-                this.navigation.navigate(
-                    'NewsDetails',
-                    {
-                        item
+                let cachedItem = null;
+                this.newsDetailsList.forEach(newsDetails => {
+                    if (item.id === newsDetails.id) {
+                        cachedItem = newsDetails;
                     }
-                );
+                });
+
+                if (cachedItem) {
+                    this.navigation.navigate(
+                        'NewsDetails',
+                        {
+                            item: cachedItem
+                        }
+                    );
+                } else {
+                    store.dispatch('FETCH_NEWS_DETAILS', {
+                        newsId: item.id,
+                        callback: (success, data) => {
+                            if (success) {
+                                this.navigation.navigate(
+                                    'NewsDetails',
+                                    {
+                                        item: data
+                                    }
+                                );
+                            } else {
+                                alert(data); // data คือ error message
+                            }
+                        }
+                    });
+                }
             },
         },
         created: function () {

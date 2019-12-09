@@ -68,6 +68,22 @@ export function SET_SUGGEST(state, {dataList}) {
     state.loadingSuggest[PROVINCE_NAME_EN[state.province]] = false;
 }
 
+export function FETCHING_NEWS_DETAILS(state) {
+    state.loadingNewsDetails[PROVINCE_NAME_EN[state.province]] = true;
+}
+
+export function SET_NEWS_DETAILS(state, {newsDetails}) {
+    let arr = state.newsDetailsList[PROVINCE_NAME_EN[state.province]];
+    // ถ้ามี news details id นั้นอยู่แล้ว จะลบทิ้ง แล้วค่อย add ใหม่ (กรณีบังคับ reload data)
+    arr = arr.filter(item => {
+        return item.id !== newsDetails.id;
+    });
+    arr.push(newsDetails);
+    state.newsDetailsList[PROVINCE_NAME_EN[state.province]] = arr;
+
+    state.loadingNewsDetails[PROVINCE_NAME_EN[state.province]] = false;
+}
+
 export function SET_MARKER_OPACITY(state, {id, index, typeIndex, opacity}) {
     state.coordinateCategoryList[PROVINCE_NAME_EN[state.province]]
         [typeIndex].list[index].markerOpacity = opacity;
