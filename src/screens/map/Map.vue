@@ -125,7 +125,7 @@
     import Slider from '@react-native-community/slider';
 
     import imageMenu from '../../../assets/images/screen_map/ic_menu.png';
-    import imageBack from '../../../assets/ic_back.png';
+    import imageBack from '../../../assets/images/ic_back.png';
 
     import imageLightOff from '../../../assets/images/sidebar/ic_light_off.png';
     import imageLightOn from '../../../assets/images/sidebar/ic_light_on.png';

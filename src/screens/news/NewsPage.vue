@@ -154,9 +154,10 @@
             if (!this.dataList && storeAction) {
                 store.dispatch(storeAction, {
                     province: this.province,
-                    callback: (success, message) => {
+                    callback: (success, data) => {
                         if (!success) {
-                            alert(message);
+                            //todo: เปลี่ยนเป็นการแสดง error ใน layout และมีปุ่ม retry
+                            alert(data); // data คือ error message
                         }
                     }
                 });

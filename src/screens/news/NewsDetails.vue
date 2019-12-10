@@ -8,10 +8,10 @@
                     callback: handleClickBack
                 }"
                 :right-icon="{
-                    icon: null,
-                    width: 24,
-                    height: 18,
-                    callback: null
+                    icon: imageShare,
+                    width: 14,
+                    height: 16.5,
+                    callback: handleClickShare
                 }"/>
         <view class="content-container">
             <view :style="{
@@ -59,7 +59,8 @@
     import {Dimensions} from 'react-native';
     import CardView from 'react-native-cardview';
 
-    import imageBack from '../../../assets/ic_back.png';
+    import imageBack from '../../../assets/images/ic_back.png';
+    import imageShare from '../../../assets/images/ic_share.png';
 
     export default {
         components: {Header, CardView},
@@ -84,18 +85,20 @@
             return {
                 DEBUG, DIMENSION, COLOR_PRIMARY,
                 Dimensions,
-                imageBack,
+                imageBack, imageShare,
             };
         },
         methods: {
             handleClickBack: function () {
                 this.navigation.goBack();
             },
+            handleClickShare: function () {
+                //todo:
+            },
         },
         created: function () {
             //alert(this.item.id);
             //todo: Get details by ID (this.item.id) from API
-
         }
     }
 </script>

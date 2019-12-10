@@ -73,13 +73,16 @@ export function FETCHING_NEWS_DETAILS(state) {
 }
 
 export function SET_NEWS_DETAILS(state, {newsDetails}) {
-    let arr = state.newsDetailsList[PROVINCE_NAME_EN[state.province]];
-    // ถ้ามี news details id นั้นอยู่แล้ว จะลบทิ้ง แล้วค่อย add ใหม่ (กรณีบังคับ reload data)
-    arr = arr.filter(item => {
-        return item.id !== newsDetails.id;
-    });
-    arr.push(newsDetails);
-    state.newsDetailsList[PROVINCE_NAME_EN[state.province]] = arr;
+    // กรณี fetch แล้ว error, action จะส่ง newsDetails เป็น null มา
+    if (newsDetails) {
+        let arr = state.newsDetailsList[PROVINCE_NAME_EN[state.province]];
+        // ถ้ามี news details id นั้นอยู่แล้ว จะลบทิ้ง แล้วค่อย add ใหม่ (กรณีบังคับ reload data)
+        arr = arr.filter(item => {
+            return item.id !== newsDetails.id;
+        });
+        arr.push(newsDetails);
+        state.newsDetailsList[PROVINCE_NAME_EN[state.province]] = arr;
+    }
 
     state.loadingNewsDetails[PROVINCE_NAME_EN[state.province]] = false;
 }
