@@ -36,9 +36,8 @@
     import imageMap from '../../../assets/images/screen_map/ic_map.png';
 
     const routes = [
-        {key: 'news', title: 'ประชาสัมพันธ์'},
-        {key: 'er', title: 'ความปลอดภัย'},
-        {key: 'suggest', title: 'คำแนะนำ'},
+        {key: 'town', title: 'ในเมือง'},
+        {key: 'suburb', title: 'นอกเมือง'},
     ];
 
     export default {
@@ -89,12 +88,10 @@
                 if (!route.key) return null;
 
                 switch (route.key) {
-                    case 'news':
+                    case 'town':
                         return <NewsPage page={0} navigation={this.navigation}/>;
-                    case 'er':
+                    case 'suburb':
                         return <NewsPage page={1} navigation={this.navigation}/>;
-                    case 'suggest':
-                        return <NewsPage page={2} navigation={this.navigation}/>;
                 }
             },
         },

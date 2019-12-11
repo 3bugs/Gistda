@@ -30,7 +30,8 @@
                                 :title="marker.title"
                                 :description="marker.description"
                                 :image="category.image"
-                                :opacity="category.markerOpacity"/>
+                                :opacity="category.markerOpacity"
+                                :on-press="handlePressMarker"/>
                     </view>
                 </view>
             </map-view>
@@ -110,6 +111,17 @@
                 </view>
             </view>
         </view>
+
+        <bottom-sheet
+                ref="bottomSheet"
+                :snap-points="[450, 300, 0]">
+            <view render-prop-fn="renderContent">
+                <text>TEST CONTENT</text>
+            </view>
+            <view render-prop-fn="renderHeader">
+                <text>TEST HEADER</text>
+            </view>
+        </bottom-sheet>
     </drawer>
 </template>
 
@@ -123,6 +135,7 @@
     import Drawer from 'react-native-drawer';
     import FilterPanel from './FilterPanel';
     import Slider from '@react-native-community/slider';
+    import BottomSheet from 'reanimated-bottom-sheet'
 
     import imageMenu from '../../../assets/images/screen_map/ic_menu.png';
     import imageBack from '../../../assets/images/ic_back.png';
@@ -131,7 +144,7 @@
     import imageLightOn from '../../../assets/images/sidebar/ic_light_on.png';
 
     export default {
-        components: {MapView, Marker, LinearGradient, CardView, Drawer, FilterPanel, Slider},
+        components: {MapView, Marker, LinearGradient, CardView, Drawer, FilterPanel, Slider, BottomSheet},
         props: {
             navigation: { // bottom nav
                 type: Object
@@ -180,7 +193,10 @@
             handleChangeOpacity: function (key, value) {
                 //alert('KEY: ' + key + '\nVALUE: ' + value);
                 this.mapDataList[key].markerOpacity = value;
-            }
+            },
+            handlePressMarker: function () {
+                this.$refs['bottomSheet'].snapTo(0);
+            },
         },
         created: function () {
             //this.navigation.state.params.header = null;
