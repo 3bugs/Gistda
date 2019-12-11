@@ -126,6 +126,6 @@
     .date {
         font-family: DBHeavent;
         font-size: 18;
-        color: #cccccc;
+        color: #aaaaaa;
     }
 </style>

@@ -12,6 +12,7 @@ import imagePhoneNakhonPathom from '../../assets/images/screen_news/ic_phone_nak
 import imagePhoneYasothon from '../../assets/images/screen_news/ic_phone_yasothon.png';
 
 export const DEBUG = true;
+export const APP_NAME = "GISTDA";
 
 export const PROVINCE_NAME_TH = ['นครปฐม', 'ยโสธร'];
 export const PROVINCE_NAME_EN = ['Nakhon Pathom', 'Yasothon'];

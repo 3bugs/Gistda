@@ -3,6 +3,7 @@ package com.gistda;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.github.wumke.RNImmediatePhoneCall.RNImmediatePhoneCallPackage;
 import com.reactnativecommunity.slider.ReactSliderPackage;
 import com.kishanjvaghela.cardview.RNCardViewPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
@@ -31,6 +32,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNImmediatePhoneCallPackage(),
             new ReactSliderPackage(),
             new RNCardViewPackage(),
             new LinearGradientPackage(),

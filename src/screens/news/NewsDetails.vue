@@ -40,6 +40,34 @@
                        }"/>
                 <text class="date">{{'20/20/2020'}}</text>
                 <text class="title">{{item.title}}</text>
+
+                <!--ที่อยู่-->
+                <view v-if="item && item.address && item.address.trim() !== ''"
+                      :style="{
+                            flexDirection: 'row',
+                            alignItems: 'flex-start',
+                            marginBottom: 15,
+                            borderWidth: 0,
+                            borderColor: 'red',
+                      }">
+                    <image :source="imagePin"
+                           :style="{
+                                width: 15,
+                                height: 16,
+                                marginTop: 5,
+                                marginRight: 5,
+                            }"/>
+                    <text :style="{
+                        flex: 1,
+                        fontFamily: 'DBHeaventt-Light',
+                        fontSize: 20,
+                        color: '#626B80',
+                        paddingRight: 20,
+                    }">
+                        {{item.address}}
+                    </text>
+                </view>
+
                 <!--<text>{{item.caption}}</text>-->
                 <text class="body"
                       v-for="paragraph in detailParagraphList">
@@ -61,6 +89,7 @@
 
     import imageBack from '../../../assets/images/ic_back.png';
     import imageShare from '../../../assets/images/ic_share.png';
+    import imagePin from '../../../assets/images/screen_news/ic_pin.png';
 
     export default {
         components: {Header, CardView},
@@ -85,7 +114,7 @@
             return {
                 DEBUG, DIMENSION, COLOR_PRIMARY,
                 Dimensions,
-                imageBack, imageShare,
+                imageBack, imageShare, imagePin,
             };
         },
         methods: {
@@ -125,7 +154,7 @@
     .date {
         font-family: DBHeavent;
         font-size: 18;
-        color: #cccccc;
+        color: #aaaaaa;
         margin-bottom: 5;
     }
 
@@ -133,7 +162,7 @@
         font-family: DBHeavent-Bold;
         font-size: 22;
         color: #333333;
-        margin-bottom: 8;
+        margin-bottom: 12;
     }
 
     .body {

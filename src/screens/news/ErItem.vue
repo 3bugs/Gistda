@@ -14,17 +14,17 @@
                     class="content-touchable"
                     :ripple-color="COLOR_PRIMARY[province]"
                     :ripple-opacity="0.2"
-                    :ripple-duration="500"
+                    :ripple-duration="300"
                     :_active-opacity="0.5"
                     :ripple-sequential="false"
-                    :on-press="null">
+                    :on-press="() => {onClick(item)}">
                 <view class="content">
                     <text class="title"
                           :numberOfLines="1">
                         {{item.name}}
                     </text>
                     <text class="detail"
-                          :numberOfLines="1">
+                          :_numberOfLines="1">
                         {{item.detail}}
                     </text>
                 </view>
@@ -60,6 +60,9 @@
             index: {
                 type: Number
             },
+            onClick: {
+                type: Function
+            },
         },
         computed: {
             province() {
@@ -91,7 +94,7 @@
     .content-touchable {
         flex: 1;
         flex-direction: row;
-        align-items: center;
+        align-items: flex-start;
         padding-top: 10;
         padding-bottom: 13;
         padding-left: 15;
