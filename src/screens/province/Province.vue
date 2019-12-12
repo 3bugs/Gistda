@@ -29,7 +29,7 @@
             </view>
             <view-pager class="view-pager"
                         :initial-page="0"
-                        :page-margin="-100"
+                        :page-margin="-130"
                         :on-page-selected="handlePageSelect">
                 <view key="1">
                     <touchable-opacity
