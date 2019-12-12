@@ -11,8 +11,8 @@ import bgBottomNavYasothon from '../../assets/images/bottom_nav/bg_tab_bar_yasot
 import imagePhoneNakhonPathom from '../../assets/images/screen_news/ic_phone_nakhon_pathom.png';
 import imagePhoneYasothon from '../../assets/images/screen_news/ic_phone_yasothon.png';
 
-import imageSliderThumbNakhonPathom from '../../assets/images/sidebar/ic_slider_thumb_nakhon_pathom.png';
-import imageSliderThumbYasothon from '../../assets/images/sidebar/ic_slider_thumb_yasothon.png';
+import imageSliderThumbNakhonPathom from '../../assets/images/sidebar/ic_slider_thumb_nakhon_pathom_2.png';
+import imageSliderThumbYasothon from '../../assets/images/sidebar/ic_slider_thumb_yasothon_2.png';
 
 export const DEBUG = true;
 export const APP_NAME = "GISTDA";
