@@ -112,23 +112,64 @@
             </view>
         </view>
 
-        <bottom-sheet
+        <!--<bottom-sheet
                 ref="bottomSheet"
-                :snap-points="[450, 300, 0]">
+                :snap-points="['90%', '47%', '20%']"
+                :initialSnap="2">
             <view render-prop-fn="renderContent">
-                <text>TEST CONTENT</text>
+                <view :style="{
+                    height: '100%',
+                    paddingLeft: DIMENSION.horizontal_margin,
+                    paddingRight: DIMENSION.horizontal_margin,
+                    paddingTop: DIMENSION.horizontal_margin - 5,
+                    paddingBottom: DIMENSION.horizontal_margin - 5,
+                    backgroundColor: 'rgba(255, 255, 255, 240)',
+                }">
+                    <text>TEST CONTENT TEST CONTENT TEST CONTENT TEST CONTENT TEST CONTENT TEST CONTENT TEST CONTENT TEST CONTENT TEST CONTENT TEST CONTENT TEST CONTENT TEST CONTENT TEST CONTENT TEST CONTENT TEST CONTENT TEST CONTENT </text>
+                </view>
             </view>
             <view render-prop-fn="renderHeader">
-                <text>TEST HEADER</text>
+                <view :style="{
+                    flexDirection: 'row',
+                    paddingLeft: DIMENSION.horizontal_margin,
+                    paddingRight: DIMENSION.horizontal_margin,
+                    paddingTop: DIMENSION.horizontal_margin - 5,
+                    paddingBottom: DIMENSION.horizontal_margin - 5,
+                    backgroundColor: 'rgba(255, 255, 255, 240)',
+                    borderTopLeftRadius: 15,
+                    borderTopRightRadius: 15,
+                }">
+                    <view :style="{
+                        flex: 1,
+                    }">
+                        <text :style="{
+                            fontFamily: 'DBHeavent-Bold',
+                            color: '#333333',
+                            fontSize: 22,
+                        }">
+                            ฟาร์มที่ผ่านการตรวจคุณภาพ
+                        </text>
+                    </view>
+                    <text>CLOSE</text>
+                </view>
+                <view :style="{
+                    marginTop: 0,
+                    marginBottom: 0,
+                    marginLeft: 0,
+                    marginRight: 0,
+                    borderBottomWidth: StyleSheet.hairlineWidth,
+                    borderBottomColor: '#999999'
+                }"/>
             </view>
-        </bottom-sheet>
+        </bottom-sheet>-->
     </drawer>
 </template>
 
 <script>
     import store from '../../store';
-    import {DEBUG, MAP_HEADER, BOTTOM_NAV, PROVINCE_NAME_EN} from '../../constants';
+    import {DEBUG, MAP_HEADER, BOTTOM_NAV, PROVINCE_NAME_EN, DIMENSION} from '../../constants';
 
+    import {StyleSheet} from 'react-native';
     import MapView, {Marker} from 'react-native-maps';
     import LinearGradient from 'react-native-linear-gradient';
     import CardView from 'react-native-cardview';
@@ -159,11 +200,11 @@
             },
             drawerOpen() {
                 return store.state.drawerOpen;
-            }
+            },
         },
         data: () => {
             return {
-                DEBUG, MAP_HEADER, BOTTOM_NAV,
+                StyleSheet, DEBUG, MAP_HEADER, BOTTOM_NAV, DIMENSION,
                 imageMenu, imageBack, imageLightOff, imageLightOn,
             };
         },
@@ -195,7 +236,7 @@
                 this.mapDataList[key].markerOpacity = value;
             },
             handlePressMarker: function () {
-                this.$refs['bottomSheet'].snapTo(0);
+                //this.$refs['bottomSheet'].snapTo(1);
             },
         },
         created: function () {
@@ -205,7 +246,7 @@
             /*store.dispatch('FETCH_MAP_DATA', {
                 province: 0
             });*/
-        }
+        },
     }
 </script>
 

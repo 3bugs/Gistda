@@ -21,7 +21,7 @@ export const COLOR_PRIMARY = ['#4041da', '#f47442'];
 export const COLOR_PRIMARY_DARK = ['#09097e', '#ed4100'];
 
 export const DIMENSION = {
-    horizontal_margin: 20,
+    horizontal_margin: 16,
 };
 export const MAP_HEADER = {
     height: 118,

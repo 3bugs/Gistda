@@ -31,20 +31,75 @@
                         :callback="handleClickItem"/>
             </view>
         </image-background>
+
+        <!--<bottom-sheet
+                ref="bottomSheet"
+                :snap-points="['90%', '47%', '5%']"
+                :initialSnap="2">
+            <view render-prop-fn="renderContent">
+                <view :style="{
+                    height: '100%',
+                    paddingLeft: DIMENSION.horizontal_margin,
+                    paddingRight: DIMENSION.horizontal_margin,
+                    paddingTop: DIMENSION.horizontal_margin - 5,
+                    paddingBottom: DIMENSION.horizontal_margin - 5,
+                    backgroundColor: 'rgba(255, 255, 255, 240)',
+                }">
+                    <text>TEST CONTENT TEST CONTENT TEST CONTENT TEST CONTENT TEST CONTENT TEST CONTENT TEST CONTENT TEST CONTENT TEST CONTENT TEST CONTENT TEST CONTENT TEST CONTENT TEST CONTENT TEST
+                        CONTENT TEST CONTENT TEST CONTENT
+                    </text>
+                </view>
+            </view>
+            <view render-prop-fn="renderHeader">
+                <view :style="{
+                    flexDirection: 'row',
+                    paddingLeft: DIMENSION.horizontal_margin,
+                    paddingRight: DIMENSION.horizontal_margin,
+                    paddingTop: DIMENSION.horizontal_margin - 5,
+                    paddingBottom: DIMENSION.horizontal_margin - 5,
+                    backgroundColor: 'rgba(255, 255, 255, 240)',
+                    borderTopLeftRadius: 15,
+                    borderTopRightRadius: 15,
+                }">
+                    <view :style="{
+                        flex: 1,
+                    }">
+                        <text :style="{
+                            fontFamily: 'DBHeavent-Bold',
+                            color: '#333333',
+                            fontSize: 22,
+                        }">
+                            ฟาร์มที่ผ่านการตรวจคุณภาพ
+                        </text>
+                    </view>
+                    <text>CLOSE</text>
+                </view>
+                <view :style="{
+                    marginTop: 0,
+                    marginBottom: 0,
+                    marginLeft: 0,
+                    marginRight: 0,
+                    borderBottomWidth: StyleSheet.hairlineWidth,
+                    borderBottomColor: '#999999'
+                }"/>
+            </view>
+        </bottom-sheet>-->
     </view>
 </template>
 
 <script>
     import store from '../store';
-    import {DEBUG, BOTTOM_NAV} from '../constants';
+    import {DEBUG, BOTTOM_NAV, DIMENSION} from '../constants';
 
     import {Dimensions} from 'react-native';
+    import {StyleSheet} from 'react-native';
     import TabBarItem from './TabBarItem';
+    import BottomSheet from 'reanimated-bottom-sheet'
 
     const tabBarHeight = 100;
 
     export default {
-        components: {TabBarItem},
+        components: {TabBarItem, BottomSheet},
         props: {
             navigation: { // bottom nav
                 type: Object
@@ -62,7 +117,7 @@
         },
         data: () => {
             return {
-                DEBUG, BOTTOM_NAV,
+                DEBUG, BOTTOM_NAV, DIMENSION, StyleSheet,
                 tabBarHeight,
                 paddingHorizontal: 0,
                 tabBarTopPosition: 0,
