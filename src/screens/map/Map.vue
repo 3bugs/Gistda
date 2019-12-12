@@ -112,7 +112,7 @@
             </view>
         </view>
 
-        <bottom-sheet
+        <!--<bottom-sheet
                 ref="bottomSheet"
                 :snap-points="['90%', '47%', '20%']"
                 :initialSnap="2">
@@ -161,7 +161,7 @@
                     borderBottomColor: '#999999'
                 }"/>
             </view>
-        </bottom-sheet>
+        </bottom-sheet>-->
     </drawer>
 </template>
 
@@ -236,7 +236,7 @@
                 this.mapDataList[key].markerOpacity = value;
             },
             handlePressMarker: function () {
-                this.$refs['bottomSheet'].snapTo(1);
+                //this.$refs['bottomSheet'].snapTo(1);
             },
         },
         created: function () {
@@ -291,7 +291,7 @@
     .search-input-container {
         position: absolute;
         width: 100%;
-        height: 100%;
+        bottom: 0;
         justify-content: flex-end;
         padding-left: 20;
         padding-right: 20;
