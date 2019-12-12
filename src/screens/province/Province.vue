@@ -19,11 +19,11 @@
                     {{temperature}}
                 </text>
                 <text class="temperature-unit"
-                      :style="{marginLeft: temperatureUnitMarginLeft, fontSize: isTallScreen ? 52 : 43, marginTop: isTallScreen ? 150 : 133}">
+                      :style="{marginLeft: temperatureUnitMarginLeft, fontSize: isTallScreen ? 50 : 43, marginTop: isTallScreen ? 150 : 133}">
                     °C
                 </text>
                 <text class="status"
-                      :style="{marginTop: isTallScreen ? 200 : 175}">
+                      :style="{marginTop: isTallScreen ? 203 : 175}">
                     {{status}}
                 </text>
             </view>
