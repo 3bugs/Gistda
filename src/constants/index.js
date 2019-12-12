@@ -11,6 +11,9 @@ import bgBottomNavYasothon from '../../assets/images/bottom_nav/bg_tab_bar_yasot
 import imagePhoneNakhonPathom from '../../assets/images/screen_news/ic_phone_nakhon_pathom.png';
 import imagePhoneYasothon from '../../assets/images/screen_news/ic_phone_yasothon.png';
 
+import imageSliderThumbNakhonPathom from '../../assets/images/sidebar/ic_slider_thumb_nakhon_pathom.png';
+import imageSliderThumbYasothon from '../../assets/images/sidebar/ic_slider_thumb_yasothon.png';
+
 export const DEBUG = true;
 export const APP_NAME = "GISTDA";
 
@@ -78,7 +81,11 @@ export const SIDEBAR = {
     sliderColor: [
         COLOR_PRIMARY[0],
         COLOR_PRIMARY[1]
-    ]
+    ],
+    sliderThumb: [
+        imageSliderThumbNakhonPathom,
+        imageSliderThumbYasothon
+    ],
 };
 export const BOTTOM_NAV = {
     height: 64,
