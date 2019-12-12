@@ -89,6 +89,9 @@
 
     .card {
         flex: 1;
+        background-color: white;
+        border-width: 0;
+        border-color: red;
     }
 
     .content-touchable {
