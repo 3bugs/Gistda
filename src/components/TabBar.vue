@@ -1,14 +1,19 @@
 <!--https://dev.to/hrastnik/lets-create-a-custom-animated-tab-bar-with-react-native-3496-->
 
 <template>
-    <view :style="{position: 'absolute', width: '100%', height: '100%', justifyContent: 'flex-end'}">
+    <!--<view :style="{position: 'absolute', width: '100%', height: '100%', justifyContent: 'flex-end'}">-->
         <image-background :source="BOTTOM_NAV.background[province]"
-                          :style="{height: tabBarHeight}"
+                          :style="{
+                                position: 'absolute',
+                                height: tabBarHeight,
+                                width: '100%',
+                                top: screenHeight - tabBarHeight,
+                           }"
                           resize-mode="cover">
             <view class="container"
                   :style="{
-                  paddingLeft: paddingHorizontal,
-                  paddingRight: paddingHorizontal,
+                        paddingLeft: paddingHorizontal,
+                        paddingRight: paddingHorizontal,
                   }">
                 <tab-bar-item
                         v-for="itemIndex in [0, 1]"
@@ -84,15 +89,14 @@
                 }"/>
             </view>
         </bottom-sheet>-->
-    </view>
+    <!--</view>-->
 </template>
 
 <script>
     import store from '../store';
     import {DEBUG, BOTTOM_NAV, DIMENSION} from '../constants';
 
-    import {Dimensions} from 'react-native';
-    import {StyleSheet} from 'react-native';
+    import {Dimensions, StyleSheet} from 'react-native';
     import TabBarItem from './TabBarItem';
     import BottomSheet from 'reanimated-bottom-sheet'
 
@@ -117,11 +121,14 @@
         },
         data: () => {
             return {
-                DEBUG, BOTTOM_NAV, DIMENSION, StyleSheet,
+                StyleSheet,
+                DEBUG, BOTTOM_NAV, DIMENSION,
                 tabBarHeight,
                 paddingHorizontal: 0,
                 tabBarTopPosition: 0,
                 //activeItem: 0,
+                screenWidth: Dimensions.get('window').width,
+                screenHeight: Dimensions.get('window').height,
             }
         },
         created: function () {

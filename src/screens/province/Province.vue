@@ -7,16 +7,22 @@
                 background-color="transparent"
                 translucent/>
         <view class="main-container">
-            <view :style="{marginLeft: 25, marginBottom: 25}">
+            <view :style="{marginLeft: 25, marginBottom: isTallScreen ? 60 : 25}">
                 <text class="province-name-en">{{provinceNameEn}}</text>
                 <text class="province-name-th">{{provinceNameTh}}</text>
                 <text class="temperature"
-                      :on-layout="handleTemperatureLayoutChange">{{temperature}}
+                      :on-layout="handleTemperatureLayoutChange"
+                      :style="{fontSize: isTallScreen ? 110 : 90}">
+                    {{temperature}}
                 </text>
                 <text class="temperature-unit"
-                      :style="{marginLeft: temperatureUnitMarginLeft}">°C
+                      :style="{marginLeft: temperatureUnitMarginLeft, marginTop: isTallScreen ? 148 : 133}">
+                    °C
                 </text>
-                <text class="status">{{status}}</text>
+                <text class="status"
+                      :style="{marginTop: isTallScreen ? 195 : 175}">
+                    {{status}}
+                </text>
             </view>
             <view-pager class="view-pager"
                         :initial-page="0"
@@ -58,6 +64,8 @@
     // https://github.com/react-native-community/react-native-geolocation/issues/39
 
     import store from '../../store';
+
+    import {Dimensions} from 'react-native';
 
     import ViewPager from '@react-native-community/viewpager';
     import bgNakhonPathom from '../../../assets/images/screen_province/bg_nakhon_pathom.jpg';
@@ -105,6 +113,10 @@
                 status: false,
 
                 test: false,
+
+                screenWidth: Dimensions.get('window').width,
+                screenHeight: Dimensions.get('window').height,
+                isTallScreen: Dimensions.get('window').height / Dimensions.get('window').width > 1.8,
             };
         },
         computed: {
@@ -137,7 +149,7 @@
             },
             handleTemperatureLayoutChange: function (e) {
                 const {x, y, width, height} = e.nativeEvent.layout;
-                this.temperatureUnitMarginLeft = width + 3;
+                this.temperatureUnitMarginLeft = width - 2;
             },
             handlePageSelect: function (e) {
                 const selectedPageIndex = e.nativeEvent.position;
@@ -205,7 +217,7 @@
     .province-name-th {
         position: absolute;
         font-family: DBHeavent-Bold;
-        letter-spacing: 1;
+        letter-spacing: 2;
         color: white;
         font-size: 55;
         margin-top: 68;
@@ -213,9 +225,8 @@
 
     .temperature {
         position: absolute;
-        font-family: DBHeavent-Med;
+        font-family: DBHeavent;
         color: white;
-        font-size: 90;
         margin-top: 96;
     }
 
@@ -224,7 +235,6 @@
         font-family: DBHeavent;
         color: white;
         font-size: 43;
-        margin-top: 133;
     }
 
     .status {
@@ -232,7 +242,6 @@
         font-family: DBHeaventt-Light;
         color: white;
         font-size: 18;
-        margin-top: 175;
         margin-left: 3;
     }
 
