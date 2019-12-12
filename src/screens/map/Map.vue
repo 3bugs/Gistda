@@ -112,7 +112,7 @@
             </view>
         </view>
 
-        <!--<bottom-sheet
+        <bottom-sheet
                 ref="bottomSheet"
                 :snap-points="['90%', '47%', '20%']"
                 :initialSnap="2">
@@ -161,7 +161,7 @@
                     borderBottomColor: '#999999'
                 }"/>
             </view>
-        </bottom-sheet>-->
+        </bottom-sheet>
     </drawer>
 </template>
 
@@ -236,7 +236,7 @@
                 this.mapDataList[key].markerOpacity = value;
             },
             handlePressMarker: function () {
-                //this.$refs['bottomSheet'].snapTo(1);
+                this.$refs['bottomSheet'].snapTo(1);
             },
         },
         created: function () {

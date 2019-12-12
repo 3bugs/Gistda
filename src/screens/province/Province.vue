@@ -7,20 +7,23 @@
                 background-color="transparent"
                 translucent/>
         <view class="main-container">
-            <view :style="{marginLeft: 25, marginBottom: isTallScreen ? 60 : 25}">
+            <view :style="{marginLeft: 25, marginBottom: isTallScreen ? 70 : 35}">
                 <text class="province-name-en">{{provinceNameEn}}</text>
-                <text class="province-name-th">{{provinceNameTh}}</text>
+                <text class="province-name-th"
+                      :style="{fontSize: isTallScreen ? 65 : 55, marginTop: isTallScreen ? 68 : 68}">
+                    {{provinceNameTh}}
+                </text>
                 <text class="temperature"
                       :on-layout="handleTemperatureLayoutChange"
-                      :style="{fontSize: isTallScreen ? 110 : 90}">
+                      :style="{fontSize: isTallScreen ? 120 : 90}">
                     {{temperature}}
                 </text>
                 <text class="temperature-unit"
-                      :style="{marginLeft: temperatureUnitMarginLeft, marginTop: isTallScreen ? 148 : 133}">
+                      :style="{marginLeft: temperatureUnitMarginLeft, fontSize: isTallScreen ? 52 : 43, marginTop: isTallScreen ? 150 : 133}">
                     °C
                 </text>
                 <text class="status"
-                      :style="{marginTop: isTallScreen ? 195 : 175}">
+                      :style="{marginTop: isTallScreen ? 200 : 175}">
                     {{status}}
                 </text>
             </view>
@@ -149,7 +152,7 @@
             },
             handleTemperatureLayoutChange: function (e) {
                 const {x, y, width, height} = e.nativeEvent.layout;
-                this.temperatureUnitMarginLeft = width - 2;
+                this.temperatureUnitMarginLeft = this.isTallScreen ? width - 7 : width - 3;
             },
             handlePageSelect: function (e) {
                 const selectedPageIndex = e.nativeEvent.position;
@@ -219,8 +222,6 @@
         font-family: DBHeavent-Bold;
         letter-spacing: 2;
         color: white;
-        font-size: 55;
-        margin-top: 68;
     }
 
     .temperature {
@@ -234,7 +235,6 @@
         position: absolute;
         font-family: DBHeavent;
         color: white;
-        font-size: 43;
     }
 
     .status {
