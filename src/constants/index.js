@@ -15,7 +15,7 @@ import imageSliderThumbNakhonPathom from '../../assets/images/sidebar/ic_slider_
 import imageSliderThumbYasothon from '../../assets/images/sidebar/ic_slider_thumb_yasothon_2.png';
 
 export const DEBUG = true;
-export const APP_NAME = "GISTDA";
+export const APP_NAME = "SAFE SAFE";
 
 export const PROVINCE_NAME_TH = ['นครปฐม', 'ยโสธร'];
 export const PROVINCE_NAME_EN = ['Nakhon Pathom', 'Yasothon'];

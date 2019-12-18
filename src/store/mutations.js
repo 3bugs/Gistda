@@ -6,12 +6,14 @@ export function SET_PROVINCE(state, {province}) {
 
 export function FETCHING_COORDINATE_CATEGORIES(state) {
     state.loadingCoordinateCategories = true;
+    state.loadingMessage = getLoadingMessage('Loading menu data');
 }
 
 export function SET_COORDINATE_CATEGORIES(state, {coordinateCategoryList}) {
     loadMapDataPref(coordinateCategoryList);
     state.coordinateCategoryList[PROVINCE_NAME_EN[state.province]] = coordinateCategoryList;
     state.loadingCoordinateCategories = false;
+    state.loadingMessage = null;
 }
 
 //todo: load map data pref
@@ -25,20 +27,25 @@ function loadMapDataPref(coordinateCategoryList) {
 }
 
 export function FETCHING_COORDINATES(state) {
-    state.loadingCoordinates[PROVINCE_NAME_EN[state.province]] = true;
+    state.loadingCoordinates = true;
+    state.loadingMessage = getLoadingMessage('Loading coordinates data');
 }
 
 export function SET_COORDINATES(state, {coordinateList}) {
     coordinateList.forEach(item => {
         state.coordinateCategoryList[PROVINCE_NAME_EN[state.province]].forEach(categoryTypeItem => {
             categoryTypeItem.list.forEach(categoryItem => {
-                if (item.category_id === categoryItem.id) {
-                    categoryItem.markerList = item.list;
+                if (item.properties.CATEGORY === categoryItem.id) {
+                    if (!categoryItem.markerList) {
+                        categoryItem.markerList = [];
+                    }
+                    categoryItem.markerList.push(item);
                 }
             });
         });
     });
-    state.loadingCoordinates[PROVINCE_NAME_EN[state.province]] = false;
+    state.loadingCoordinates = false;
+    state.loadingMessage = null;
 }
 
 export function FETCHING_NEWS(state) {
@@ -116,3 +123,11 @@ export function SET_MARKER_VISIBILITY(state, {id, index, typeIndex, visibility})
 export function SET_DRAWER_OPEN(state, {drawerOpen}) {
     state.drawerOpen = drawerOpen;
 }
+
+function getLoadingMessage(message) {
+    return /*'รอสักครู่\n' +*/ message;
+}
+/*
+export function SET_LOADING_MESSAGE(state, {message}) {
+    state.loadingMessage = message;
+}*/

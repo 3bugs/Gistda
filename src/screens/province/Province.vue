@@ -54,11 +54,9 @@
                 </view>
             </view-pager>
         </view>
-        <activity-indicator
-                class="progress"
-                size="large"
-                color="#ffffff"
-                v-if="loadingCoordinateCategories"/>
+        <Progress :showIf="loadingCoordinateCategories || loadingCoordinates"
+                  :message="loadingMessage"
+                  color="#fff"/>
     </image-background>
 </template>
 
@@ -67,6 +65,7 @@
     // https://github.com/react-native-community/react-native-geolocation/issues/39
 
     import store from '../../store';
+    import Progress from '../../components/Progress';
 
     import {Dimensions} from 'react-native';
 
@@ -75,6 +74,7 @@
     import bgYasothon from '../../../assets/images/screen_province/bg_yasothon.jpg';
     import imageNakhonPathom from '../../../assets/images/screen_province/bg_card_nakhon_pathom_w500.png';
     import imageYasothon from '../../../assets/images/screen_province/bg_card_yasothon_w500.png';
+    import {PROVINCE_NAME_EN} from "../../constants";
 
     const provinceList = [
         {
@@ -93,7 +93,7 @@
     ];
 
     export default {
-        components: {ViewPager},
+        components: {ViewPager, Progress},
         props: {
             navigation: { // stack navigator
                 type: Object
@@ -123,8 +123,17 @@
             };
         },
         computed: {
+            province() {
+                return store.state.province;
+            },
             loadingCoordinateCategories() {
                 return store.state.loadingCoordinateCategories;
+            },
+            loadingCoordinates() {
+                return store.state.loadingCoordinates;
+            },
+            loadingMessage() {
+                return store.state.loadingMessage;
             }
         },
         methods: {
@@ -163,7 +172,7 @@
                 this.status = provinceList[selectedPageIndex].status;
             },
             handleSelectProvince: function (province) {
-                if (this.loadingCoordinateCategories) {
+                if (this.loadingCoordinateCategories || this.loadingCoordinates) {
                     return;
                 }
 
@@ -190,12 +199,27 @@
 </script>
 
 <style>
-    .progress {
+    .progress-container {
         position: absolute;
+        justify-content: center;
+        align-items: center;
         width: 100%;
         height: 100%;
         border-width: 0;
+        border-color: cyan;
+    }
+
+    .progress {
+        border-width: 0;
         border-color: yellow;
+    }
+
+    .progress-text {
+        text-align: center;
+        font-family: DBHeaventt-Light;
+        color: white;
+        font-size: 22;
+        margin-top: 10;
     }
 
     .main-container {

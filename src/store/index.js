@@ -20,6 +20,7 @@ const store = new Vuex.Store({
     state: {
         province: 0,
         drawerOpen: false,
+        loadingMessage: null,
         loadingCoordinateCategories: false,
 
         //กำหนดเป็น array แล้วมีปัญหากับ data binding, view ไม่อัพเดท
@@ -28,10 +29,7 @@ const store = new Vuex.Store({
             [PROVINCE_NAME_EN[1]]: [],
         },
 
-        loadingCoordinates: {
-            [PROVINCE_NAME_EN[0]]: false,
-            [PROVINCE_NAME_EN[1]]: false,
-        },
+        loadingCoordinates: false,
 
         /*loadingMapDataList: false,
         mapDataList: [],*/

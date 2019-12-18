@@ -45,10 +45,101 @@ export async function fetchCoordinateCategories(province) {
     return await _fetch(`coords/categories`);
 }
 
-export function fetchCoordinates() {
+export async function fetchCoordinates(province, idList) {
+    let paramIdList = '';
+
+    if (idList && idList.length > 0) {
+        paramIdList = 'cat_id=';
+        idList.forEach(id => {
+            paramIdList += `${id},`;
+        });
+        paramIdList = paramIdList.slice(0, -1);
+    }
+
+    const url = `${baseURL}/coords/?province_code=${provinceCode[province]}&${paramIdList}`;
+    //alert(url);
+
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+        });
+        const responseJson = await response.json();
+
+        const data = responseJson.features;
+
+        return new ApiResult(
+            true,
+            '',
+            data
+        );
+    } catch (error) {
+        return new ApiResult(
+            false,
+            `เกิดข้อผิดพลาดในการเชื่อมต่อเครือข่าย - ${error}`,
+            null
+        );
+    }
+}
+
+export function fetchCoordinates_old() {
     return [
         {
-            category_id: '1',
+            "type": "Feature",
+            "id": 1194,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    100.1178728,
+                    14.1181364
+                ]
+            },
+            "properties": {
+                "NAME_T": "สถานีขนส่งบางหลวง",
+                "LOCATION_T": "",
+                "CATEGORY": 1,
+                "P_CODE": 73,
+                "IMAGES": []
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 1193,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    100.0641947,
+                    13.8148658
+                ]
+            },
+            "properties": {
+                "NAME_T": "สถานีขนส่งผู้โดยสาร จ.นครปฐม",
+                "LOCATION_T": "",
+                "CATEGORY": 1,
+                "P_CODE": 73,
+                "IMAGES": []
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 1192,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    100.2885255,
+                    13.790154
+                ]
+            },
+            "properties": {
+                "NAME_T": "สถานีขนส่งสินค้าพุทธมณฑล",
+                "LOCATION_T": "",
+                "CATEGORY": 2,
+                "P_CODE": 73,
+                "IMAGES": []
+            }
+        },
+
+        /*{
+            category_id: 1,
             list: [
                 {
                     coordinate: {
@@ -77,7 +168,7 @@ export function fetchCoordinates() {
             ]
         },
         {
-            category_id: '2',
+            category_id: 2,
             list: [
                 {
                     coordinate: {
@@ -104,7 +195,7 @@ export function fetchCoordinates() {
                     description: 'รายละเอียด ทดสอบ 6',
                 },
             ]
-        }
+        }*/
     ];
 }
 

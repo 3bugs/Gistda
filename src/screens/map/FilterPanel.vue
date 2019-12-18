@@ -20,6 +20,9 @@
                 <view render-prop="ListHeaderComponent">
                     <filter-panel-header/>
                 </view>
+                <view render-prop="ListFooterComponent">
+                    <view :style="{height: 80}"/>
+                </view>
             </flat-list>
         </linear-gradient>
     </view>

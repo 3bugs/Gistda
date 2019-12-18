@@ -40,6 +40,7 @@ export function LOGOUT({commit, state}, callback) {
 import {
     fetchCoordinateCategories,
     fetchCoordinates,
+    fetchCoordinates_old,
     fetchNews,
     fetchEr,
 } from './fetch';
@@ -59,9 +60,17 @@ export async function SET_PROVINCE({commit, state}, {province, callback}) {
             coordinateCategoryList: apiResult.data.list
         });
 
-        FETCH_COORDINATE({commit, state}, {});
-
-        callback(true, null);
+        await FETCH_COORDINATE({commit, state}, {
+            province,
+            idList: null /*todo*/,
+            callback: (success, message) => {
+                if (success) {
+                    callback(true, null);
+                } else {
+                    callback(false, message);
+                }
+            }
+        });
     } else {
         commit('SET_COORDINATE_CATEGORIES', {
             coordinateCategoryList: []
@@ -70,111 +79,21 @@ export async function SET_PROVINCE({commit, state}, {province, callback}) {
     }
 }
 
-export function FETCH_COORDINATE({commit, state}, {}) {
+export async function FETCH_COORDINATE({commit, state}, {province, idList, callback}) {
     commit('FETCHING_COORDINATES');
 
-    const coordinateList = fetchCoordinates();
-    commit('SET_COORDINATES', {
-        coordinateList,
-        _coordinateList: [
-            {
-                filterTitle: 'ตำแหน่งอุบัติเหตุ',
-                filterIcon: imageFilterGeoAccident,
-                markerOpacity: 1,
-                markerVisibility: false,
-                markerList: [
-                    {
-                        coordinate: {
-                            latitude: 13.8100,
-                            longitude: 100.04427,
-                        },
-                        title: 'ทดสอบ 1',
-                        description: 'รายละเอียด ทดสอบ 1',
-                    },
-                    {
-                        coordinate: {
-                            latitude: 13.8200,
-                            longitude: 100.05627,
-                        },
-                        title: 'ทดสอบ 2',
-                        description: 'รายละเอียด ทดสอบ 2',
-                    },
-                    {
-                        coordinate: {
-                            latitude: 13.8300,
-                            longitude: 100.04227,
-                        },
-                        title: 'ทดสอบ 3',
-                        description: 'รายละเอียด ทดสอบ 3',
-                    },
-                ]
-            },
-            {
-                filterTitle: 'พื้นที่เสี่ยงบนท้องถนน พื้นที่เสี่ยงบนท้องถนน ',
-                filterIcon: imageFilterGeoRiskArea,
-                markerOpacity: 1,
-                markerVisibility: false,
-                markerList: [
-                    {
-                        coordinate: {
-                            latitude: 13.8400,
-                            longitude: 100.01427,
-                        },
-                        title: 'ทดสอบ 4',
-                        description: 'รายละเอียด ทดสอบ 4',
-                    },
-                    {
-                        coordinate: {
-                            latitude: 13.8000,
-                            longitude: 100.02627,
-                        },
-                        title: 'ทดสอบ 5',
-                        description: 'รายละเอียด ทดสอบ 5',
-                    },
-                    {
-                        coordinate: {
-                            latitude: 13.7900,
-                            longitude: 100.03227,
-                        },
-                        title: 'ทดสอบ 6',
-                        description: 'รายละเอียด ทดสอบ 6',
-                    },
-                ]
-            },
-            {
-                filterTitle: 'เส้นทางคมนาคม',
-                filterIcon: imageFilterGeoRoute,
-                markerOpacity: 0.5,
-                markerVisibility: true,
-                markerList: [
-                    {
-                        coordinate: {
-                            latitude: 13.8450,
-                            longitude: 100.01827,
-                        },
-                        title: 'ทดสอบ 4',
-                        description: 'รายละเอียด ทดสอบ 4',
-                    },
-                    {
-                        coordinate: {
-                            latitude: 13.8050,
-                            longitude: 100.02127,
-                        },
-                        title: 'ทดสอบ 5',
-                        description: 'รายละเอียด ทดสอบ 5',
-                    },
-                    {
-                        coordinate: {
-                            latitude: 13.7950,
-                            longitude: 100.02727,
-                        },
-                        title: 'ทดสอบ 6',
-                        description: 'รายละเอียด ทดสอบ 6',
-                    },
-                ]
-            },
-        ], // mapDataList
-    });
+    const apiResult = await fetchCoordinates(province, idList);
+    if (apiResult.success) {
+        commit('SET_COORDINATES', {
+            coordinateList: apiResult.data,
+        });
+        callback(true, null);
+    } else {
+        commit('SET_COORDINATES', {
+            coordinateList: [],
+        });
+        callback(false, apiResult.message);
+    }
 }
 
 export async function FETCH_NEWS({commit, state}, {province, callback}) {
@@ -272,3 +191,10 @@ export function CLOSE_DRAWER({commit, state}, {}) {
         drawerOpen: false
     });
 }
+
+/*
+export function SET_LOADING_MESSAGE({commit, state}, {message}) {
+    commit('SET_LOADING_MESSAGE', {
+        message
+    });
+}*/

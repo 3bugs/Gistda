@@ -16,18 +16,21 @@
               :style="{marginBottom: BOTTOM_NAV.height}">
             <map-view class="map-view"
                       :initial-region="{
-                      latitude: 13.8196,
-                      longitude: 100.04427,
-                      latitudeDelta: 0.0922,
-                      longitudeDelta: 0.0421,
+                        latitude: 13.8196,
+                        longitude: 100.04427,
+                        latitudeDelta: 0.0922,
+                        longitudeDelta: 0.0421,
                       }"
                       :style="{marginTop: MAP_HEADER.height}">
                 <view v-for="(categoryType, categoryTypeIndex) in mapDataList">
                     <view v-for="(category, categoryIndex) in categoryType.list">
                         <marker v-for="(marker, markerIndex) in category.markerList"
-                                v-if="category.markerVisibility"
-                                :coordinate="marker.coordinate"
-                                :title="marker.title"
+                                v-if="category.markerVisibility && marker.geometry.type === 'Point'"
+                                :coordinate="{
+                                    latitude: marker.geometry.coordinates[1],
+                                    longitude: marker.geometry.coordinates[0]
+                                }"
+                                :title="marker.properties.NAME_T"
                                 :description="marker.description"
                                 :image="category.image"
                                 :opacity="category.markerOpacity"
@@ -39,8 +42,8 @@
             <view class="header-container">
                 <linear-gradient class="header"
                                  :colors="[
-                                 MAP_HEADER.background[province].startColor,
-                                 MAP_HEADER.background[province].endColor
+                                    MAP_HEADER.background[province].startColor,
+                                    MAP_HEADER.background[province].endColor
                                  ]"
                                  :style="{height: MAP_HEADER.height}">
                     <touchable-opacity class="menu-icon-touchable"

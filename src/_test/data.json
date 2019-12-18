@@ -1,0 +1,61 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "name": "ข้อมูลภูมิสารสนเทศ",
+      "list": [
+        {
+          "id": 1,
+          "name": "ตำแหน่งอุบัติเหตุ",
+          "image": "http://fenrir.studio/d/gistda_dev/uploads/1rk1576090326.png",
+          "default": true,
+          "markerList": [
+            {
+              "type": "Feature",
+              "id": 1194,
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  100.1178728,
+                  14.1181364
+                ]
+              },
+              "properties": {
+                "NAME_T": "สถานีขนส่งบางหลวง",
+                "LOCATION_T": "",
+                "CATEGORY": 3,
+                "P_CODE": 73,
+                "IMAGES": [
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "name": "พื้นที่เสี่ยงบนท้องถนน",
+          "image": "http://fenrir.studio/d/gistda_dev/uploads/cat_2.png",
+          "default": true
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "ข้อมูลด้านอาหารปลอดภัย",
+      "list": [
+        {
+          "id": 7,
+          "name": "ตำแหน่งตลาด",
+          "image": "http://fenrir.studio/d/gistda_dev/uploads/cat_7.png",
+          "default": false
+        },
+        {
+          "id": 8,
+          "name": "ข้อมูลแปลงฟาร์มที่ผ่านการตรวจคุณภาพ",
+          "image": "http://fenrir.studio/d/gistda_dev/uploads/cat_8.png",
+          "default": false
+        }
+      ]
+    }
+  ]
+}
