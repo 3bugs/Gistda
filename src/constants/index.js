@@ -26,6 +26,20 @@ export const COLOR_PRIMARY_DARK = ['#09097e', '#ed4100'];
 export const DIMENSION = {
     horizontal_margin: 16,
 };
+export const PROVINCE_DIMENSION = [
+    {
+        minLatitude: 13.5978,
+        maxLatitude: 14.3090,
+        minLongitude: 99.7962,
+        maxLongitude: 100.3675,
+    },
+    {
+        minLatitude: 15.1984,
+        maxLatitude: 16.5366,
+        minLongitude: 103.9440,
+        maxLongitude: 104.8504,
+    }
+];
 export const MAP_HEADER = {
     height: 118,
     title: [

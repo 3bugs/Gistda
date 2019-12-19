@@ -14,27 +14,42 @@
 
         <view class="container"
               :style="{marginBottom: BOTTOM_NAV.height}">
-            <map-view class="map-view"
-                      :initial-region="{
-                        latitude: 13.8196,
-                        longitude: 100.04427,
-                        latitudeDelta: 0.0922,
-                        longitudeDelta: 0.0421,
-                      }"
-                      :style="{marginTop: MAP_HEADER.height}">
+            <map-view
+                    class="map-view"
+                    :initial-region="{
+                        latitude: (PROVINCE_DIMENSION[province].minLatitude + PROVINCE_DIMENSION[province].maxLatitude) / 2,
+                        longitude: (PROVINCE_DIMENSION[province].minLongitude + PROVINCE_DIMENSION[province].maxLongitude) / 2,
+                        latitudeDelta: PROVINCE_DIMENSION[province].maxLatitude - PROVINCE_DIMENSION[province].minLatitude,
+                        longitudeDelta: PROVINCE_DIMENSION[province].maxLongitude - PROVINCE_DIMENSION[province].minLongitude,
+                    }"
+                    :style="{marginTop: MAP_HEADER.height}"
+                    :on-map-ready="handleMapReady">
+
                 <view v-for="(categoryType, categoryTypeIndex) in mapDataList">
                     <view v-for="(category, categoryIndex) in categoryType.list">
-                        <marker v-for="(marker, markerIndex) in category.markerList"
+                        <!--จุด-->
+                        <marker
+                                v-for="(marker, markerIndex) in category.markerList"
                                 v-if="category.markerVisibility && marker.geometry.type === 'Point'"
                                 :coordinate="{
                                     latitude: marker.geometry.coordinates[1],
                                     longitude: marker.geometry.coordinates[0]
                                 }"
                                 :title="marker.properties.NAME_T"
-                                :description="marker.description"
+                                :description="null"
                                 :image="category.image"
                                 :opacity="category.markerOpacity"
-                                :on-press="handlePressMarker"/>
+                                :on-press="() => handlePressPoint(marker)"/>
+                        <!--เส้น-->
+                        <polyline
+                                v-for="(marker, markerIndex) in category.markerList"
+                                v-if="category.markerVisibility && marker.geometry.type === 'Linestring'"
+                                :coordinates="getPolylineCoordinates(marker.geometry.coordinates)"
+                                :title="marker.properties.NAME_T"
+                                :strokeColor="'#45b3ff'"
+                                :strokeWidth="marker.active ? 4 : 2"
+                                :tappable="true"
+                                :on-press="() => handlePressPolyline(marker)"/>
                     </view>
                 </view>
             </map-view>
@@ -170,10 +185,12 @@
 
 <script>
     import store from '../../store';
-    import {DEBUG, MAP_HEADER, BOTTOM_NAV, PROVINCE_NAME_EN, DIMENSION} from '../../constants';
+    import {DEBUG, MAP_HEADER, BOTTOM_NAV, PROVINCE_NAME_EN, DIMENSION, PROVINCE_DIMENSION} from '../../constants';
 
     import {StyleSheet} from 'react-native';
-    import MapView, {Marker} from 'react-native-maps';
+    import {Fragment} from 'react';
+    import MapView from 'react-native-map-clustering';
+    import {Marker, Polyline} from 'react-native-maps';
     import LinearGradient from 'react-native-linear-gradient';
     import CardView from 'react-native-cardview';
     import Drawer from 'react-native-drawer';
@@ -188,7 +205,7 @@
     import imageLightOn from '../../../assets/images/sidebar/ic_light_on.png';
 
     export default {
-        components: {MapView, Marker, LinearGradient, CardView, Drawer, FilterPanel, Slider, BottomSheet},
+        components: {Fragment, MapView, Marker, Polyline, LinearGradient, CardView, Drawer, FilterPanel, Slider, BottomSheet},
         props: {
             navigation: { // bottom nav
                 type: Object
@@ -207,7 +224,7 @@
         },
         data: () => {
             return {
-                StyleSheet, DEBUG, MAP_HEADER, BOTTOM_NAV, DIMENSION,
+                StyleSheet, DEBUG, MAP_HEADER, BOTTOM_NAV, DIMENSION, PROVINCE_DIMENSION,
                 imageMenu, imageBack, imageLightOff, imageLightOn,
             };
         },
@@ -238,8 +255,27 @@
                 //alert('KEY: ' + key + '\nVALUE: ' + value);
                 this.mapDataList[key].markerOpacity = value;
             },
-            handlePressMarker: function () {
+            handlePressPoint: function (marker) {
                 //this.$refs['bottomSheet'].snapTo(1);
+                //alert(marker.properties.NAME_T);
+                marker.active = true;
+            },
+            handlePressPolyline: function (marker) {
+                //alert(marker.properties.NAME_T);
+                marker.active = true;
+            },
+            getPolylineCoordinates: function (coordinates) {
+                const output = [];
+                coordinates.forEach(coord => {
+                    output.push({
+                        latitude: coord[1],
+                        longitude: coord[0],
+                    });
+                });
+                return output;
+            },
+            handleMapReady: function () {
+                //alert('Map ready!');
             },
         },
         created: function () {

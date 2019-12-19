@@ -6,7 +6,7 @@ export function SET_PROVINCE(state, {province}) {
 
 export function FETCHING_COORDINATE_CATEGORIES(state) {
     state.loadingCoordinateCategories = true;
-    state.loadingMessage = getLoadingMessage('Loading menu data');
+    state.loadingMessage = getLoadingMessage('Loading filter data');
 }
 
 export function SET_COORDINATE_CATEGORIES(state, {coordinateCategoryList}) {
@@ -28,7 +28,7 @@ function loadMapDataPref(coordinateCategoryList) {
 
 export function FETCHING_COORDINATES(state) {
     state.loadingCoordinates = true;
-    state.loadingMessage = getLoadingMessage('Loading coordinates data');
+    state.loadingMessage = getLoadingMessage('Loading maps data');
 }
 
 export function SET_COORDINATES(state, {coordinateList}) {
