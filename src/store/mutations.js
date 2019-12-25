@@ -1,4 +1,5 @@
 import {PROVINCE_NAME_EN} from '../constants/index';
+import {getLocalCategoryData, setLocalCategoryData} from './db';
 
 export function SET_PROVINCE(state, {province}) {
     state.province = province;
@@ -9,22 +10,76 @@ export function FETCHING_COORDINATE_CATEGORIES(state) {
     state.loadingMessage = getLoadingMessage('Loading filter data');
 }
 
-export function SET_COORDINATE_CATEGORIES(state, {coordinateCategoryList}) {
-    loadMapDataPref(coordinateCategoryList);
+export async function SET_COORDINATE_CATEGORIES(state, {coordinateCategoryList, callback}) {
+    await loadMapDataPref(state.province, coordinateCategoryList);
     state.coordinateCategoryList[PROVINCE_NAME_EN[state.province]] = coordinateCategoryList;
     state.loadingCoordinateCategories = false;
     state.loadingMessage = null;
+
+    callback();
 }
 
 //todo: load map data pref
-function loadMapDataPref(coordinateCategoryList) {
-    coordinateCategoryList.forEach(categoryType => {
-        categoryType.list.forEach(category => {
+async function loadMapDataPref(province, coordinateCategoryList) {
+    /*coordinateCategoryList.forEach(categoryType => {
+        categoryType.list.forEach(async category => {
+            const localCategoryData = await getLocalCategoryData(province, category.id);
+
             category.markerOpacity = 1;
-            category.markerVisibility = true;
+            if (localCategoryData.opacity) {
+                category.markerOpacity = localCategoryData.opacity;
+            }
+
+            category.markerVisibility = category.default;
+            if (localCategoryData.checked) {
+                category.markerVisibility = localCategoryData.checked;
+            }
+
+            category.markerList = null;
+            if (localCategoryData.cachedCoordinateList) {
+                category.markerList = localCategoryData.cachedCoordinateList;
+            }
         });
-    });
+    });*/
+
+    for (let i = 0; i < coordinateCategoryList.length; i++) {
+        const categoryType = coordinateCategoryList[i];
+        for (let j = 0; j < categoryType.list.length; j++) {
+            const category = categoryType.list[j];
+
+            const localCategoryData = await getLocalCategoryData(province, category.id);
+
+            /*{
+                checked: true,
+                opacity: 1,
+                cachedCoordinateList: [],
+                lastUpdated: ''
+            }*/
+
+            category.markerOpacity = 1;
+            if (localCategoryData.opacity) {
+                category.markerOpacity = localCategoryData.opacity;
+            }
+
+            category.markerVisibility = category.default;
+            if (localCategoryData.checked) {
+                category.markerVisibility = localCategoryData.checked;
+            }
+
+            category.markerList = null;
+            if (localCategoryData.cachedCoordinateList) {
+                category.markerList = localCategoryData.cachedCoordinateList;
+            }
+        }
+    }
 }
+
+//https://codeburst.io/javascript-async-await-with-foreach-b6ba62bbf404
+/*async function asyncForEach(array, callback) {
+    for (let i = 0; i < array.length; i++) {
+        await callback(array[i], i, array);
+    }
+}*/
 
 export function FETCHING_COORDINATES(state) {
     state.loadingCoordinates = true;

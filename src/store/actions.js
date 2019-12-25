@@ -56,19 +56,32 @@ export async function SET_PROVINCE({commit, state}, {province, callback}) {
     //todo: รเบุ province
     const apiResult = await fetchCoordinateCategories(province);
     if (apiResult.success) {
+        const coordinateCategoryList = apiResult.data.list;
         commit('SET_COORDINATE_CATEGORIES', {
-            coordinateCategoryList: apiResult.data.list
-        });
+            coordinateCategoryList,
+            callback: async () => {
+                // ตรงจุดนี้ coordinateCategoryList จะมีข้อมูลตามที่ดึงจาก API + ที่แคชไว้ใน local storage
 
-        await FETCH_COORDINATE({commit, state}, {
-            province,
-            idList: null /*todo*/,
-            callback: (success, message) => {
-                if (success) {
-                    callback(true, null);
-                } else {
-                    callback(false, message);
-                }
+                const idList = [];
+                coordinateCategoryList.forEach(categoryType => {
+                    categoryType.list.forEach(category => {
+                        if (category.markerVisibility && !category.markerList) {
+                            idList.push(category.id);
+                        }
+                    });
+                });
+
+                await FETCH_COORDINATE({commit, state}, {
+                    province,
+                    idList,
+                    callback: (success, message) => {
+                        if (success) {
+                            callback(true, null);
+                        } else {
+                            callback(false, message);
+                        }
+                    }
+                });
             }
         });
     } else {
