@@ -57,7 +57,7 @@ export async function fetchCoordinates(province, idList) {
     }
 
     const url = `${baseURL}/coords/?province_code=${provinceCode[province]}&${paramIdList}`;
-    console.log(url);
+    console.log(`Fetching ${url}`);
 
     try {
         const response = await fetch(url, {

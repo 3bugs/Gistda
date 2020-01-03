@@ -65,47 +65,56 @@ export async function SET_PROVINCE({commit, state}, {province, callback}) {
                 const idList = [];
                 coordinateCategoryList.forEach(categoryType => {
                     categoryType.list.forEach(category => {
+                        // ถ้า category ถูกเลือกไว้ และยังไม่มีข้อมูลแคช ก็จะดึง coords จาก api
                         if (category.markerVisibility && !category.markerList) {
                             idList.push(category.id);
                         }
                     });
                 });
 
-                await FETCH_COORDINATE({commit, state}, {
-                    province,
-                    idList,
-                    callback: (success, message) => {
-                        if (success) {
-                            callback(true, null);
-                        } else {
-                            callback(false, message);
+                if (idList.length > 0) {
+                    await FETCH_COORDINATES({commit, state}, {
+                        province,
+                        idList,
+                        callback: (success, message) => {
+                            if (success) {
+                                callback(true, null);
+                            } else {
+                                callback(false, message);
+                            }
                         }
-                    }
-                });
+                    });
+                }
             }
         });
     } else {
         commit('SET_COORDINATE_CATEGORIES', {
-            coordinateCategoryList: []
+            coordinateCategoryList: [],
+            callback: () => {
+                callback(false, apiResult.message);
+            }
         });
-        callback(false, apiResult.message);
     }
 }
 
-export async function FETCH_COORDINATE({commit, state}, {province, idList, callback}) {
+export async function FETCH_COORDINATES({commit, state}, {province, idList, callback}) {
     commit('FETCHING_COORDINATES');
 
     const apiResult = await fetchCoordinates(province, idList);
     if (apiResult.success) {
         commit('SET_COORDINATES', {
             coordinateList: apiResult.data,
+            callback: () => {
+                callback(true, null);
+            }
         });
-        callback(true, null);
     } else {
         commit('SET_COORDINATES', {
             coordinateList: [],
+            callback: () => {
+                callback(false, apiResult.message);
+            }
         });
-        callback(false, apiResult.message);
     }
 }
 

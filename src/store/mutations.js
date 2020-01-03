@@ -13,8 +13,13 @@ export function FETCHING_COORDINATE_CATEGORIES(state) {
 export async function SET_COORDINATE_CATEGORIES(state, {coordinateCategoryList, callback}) {
     await loadMapDataPref(state.province, coordinateCategoryList);
     state.coordinateCategoryList[PROVINCE_NAME_EN[state.province]] = coordinateCategoryList;
+
     state.loadingCoordinateCategories = false;
     state.loadingMessage = null;
+
+    console.log("----- SET_COORDINATE_CATEGORIES -----");
+    console.log(JSON.stringify(state.coordinateCategoryList[PROVINCE_NAME_EN[state.province]]));
+    console.log("----- SET_COORDINATE_CATEGORIES -----");
 
     callback();
 }
@@ -50,25 +55,25 @@ async function loadMapDataPref(province, coordinateCategoryList) {
             const localCategoryData = await getLocalCategoryData(province, category.id);
 
             /*{
-                checked: true,
-                opacity: 1,
-                cachedCoordinateList: [],
+                markerVisibility: true,
+                markerOpacity: 1,
+                markerList: [],
                 lastUpdated: ''
             }*/
 
             category.markerOpacity = 1;
-            if (localCategoryData.opacity) {
-                category.markerOpacity = localCategoryData.opacity;
+            if (localCategoryData && (localCategoryData.markerOpacity != null)) {
+                category.markerOpacity = localCategoryData.markerOpacity;
             }
 
             category.markerVisibility = category.default;
-            if (localCategoryData.checked) {
-                category.markerVisibility = localCategoryData.checked;
+            if (localCategoryData && (localCategoryData.markerVisibility != null)) {
+                category.markerVisibility = localCategoryData.markerVisibility;
             }
 
             category.markerList = null;
-            if (localCategoryData.cachedCoordinateList) {
-                category.markerList = localCategoryData.cachedCoordinateList;
+            if (localCategoryData && localCategoryData.markerList) {
+                category.markerList = localCategoryData.markerList;
             }
         }
     }
@@ -86,21 +91,46 @@ export function FETCHING_COORDINATES(state) {
     state.loadingMessage = getLoadingMessage('Loading maps data');
 }
 
-export function SET_COORDINATES(state, {coordinateList}) {
-    coordinateList.forEach(item => {
-        state.coordinateCategoryList[PROVINCE_NAME_EN[state.province]].forEach(categoryTypeItem => {
-            categoryTypeItem.list.forEach(categoryItem => {
-                if (item.properties.CATEGORY === categoryItem.id) {
-                    if (!categoryItem.markerList) {
-                        categoryItem.markerList = [];
-                    }
-                    categoryItem.markerList.push(item);
+export async function SET_COORDINATES(state, {coordinateList, callback}) {
+    const coordinateSparseArray = [];
+    coordinateList.forEach(coordinate => {
+        const category = coordinate.properties.CATEGORY;
+        if (!coordinateSparseArray[category]) {
+            coordinateSparseArray[category] = [];
+        }
+        coordinateSparseArray[category].push(coordinate);
+    });
+
+    // แคชไว้ใน local storage
+    for (let i = 0; i < coordinateSparseArray.length; i++) {
+        const markerList = coordinateSparseArray[i];
+        if (markerList) {
+            await setLocalCategoryData(
+                state.province,
+                i,
+                {
+                    markerList,
                 }
-            });
+            );
+        }
+    }
+
+    state.coordinateCategoryList[PROVINCE_NAME_EN[state.province]].forEach(categoryTypeItem => {
+        categoryTypeItem.list.forEach(categoryItem => {
+            if (coordinateSparseArray[categoryItem.id]) {
+                categoryItem.markerList = coordinateSparseArray[categoryItem.id];
+            }
         });
     });
+
+    console.log("----- SET_COORDINATES -----");
+    console.log(JSON.stringify(state.coordinateCategoryList[PROVINCE_NAME_EN[state.province]]));
+    console.log("----- SET_COORDINATES -----");
+
     state.loadingCoordinates = false;
     state.loadingMessage = null;
+
+    callback();
 }
 
 export function FETCHING_NEWS(state) {

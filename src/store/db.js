@@ -20,11 +20,10 @@ async function loadData() {
     }
 }
 
-//todo: รื้อใหม่ ดู comment ข้างล่าง ********************************************
-export async function setLocalCategoryData(province, categoryId, data) {
-    const KEY = _getCategoryDataMapKey(province);
+export async function setLocalCategoryData(province, category, data) {
+    const KEY = _getCategoryDataMapKey(province, category);
 
-    let categoryData = JSON.parse(await getCategoryData(province, categoryId));
+    let categoryData = await getLocalCategoryData(province, category);
     if (!categoryData) {
         categoryData = {};
     }
@@ -32,22 +31,49 @@ export async function setLocalCategoryData(province, categoryId, data) {
     Object.keys(data).forEach(propertyName => {
         categoryData[propertyName] = data[propertyName];
     });
+
+    try {
+        await AsyncStorage.setItem(KEY, JSON.stringify(categoryData));
+
+        console.log(`Saving cache for ${KEY}: `);
+        _logCategoryObject(categoryData);
+
+        return true;
+    } catch (error) {
+        return false;
+    }
 }
 
-//todo: รื้อใหม่ ดู comment ข้างล่าง ********************************************
 export async function getLocalCategoryData(province, category) {
     const KEY = _getCategoryDataMapKey(province, category);
 
     try {
-        const categoryData = await AsyncStorage.getItem(KEY);
+        let categoryData = JSON.parse(await AsyncStorage.getItem(KEY));
         if (!categoryData) {
-            await AsyncStorage.setItem(KEY, JSON.stringify({}));
-            return {};
-        } else {
-            return JSON.parse(categoryData);
+            categoryData = {};
+            await AsyncStorage.setItem(KEY, JSON.stringify(categoryData));
         }
+
+        console.log(`Loading cache for ${KEY}: `);
+        _logCategoryObject(categoryData);
+
+        return categoryData;
     } catch (error) {
         return null;
+    }
+}
+
+function _logCategoryObject(categoryData) {
+    if (!categoryData) {
+        console.log(`  - NULL`);
+    } else {
+        Object.keys(categoryData).forEach(propertyName => {
+            if (propertyName === 'markerList') {
+                console.log(`  - [${propertyName}]: COUNT = ${categoryData[propertyName].length}`);
+            } else {
+                console.log(`  - [${propertyName}]: ${categoryData[propertyName]}`);
+            }
+        });
     }
 }
 
@@ -55,36 +81,20 @@ function _getCategoryDataMapKey(province, category) {
     return `province-${province}-category-${category}`;
 }
 
-// เก็บ categoryDataMap หน้าตาแบบนี้ (สำหรับแต่ละจังหวัด)
-const _categoryDataMap = {
-    '1': {
-        checked: true,
-        opacity: 1.0,
-        cachedCoordinateList: [],
-        lastUpdated: '',
-    },
-    '2': {
-        checked: true,
-        opacity: 1.0,
-        cachedCoordinateList: [],
-        lastUpdated: '',
-    },
-};
-
 /*
 * เปลี่ยนใหม่ แบบนี้ดีกว่า (แยก key ไปเลย)
 asyncStorage key province.0-category.1
 {
-    checked: true,
-    opacity: 1.0,
-    cachedCoordinateList: [],
+    markerVisibility: true,
+    markerOpacity: 1.0,
+    markerList: [],
     lastUpdated: '',
 }
 asyncStorage key province.0-category.2
 {
-    checked: false,
-    opacity: 0.5,
-    cachedCoordinateList: [],
+    markerVisibility: false,
+    markerOpacity: 0.5,
+    markerList: [],
     lastUpdated: '',
 }
 * */

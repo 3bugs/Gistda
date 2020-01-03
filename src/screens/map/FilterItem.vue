@@ -80,6 +80,7 @@
 
 <script>
     import store from '../../store';
+    import {getLocalCategoryData, setLocalCategoryData} from '../../store/db';
     import {DEBUG, SIDEBAR} from '../../constants';
 
     import {StyleSheet} from 'react-native';
@@ -137,16 +138,67 @@
                     opacity: value
                 });
             },
-            handleCheckChange: function (e) {
+            handleCheckChange: async function (e) {
                 //alert(e.target);
-                this.visibilityValue = !this.visibilityValue;
 
-                store.dispatch('SET_MARKER_VISIBILITY', {
-                    id: this.item.id,
-                    index: this.index,
-                    typeIndex: this.typeIndex,
-                    visibility: this.visibilityValue
-                });
+                if (!this.visibilityValue) {
+                    console.log('Checking if cache exist');
+                    const categoryData = await getLocalCategoryData(this.province, this.item.id);
+
+                    if (!categoryData || !categoryData.markerList) { // ถ้ายังไม่มีในแคช
+                        console.log(`Cache NOT found: province-${this.province}-category-${this.item.id}`);
+
+                        await store.dispatch('FETCH_COORDINATES', {
+                            province: this.province,
+                            idList: [this.item.id],
+                            callback: (success, message) => {
+
+                                console.log('8'); //todo************************************
+
+                                this.visibilityValue = !this.visibilityValue;
+
+                                console.log('9'); //todo************************************
+
+                                store.dispatch('SET_MARKER_VISIBILITY', {
+                                    id: this.item.id,
+                                    index: this.index,
+                                    typeIndex: this.typeIndex,
+                                    visibility: this.visibilityValue
+                                });
+
+                                console.log('10'); //todo************************************
+
+                                setLocalCategoryData(this.province, this.item.id, {markerVisibility: this.visibilityValue});
+
+                                console.log('11'); //todo************************************
+                            },
+                        });
+                    } else { // ถ้ามีในแคชแล้ว ไม่ต้อง fetch ใหม่
+                        console.log(`Cache found: province-${this.province}-category-${this.item.id}`);
+
+                        this.visibilityValue = !this.visibilityValue;
+
+                        await store.dispatch('SET_MARKER_VISIBILITY', {
+                            id: this.item.id,
+                            index: this.index,
+                            typeIndex: this.typeIndex,
+                            visibility: this.visibilityValue
+                        });
+
+                        await setLocalCategoryData(this.province, this.item.id, {markerVisibility: this.visibilityValue});
+                    }
+                } else {
+                    this.visibilityValue = !this.visibilityValue;
+
+                    await store.dispatch('SET_MARKER_VISIBILITY', {
+                        id: this.item.id,
+                        index: this.index,
+                        typeIndex: this.typeIndex,
+                        visibility: this.visibilityValue
+                    });
+
+                    await setLocalCategoryData(this.province, this.item.id, {markerVisibility: this.visibilityValue});
+                }
             }
         },
         created: function () {
