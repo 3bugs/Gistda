@@ -23,6 +23,17 @@ export const PROVINCE_NAME_EN = ['Nakhon Pathom', 'Yasothon'];
 export const COLOR_PRIMARY = ['#4041da', '#f47442'];
 export const COLOR_PRIMARY_DARK = ['#09097e', '#ed4100'];
 
+export const INCIDENT_FORM_DATA = {
+    KEY_INCIDENT_CATEGORY: 'incidentCategory',
+    KEY_DETAILS: 'details',
+    KEY_PROVINCE: 'province',
+    KEY_DISTRICT: 'district',
+    KEY_SUB_DISTRICT: 'subDistrict',
+    KEY_REPORTER: 'reporter',
+    KEY_EMAIL: 'email',
+    KEY_PHONE: 'phone',
+};
+
 export const DIMENSION = {
     horizontal_margin: 16,
 };

@@ -214,6 +214,28 @@ export function CLOSE_DRAWER({commit, state}, {}) {
     });
 }
 
+export function SET_INCIDENT_FORM_DATA({commit, state}, {formData}) {
+    commit('SET_INCIDENT_FORM_DATA', {
+        formData
+    });
+}
+
+export function CLEAR_INCIDENT_FORM_DATA_AND_IMAGES({commit, state}, {}) {
+    commit('CLEAR_INCIDENT_FORM_DATA_AND_IMAGES', {});
+}
+
+export function ADD_INCIDENT_IMAGE({commit, state}, {imageData}) {
+    commit('ADD_INCIDENT_IMAGE', {
+        imageData
+    });
+}
+
+export function DELETE_INCIDENT_IMAGE({commit, state}, {imageIndex}) {
+    commit('DELETE_INCIDENT_IMAGE', {
+        imageIndex
+    });
+}
+
 /*
 export function SET_LOADING_MESSAGE({commit, state}, {message}) {
     commit('SET_LOADING_MESSAGE', {

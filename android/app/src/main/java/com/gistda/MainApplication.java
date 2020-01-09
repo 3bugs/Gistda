@@ -3,6 +3,10 @@ package com.gistda;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import fr.snapp.imagebase64.RNImgToBase64Package;
+import com.RNFetchBlob.RNFetchBlobPackage;
+import fr.bamlab.rnimageresizer.ImageResizerPackage;
+import com.imagepicker.ImagePickerPackage;
 import com.github.wumke.RNImmediatePhoneCall.RNImmediatePhoneCallPackage;
 import com.reactnativecommunity.slider.ReactSliderPackage;
 import com.kishanjvaghela.cardview.RNCardViewPackage;
@@ -32,6 +36,10 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNImgToBase64Package(),
+            new RNFetchBlobPackage(),
+            new ImageResizerPackage(),
+            new ImagePickerPackage(),
             new RNImmediatePhoneCallPackage(),
             new ReactSliderPackage(),
             new RNCardViewPackage(),

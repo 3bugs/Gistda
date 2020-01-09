@@ -152,12 +152,7 @@
                             province: this.province,
                             idList: [this.item.id],
                             callback: (success, message) => {
-
-                                console.log('8'); //todo************************************
-
                                 this.visibilityValue = !this.visibilityValue;
-
-                                console.log('9'); //todo************************************
 
                                 store.dispatch('SET_MARKER_VISIBILITY', {
                                     id: this.item.id,
@@ -166,11 +161,7 @@
                                     visibility: this.visibilityValue
                                 });
 
-                                console.log('10'); //todo************************************
-
                                 setLocalCategoryData(this.province, this.item.id, {markerVisibility: this.visibilityValue});
-
-                                console.log('11'); //todo************************************
                             },
                         });
                     } else { // ถ้ามีในแคชแล้ว ไม่ต้อง fetch ใหม่

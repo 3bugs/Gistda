@@ -21,7 +21,7 @@
                         :state="currentRouteIndex === itemIndex"
                         :callback="handleClickItem"/>
                 <touchable-opacity class="item-container-touchable"
-                                   :on-press="null">
+                                   :on-press="addIncidentReport">
                     <view class="item-container">
                         <image :source="BOTTOM_NAV.addIcon[province]"
                                :style="{width: 56, height: 56}"
@@ -176,6 +176,9 @@
                     alert('No route to go!');
                 }
             },
+            addIncidentReport: function () {
+                this.navigation.navigate('IncidentForm');
+            }
         }
     }
 </script>

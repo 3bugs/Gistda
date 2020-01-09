@@ -189,7 +189,7 @@
 
     import {StyleSheet} from 'react-native';
     import {Fragment} from 'react';
-    import MapView from 'react-native-map-clustering';
+    import MapView from 'react-native-maps';
     import {Marker, Polyline} from 'react-native-maps';
     import LinearGradient from 'react-native-linear-gradient';
     import CardView from 'react-native-cardview';

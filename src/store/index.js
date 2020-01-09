@@ -8,7 +8,7 @@ import Vuex from 'vuex';
 import * as actions from './actions';
 import * as mutations from './mutations';
 
-import {PROVINCE_NAME_EN} from '../constants/index';
+import {PROVINCE_NAME_TH, PROVINCE_NAME_EN, INCIDENT_FORM_DATA} from '../constants/index';
 
 Vue.use(Vuex);
 
@@ -22,6 +22,30 @@ const store = new Vuex.Store({
         drawerOpen: false,
         loadingMessage: null,
         loadingCoordinateCategories: false,
+
+        incidentFormData: {
+            [INCIDENT_FORM_DATA.KEY_INCIDENT_CATEGORY]: 0,
+            [INCIDENT_FORM_DATA.KEY_DETAILS]: '',
+            [INCIDENT_FORM_DATA.KEY_PROVINCE]: '',
+            [INCIDENT_FORM_DATA.KEY_DISTRICT]: -1,
+            [INCIDENT_FORM_DATA.KEY_SUB_DISTRICT]: -1,
+            [INCIDENT_FORM_DATA.KEY_REPORTER]: '',
+            [INCIDENT_FORM_DATA.KEY_EMAIL]: '',
+            [INCIDENT_FORM_DATA.KEY_PHONE]: '',
+        },
+        incidentImages: [],
+
+        /*incidentFormData: {
+            category: null,
+            details: null,
+            province: null,
+            district: null,
+            subDistrict: null,
+            reporter: null,
+            email: null,
+            phone: null,
+            pickedImages: [],
+        },*/
 
         //กำหนดเป็น array แล้วมีปัญหากับ data binding, view ไม่อัพเดท
         coordinateCategoryList: {

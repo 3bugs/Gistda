@@ -209,6 +209,50 @@ export function SET_DRAWER_OPEN(state, {drawerOpen}) {
     state.drawerOpen = drawerOpen;
 }
 
+export function SET_INCIDENT_FORM_DATA(state, {formData}) {
+    if (!state.incidentFormData) {
+        state.incidentFormData = {};
+    }
+
+    Object.keys(formData).forEach(propertyName => {
+        state.incidentFormData[propertyName] = formData[propertyName];
+    });
+
+    logObjectProperties('incidentFormData', state.incidentFormData);
+}
+
+export function CLEAR_INCIDENT_FORM_DATA_AND_IMAGES(state, {}) {
+    state.incidentFormData = null;
+    state.incidentImages = [];
+
+    logObjectProperties('incidentFormData', state.incidentFormData);
+    console.log(`Incident images count: ${state.incidentImages.length}`);
+}
+
+export function ADD_INCIDENT_IMAGE(state, {imageData}) {
+    state.incidentImages.push(imageData);
+
+    console.log(`Incident images count: ${state.incidentImages.length}`);
+}
+
+export function DELETE_INCIDENT_IMAGE(state, {imageIndex}) {
+    state.incidentImages.splice(imageIndex, 1);
+
+    console.log(`Incident images count: ${state.incidentImages.length}`);
+}
+
+function logObjectProperties(objectName, object) {
+    console.log(`Properties of ${objectName}:`);
+    if (object) {
+        Object.keys(object).forEach(propertyName => {
+            console.log(`   - ${propertyName} = ${object[propertyName]}`);
+        });
+    } else {
+        console.log(`${objectName} is NULL!`);
+    }
+    console.log('.');
+}
+
 function getLoadingMessage(message) {
     return /*'รอสักครู่\n' +*/ message;
 }
