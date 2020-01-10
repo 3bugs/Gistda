@@ -1,7 +1,7 @@
 import ApiResult from '../model/ApiResult';
 
 const baseURL = 'https://fenrir.studio/d/gistda_dev';
-const provinceCode = [
+export const provinceCode = [
     73, // นครปฐม
     35, // ยโสธร
 ];
@@ -23,6 +23,45 @@ export async function _fetch(path) {
                 true,
                 message,
                 data
+            );
+        } else {
+            return new ApiResult(
+                false,
+                `[${statusCode}]: ${message}`,
+                null
+            );
+        }
+    } catch (error) {
+        return new ApiResult(
+            false,
+            `เกิดข้อผิดพลาดในการเชื่อมต่อเครือข่าย - ${error}`,
+            null
+        );
+    }
+}
+
+export async function submitFormData(formData) {
+    const url = `${baseURL}/alarms/send`;
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer FqpKh7GbRPsBoH1nPGmMaPfCOyNjUg',
+            },
+            body: JSON.stringify(formData)
+        });
+        const responseJson = await response.json();
+
+        const statusCode = responseJson.result.status_code;
+        const message = responseJson.result.description;
+
+        if (statusCode === 200) {
+            return new ApiResult(
+                true,
+                message,
+                null
             );
         } else {
             return new ApiResult(

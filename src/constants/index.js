@@ -32,6 +32,8 @@ export const INCIDENT_FORM_DATA = {
     KEY_REPORTER: 'reporter',
     KEY_EMAIL: 'email',
     KEY_PHONE: 'phone',
+    KEY_LATITUDE: 'latitude',
+    KEY_LONGITUDE: 'longitude',
 };
 
 export const DIMENSION = {

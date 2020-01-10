@@ -5,6 +5,10 @@ export function SET_PROVINCE(state, {province}) {
     state.province = province;
 }
 
+export function SUBMITTING_INCIDENT_FORM_DATA(state, {isSubmitting}) {
+    state.submittingFormData = isSubmitting;
+}
+
 export function FETCHING_COORDINATE_CATEGORIES(state) {
     state.loadingCoordinateCategories = true;
     state.loadingMessage = getLoadingMessage('Loading filter data');

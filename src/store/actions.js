@@ -1,4 +1,5 @@
-import {fetchNewsDetails, fetchPosts, fetchSuggest} from './fetch';
+import {provinceCode, fetchNewsDetails, fetchPosts, fetchSuggest, submitFormData} from './fetch';
+import {INCIDENT_FORM_DATA} from '../constants/index';
 import {AsyncStorage} from 'react-native';
 
 // ensure data for rendering given list type
@@ -115,6 +116,39 @@ export async function FETCH_COORDINATES({commit, state}, {province, idList, call
                 callback(false, apiResult.message);
             }
         });
+    }
+}
+
+export async function SUBMIT_INCIDENT_FORM_DATA({commit, state}, {callback}) {
+    commit('SUBMITTING_INCIDENT_FORM_DATA', {isSubmitting: true});
+
+    //todo: validate form data first!!!
+
+    const formData = {
+        type: state.incidentFormData[INCIDENT_FORM_DATA.KEY_INCIDENT_CATEGORY],
+        detail: state.incidentFormData[INCIDENT_FORM_DATA.KEY_DETAILS],
+        address: '',
+        subdistrict: state.incidentFormData[INCIDENT_FORM_DATA.KEY_SUB_DISTRICT],
+        district: state.incidentFormData[INCIDENT_FORM_DATA.KEY_DISTRICT],
+        province_code: provinceCode[state.province],
+        lat: state.incidentFormData[INCIDENT_FORM_DATA.KEY_LATITUDE],
+        lng: state.incidentFormData[INCIDENT_FORM_DATA.KEY_LONGITUDE],
+        name: state.incidentFormData[INCIDENT_FORM_DATA.KEY_REPORTER],
+        email: state.incidentFormData[INCIDENT_FORM_DATA.KEY_EMAIL],
+        phone: state.incidentFormData[INCIDENT_FORM_DATA.KEY_PHONE],
+        images: state.incidentImages,
+    };
+
+    console.log(`Incident form data:`);
+    console.log(formData);
+
+    const apiResult = await submitFormData(formData);
+    commit('SUBMITTING_INCIDENT_FORM_DATA', {isSubmitting: false});
+
+    if (apiResult.success) {
+        callback(true, null);
+    } else {
+        callback(false, apiResult.message);
     }
 }
 

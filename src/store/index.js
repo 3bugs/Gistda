@@ -22,16 +22,19 @@ const store = new Vuex.Store({
         drawerOpen: false,
         loadingMessage: null,
         loadingCoordinateCategories: false,
+        submittingFormData: false,
 
         incidentFormData: {
             [INCIDENT_FORM_DATA.KEY_INCIDENT_CATEGORY]: 0,
-            [INCIDENT_FORM_DATA.KEY_DETAILS]: '',
+            [INCIDENT_FORM_DATA.KEY_DETAILS]: 'ทดสอบรายละเอียด',
             [INCIDENT_FORM_DATA.KEY_PROVINCE]: '',
             [INCIDENT_FORM_DATA.KEY_DISTRICT]: -1,
             [INCIDENT_FORM_DATA.KEY_SUB_DISTRICT]: -1,
-            [INCIDENT_FORM_DATA.KEY_REPORTER]: '',
-            [INCIDENT_FORM_DATA.KEY_EMAIL]: '',
-            [INCIDENT_FORM_DATA.KEY_PHONE]: '',
+            [INCIDENT_FORM_DATA.KEY_REPORTER]: 'Promlert Lovichit', //todo: ***
+            [INCIDENT_FORM_DATA.KEY_EMAIL]: 'promlert@gmail.com',
+            [INCIDENT_FORM_DATA.KEY_PHONE]: '085-058-1776',
+            [INCIDENT_FORM_DATA.KEY_LATITUDE]: null,
+            [INCIDENT_FORM_DATA.KEY_LONGITUDE]: null,
         },
         incidentImages: [],
 

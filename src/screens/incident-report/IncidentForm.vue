@@ -108,20 +108,41 @@
                             :editable="true"/>
 
                     <text class="label">พิกัดจุดเกิดเหตุ</text>
-                    <map-view
-                            ref="mapView"
-                            :style="{
+                    <view :style="{
                                 height: (Dimensions.get('window').width - (2 * DIMENSION.horizontal_margin)) * 0.67,
                                 marginTop: 15,
-                            }"
-                            :initial-region="{
-                                latitude: (PROVINCE_DIMENSION[province].minLatitude + PROVINCE_DIMENSION[province].maxLatitude) / 2,
-                                longitude: (PROVINCE_DIMENSION[province].minLongitude + PROVINCE_DIMENSION[province].maxLongitude) / 2,
-                                latitudeDelta: 0.005,
-                                longitudeDelta: 0.005,
-                            }">
+                          }">
+                        <map-view
+                                ref="mapView"
+                                :style="{
+                                    width: '100%',
+                                    height: '100%',
+                                }"
+                                :initial-region="{
+                                    latitude: (PROVINCE_DIMENSION[province].minLatitude + PROVINCE_DIMENSION[province].maxLatitude) / 2,
+                                    longitude: (PROVINCE_DIMENSION[province].minLongitude + PROVINCE_DIMENSION[province].maxLongitude) / 2,
+                                    latitudeDelta: 0.005,
+                                    longitudeDelta: 0.005,
+                                }"
+                                :on-region-change-complete="handleRegionChange">
 
-                    </map-view>
+                        </map-view>
+
+                        <view :style="{
+                            position: 'absolute',
+                            left: '50%',
+                            top: '50%',
+                            marginLeft: -20,
+                            marginTop: -20
+                        }">
+                            <image :style="{
+                                        width: 40,
+                                        height: 40,
+                                    }"
+                                   :source="imageMarker"
+                                   resize-mode="contain"/>
+                        </view>
+                    </view>
 
                     <floating-label-input
                             :name="INCIDENT_FORM_DATA.KEY_PROVINCE"
@@ -235,7 +256,40 @@
                         </touchable-opacity>
                     </view>
 
-                    <view :style="{marginBottom: 20}"/>
+                    <view :style="{marginBottom: 25}"/>
+
+                    <!--<button
+                        title="แจ้งเหตุ"
+                        :on-press="handleClickSubmitButton"
+                        color="#1665D8"
+                        :style="{
+                            fontFamily: 'DBHeavent-Med',
+                            fontSize: 22,
+                        }"
+                    />-->
+
+                    <touchable-opacity
+                            :on-press="handleClickSubmitButton"
+                            :active-opacity="0.6"
+                            :style="{
+
+                            }">
+                        <view :style="{
+                            backgroundColor: '#1665D8',
+                            paddingTop: 12,
+                            paddingBottom: 12,
+                            alignItems: 'center',
+                            borderRadius: 60,
+                        }">
+                            <text :style="{
+                                fontFamily: 'DBHeavent-Med',
+                                fontSize: 22,
+                                color: 'white',
+                            }">แจังเหตุ</text>
+                        </view>
+                    </touchable-opacity>
+
+                    <view :style="{marginBottom: 25}"/>
                 </scroll-view>
             </view>
         </view>
@@ -270,6 +324,12 @@
                         }"/>
             </dialog-container>
         </view>
+
+        <activity-indicator
+                class="progress"
+                size="large"
+                :color="COLOR_PRIMARY[province]"
+                v-if="isSubmitting"/>
     </view>
 </template>
 
@@ -280,18 +340,19 @@
     import Header from '../../components/Header';
     import FloatingLabelInput from '../../components/FloatingLabelInput';
 
-    import {Dimensions, Picker} from 'react-native';
-    import {StyleSheet} from 'react-native';
+    import {Platform, PermissionsAndroid, StyleSheet, Dimensions, Picker} from 'react-native';
     import CardView from 'react-native-cardview';
     import ImagePicker from 'react-native-image-picker';
     import ImageResizer from 'react-native-image-resizer';
     import ImgToBase64 from 'react-native-image-base64';
     import Dialog from "react-native-dialog";
     import MapView from 'react-native-maps';
+    import Geolocation from 'react-native-geolocation-service';
 
     import imageBack from '../../../assets/images/ic_back.png';
     import imageClose from '../../../assets/images/ic_close.png';
     import imageAdd from '../../../assets/images/ic_add.png';
+    import imageMarker from '../../../assets/images/ic_marker.png';
 
     const THUMB_IMAGE_SIZE = 100;
 
@@ -366,6 +427,9 @@
                 return this.districtValue === -1
                     ? []
                     : this.DISTRICT_DATA[this.province][this.districtValue].subDistricts;
+            },
+            isSubmitting() {
+                return store.state.submittingFormData;
             }
         },
         data: () => {
@@ -373,7 +437,7 @@
                 DEBUG, PROVINCE_NAME_TH, DIMENSION, COLOR_PRIMARY, COLOR_PRIMARY_DARK,
                 DISTRICT_DATA, INCIDENT_FORM_DATA, PROVINCE_DIMENSION,
                 Dimensions, StyleSheet,
-                imageBack, imageClose, imageAdd,
+                imageBack, imageClose, imageAdd, imageMarker,
                 incidentCategories: [
                     '-- เลือกหมวดหมู่ของเหตุ --',
                     'อุบัติเหตุ', 'รถเสีย', 'การชุมนุม', 'คำเตือน', 'โรคระบาด', 'สุขลักษณะสถานที่จำหน่ายอาหาร', 'อื่นๆ'
@@ -412,13 +476,6 @@
                 });
             },
             handleClickAddImage: function () {
-                this.$refs['mapView'].animateToRegion({
-                    latitude: 13.7563,
-                    longitude: 100.5018,
-                    latitudeDelta: 0.1,
-                    longitudeDelta: 0.1,
-                });
-
                 const options = {
                     title: 'ถ่ายรูปหรือเลือกรูปภาพ',
                     takePhotoButtonTitle: 'ถ่ายรูป...',
@@ -485,6 +542,79 @@
                 });
                 this.showImageDialog = false;
             },
+            getCurrentLocation: function () {
+                if (Platform.OS === 'android') { // android
+                    this.requestLocationPermission((success, message) => {
+                        if (success) {
+                            this.doGetCurrentLocation();
+                        } else {
+                            alert(message);
+                        }
+                    });
+                } else { // ios
+                    this.doGetCurrentLocation();
+                }
+            },
+            doGetCurrentLocation: function () {
+                Geolocation.getCurrentPosition(
+                    (position) => {
+                        console.log(position.coords);
+
+                        this.$refs['mapView'].animateToRegion({
+                            latitude: position.coords.latitude,
+                            longitude: position.coords.longitude,
+                            latitudeDelta: 0.005,
+                            longitudeDelta: 0.005,
+                        });
+                    },
+                    (error) => {
+                        console.log(`Error getting location: ${error.message}`);
+                    },
+                    { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+                );
+            },
+            requestLocationPermission: async function (callback) {
+                try {
+                    const granted = await PermissionsAndroid.request(
+                        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+                        {
+                            title: this.APP_NAME,
+                            message:
+                                'แอปจำเป็นต้องขอข้อมูลตำแหน่งปัจจุบันของคุณ',
+                            buttonNegative: 'ยกเลิก',
+                            buttonPositive: 'ตกลง',
+                        },
+                    );
+                    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                        callback(true, null);
+                    } else {
+                        callback(false, 'แอปไม่ได้รับอนุญาตจากผู้ใช้ จึงไม่สามารถตรวจสอบตำแหน่งปัจจุบันได้');
+                    }
+                } catch (err) {
+                    callback(false, err);
+                }
+            },
+            handleRegionChange: function (region) {
+                store.dispatch('SET_INCIDENT_FORM_DATA', {
+                    formData: {
+                        [INCIDENT_FORM_DATA.KEY_LATITUDE]: region.latitude,
+                        [INCIDENT_FORM_DATA.KEY_LONGITUDE]: region.longitude,
+                    },
+                });
+            },
+            handleClickSubmitButton: function () {
+                if (this.isSubmitting) return;
+
+                store.dispatch('SUBMIT_INCIDENT_FORM_DATA', {
+                    callback: (success, message) => {
+                        if (success) {
+                            alert('Submit data successfully.');
+                        } else {
+                            alert(message);
+                        }
+                    },
+                });
+            }
         },
         created: function () {
             store.dispatch('SET_INCIDENT_FORM_DATA', {
@@ -492,6 +622,8 @@
                     [INCIDENT_FORM_DATA.KEY_PROVINCE]: this.PROVINCE_NAME_TH[this.province],
                 },
             });
+
+            this.getCurrentLocation();
         }
     }
 </script>
@@ -546,5 +678,13 @@
         padding-bottom: 0;
         margin-top: 25;
         margin-bottom: 0;
+    }
+
+    .progress {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-width: 0;
+        border-color: yellow;
     }
 </style>
