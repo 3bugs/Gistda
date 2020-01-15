@@ -18,6 +18,7 @@
     import Map from './src/screens/map/Map';
     import News from './src/screens/news/News';
     import NewsDetails from './src/screens/news/NewsDetails';
+    import Login from './src/screens/login/Login';
     import IncidentForm from './src/screens/incident-report/IncidentForm';
     import SettingsScreen from './src/screens/map/SettingsScreen';
     import TabBar from './src/components/TabBar';
@@ -80,6 +81,12 @@
             },
             NewsDetails: {
                 screen: NewsDetails,
+                navigationOptions: {
+                    header: null,
+                }
+            },
+            Login: {
+                screen: Login,
                 navigationOptions: {
                     header: null,
                 }

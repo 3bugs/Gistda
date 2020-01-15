@@ -95,6 +95,7 @@
 <script>
     import store from '../store';
     import {DEBUG, BOTTOM_NAV, DIMENSION} from '../constants';
+    import {setUser, getUser} from '../store/db';
 
     import {Dimensions, StyleSheet} from 'react-native';
     import TabBarItem from './TabBarItem';
@@ -176,8 +177,16 @@
                     alert('No route to go!');
                 }
             },
-            addIncidentReport: function () {
-                this.navigation.navigate('IncidentForm');
+            addIncidentReport: async function () {
+                /*this.navigation.navigate('IncidentForm');
+                return;*/
+
+                const user = await getUser();
+                if (user === null) {
+                    this.navigation.navigate('Login');
+                } else {
+                    this.navigation.navigate('IncidentForm');
+                }
             }
         }
     }

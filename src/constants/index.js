@@ -135,3 +135,15 @@ export const SCREEN_NEWS = {
         imagePhoneYasothon
     ],
 };
+export const SCREEN_LOGIN = {
+    background: [
+        {
+            startColor: COLOR_PRIMARY_DARK[0],
+            endColor: COLOR_PRIMARY[0],
+        },
+        {
+            startColor: COLOR_PRIMARY_DARK[1],
+            endColor: COLOR_PRIMARY[1],
+        },
+    ],
+};

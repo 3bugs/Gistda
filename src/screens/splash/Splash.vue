@@ -7,7 +7,9 @@
         />
         <view class="main-container">
             <view class="logo-container" :style="{paddingBottom: bottomPadding}">
-                <image class="logo" :source="logo"/>
+                <image class="logo"
+                       :source="logo"
+                       resize-mode="contain"/>
                 <text class="title">{{title}}</text>
             </view>
             <text class="powered-by">{{poweredBy}}</text>
@@ -73,7 +75,6 @@
     .logo {
         width: 250;
         height: 250;
-        resize-mode: contain;
     }
 
     .title {

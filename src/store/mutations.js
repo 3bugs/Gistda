@@ -1,4 +1,4 @@
-import {PROVINCE_NAME_EN} from '../constants/index';
+import {PROVINCE_NAME_EN, INCIDENT_FORM_DATA} from '../constants/index';
 import {getLocalCategoryData, setLocalCategoryData} from './db';
 
 export function SET_PROVINCE(state, {province}) {
@@ -226,7 +226,16 @@ export function SET_INCIDENT_FORM_DATA(state, {formData}) {
 }
 
 export function CLEAR_INCIDENT_FORM_DATA_AND_IMAGES(state, {}) {
-    state.incidentFormData = null;
+    state.incidentFormData[INCIDENT_FORM_DATA.KEY_INCIDENT_CATEGORY] = 0;
+    state.incidentFormData[INCIDENT_FORM_DATA.KEY_DETAILS] = '';
+    state.incidentFormData[INCIDENT_FORM_DATA.KEY_PROVINCE] = '';
+    state.incidentFormData[INCIDENT_FORM_DATA.KEY_DISTRICT] = -1;
+    state.incidentFormData[INCIDENT_FORM_DATA.KEY_SUB_DISTRICT] = -1;
+    state.incidentFormData[INCIDENT_FORM_DATA.KEY_REPORTER] = ''; //todo: ***
+    state.incidentFormData[INCIDENT_FORM_DATA.KEY_EMAIL] = '';
+    state.incidentFormData[INCIDENT_FORM_DATA.KEY_PHONE] = '';
+    state.incidentFormData[INCIDENT_FORM_DATA.KEY_LATITUDE] = null;
+    state.incidentFormData[INCIDENT_FORM_DATA.KEY_LONGITUDE] = null;
     state.incidentImages = [];
 
     logObjectProperties('incidentFormData', state.incidentFormData);

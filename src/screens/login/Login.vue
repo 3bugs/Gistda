@@ -1,0 +1,296 @@
+<template>
+    <linear-gradient class="container"
+                     :colors="[
+                         SCREEN_LOGIN.background[province].startColor,
+                         SCREEN_LOGIN.background[province].endColor
+                     ]">
+        <scroll-view
+                class="content-container"
+                keyboard-should-persist-taps="handled"
+                :style="{
+                    paddingLeft: DIMENSION.horizontal_margin,
+                    paddingRight: DIMENSION.horizontal_margin,
+                }">
+            <view :style="{marginBottom: 90}"/>
+
+            <image :source="imageLogo"
+                   class="logo"
+                   resize-mode="contain"/>
+            <view :style="{marginBottom: 25}"/>
+
+            <text class="title">{{'ระบบภูมิสารสนเทศ\nด้านความปลอดภัยจังหวัด'}}</text>
+            <view :style="{marginBottom: 30}"/>
+
+            <card-view :card-elevation="0"
+                       :card-maxElevation="0"
+                       :corner-radius="28"
+                       :style="{
+                            backgroundColor: 'rgba(20, 15, 38, 0.648579)',
+                            paddingTop: 2,
+                            paddingBottom: 2,
+                            paddingLeft: 25,
+                            paddingRight: 25,
+                            justifyContent: 'center',
+                        }">
+                <text-input
+                        class="text-input"
+                        keyboard-type="email-address"
+                        placeholder="EMAIL"
+                        placeholder-text-color="rgba(255, 255, 255, 0.3)"
+                        v-model="emailContent"/>
+            </card-view>
+            <view :style="{marginBottom: 15}"/>
+
+            <card-view :card-elevation="0"
+                       :card-maxElevation="0"
+                       :corner-radius="28"
+                       :style="{
+                            flexDirection: 'row',
+                            backgroundColor: 'rgba(20, 15, 38, 0.648579)',
+                            paddingTop: 2,
+                            paddingBottom: 2,
+                            paddingLeft: 25,
+                            paddingRight: 25,
+                            alignItems: 'center',
+                        }">
+                <text-input
+                        :style="{
+                            flex: 1,
+                        }"
+                        class="text-input"
+                        keyboard-type="default"
+                        :secure-text-entry="!showPassword"
+                        placeholder="PASSWORD"
+                        placeholder-text-color="rgba(255, 255, 255, 0.3)"
+                        v-model="passwordContent"/>
+                <touchable-opacity :on-press="handleClickShowHidePassword">
+                    <text class="action-show">
+                        {{showPassword ? 'HIDE' : 'SHOW'}}
+                    </text>
+                </touchable-opacity>
+            </card-view>
+            <view :style="{marginBottom: 15}"/>
+
+            <my-button
+                    text="LOGIN"
+                    :icon="null"
+                    bg-color="#A573FF"
+                    :on-click="handleClickLogin"/>
+            <view :style="{marginBottom: 20}"/>
+
+            <view :style="{
+                flexDirection: 'row',
+                alignItems: 'center',
+            }">
+                <view :style="{
+                    flex: 1,
+                    borderBottomWidth: 2,
+                    borderBottomColor: 'rgba(255, 255, 255, 0.3)',
+                }"/>
+                <text class="or">OR</text>
+                <view :style="{
+                    flex: 1,
+                    borderBottomWidth: 2,
+                    borderBottomColor: 'rgba(255, 255, 255, 0.3)',
+                }"/>
+            </view>
+            <view :style="{marginBottom: 20}"/>
+
+            <my-button
+                    text="LOGIN WITH FACEBOOK"
+                    :icon="imageFacebook"
+                    bg-color="#465AB1"
+                    :on-click="handleClickLoginFacebook"/>
+            <view :style="{marginBottom: 15}"/>
+
+            <my-button
+                    text="LOGIN WITH LINE"
+                    :icon="imageLine"
+                    bg-color="#00B900"
+                    :on-click="handleClickLoginLine"/>
+            <view :style="{marginBottom: 15}"/>
+
+            <my-button
+                    text="LOGIN WITH GMAIL"
+                    :icon="imageGoogle"
+                    bg-color="#DD4B39"
+                    :on-click="handleClickLoginGoogle"/>
+            <view :style="{marginBottom: 25}"/>
+
+            <view :style="{
+                flexDirection: 'row',
+                justifyContent: 'space-between'
+            }">
+                <touchable-opacity :on-press="handleClickForgotPassword">
+                    <text class="action">FORGOT PASSWORD</text>
+                </touchable-opacity>
+                <touchable-opacity :on-press="handleClickSignUp">
+                    <text class="action">SIGN UP</text>
+                </touchable-opacity>
+            </view>
+            <view :style="{marginBottom: 30}"/>
+        </scroll-view>
+
+        <view :style="{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+        }">
+            <header :title="null"
+                    :transparent="true"
+                    :left-icon="{
+                        icon: imageBack,
+                        width: 24,
+                        height: 18,
+                        callback: handleClickBack
+                    }"
+                    :right-icon="{
+                        icon: null,
+                        width: 14,
+                        height: 16.5,
+                        callback: null
+                    }"/>
+        </view>
+    </linear-gradient>
+</template>
+
+<script>
+    import store from '../../store';
+    import {DEBUG, DIMENSION, SCREEN_LOGIN} from '../../constants';
+    import Header from '../../components/Header';
+    import MyButton from '../../components/MyButton';
+
+    import {Alert, Dimensions} from 'react-native';
+    import LinearGradient from 'react-native-linear-gradient';
+    import CardView from 'react-native-cardview';
+
+    import imageBack from '../../../assets/images/ic_back.png';
+    import imageLogo from '../../../assets/images/screen_login/ic_logo.png';
+    import imageFacebook from '../../../assets/images/screen_login/ic_facebook.png';
+    import imageLine from '../../../assets/images/screen_login/ic_line_2.png';
+    import imageGoogle from '../../../assets/images/screen_login/ic_google.png';
+
+    export default {
+        components: {Header, MyButton, LinearGradient, CardView},
+        props: {
+            navigation: {
+                type: Object
+            },
+        },
+        computed: {
+            province() {
+                return store.state.province;
+            },
+        },
+        data: () => {
+            return {
+                DEBUG, DIMENSION, SCREEN_LOGIN,
+                Dimensions,
+                imageBack, imageLogo, imageFacebook, imageLine, imageGoogle,
+                emailContent: '', passwordContent: '',
+                showPassword: false,
+            };
+        },
+        methods: {
+            handleClickBack: function () {
+                this.navigation.goBack();
+            },
+            handleEmailChange: function () {
+
+            },
+            handlePasswordChange: function () {
+
+            },
+            handleClickLogin: function () {
+                console.log(`Email: ${this.emailContent}, Password: ${this.passwordContent}`);
+                if (this.emailContent && this.passwordContent) {
+
+                } else {
+                    Alert.alert(
+                        'ผิดพลาด',
+                        'กรุณากรอกอีเมลและรหัสผ่าน'
+                    );
+                }
+            },
+            handleClickShowHidePassword: function () {
+                this.showPassword = !this.showPassword;
+            },
+            handleClickLoginFacebook: function () {
+
+            },
+            handleClickLoginLine: function () {
+
+            },
+            handleClickLoginGoogle: function () {
+
+            },
+            handleClickForgotPassword: function () {
+
+            },
+            handleClickSignUp: function () {
+
+            },
+        },
+    }
+</script>
+
+<style>
+    .container {
+        flex: 1;
+    }
+
+    .content-container {
+        flex: 1;
+        border-width: 0;
+        border-color: yellow;
+    }
+
+    .logo {
+        width: 100%;
+        height: 90;
+    }
+
+    .title {
+        text-align: center;
+        font-family: DBHeavent;
+        font-size: 28;
+        color: white;
+    }
+
+    .or {
+        text-align: center;
+        font-family: DBHeavent;
+        font-size: 22;
+        color: white;
+        margin-left: 50;
+        margin-right: 50;
+    }
+
+    .action {
+        font-family: DBHeavent;
+        font-size: 22;
+        color: rgba(255, 255, 255, 0.3);
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .action-show {
+        font-family: DBHeavent;
+        font-size: 16;
+        color: white;
+        padding-left: 8;
+        padding-right: 8;
+        padding-top: 5;
+        padding-bottom: 5;
+        background-color: rgba(0, 0, 0, 0.4);
+    }
+
+    .text-input {
+        font-family: DBHeavent;
+        font-size: 22;
+        color: white;
+        border-bottom-width: 0;
+        border-bottom-color: #adadad;
+    }
+</style>

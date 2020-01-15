@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE WMT_MS_Capabilities SYSTEM "http://wms.ngis.go.th:8081/geoserver/schemas/wms/1.1.1/WMS_MS_Capabilities.dtd">
+<WMT_MS_Capabilities version="1.1.1" updateSequence="28350">
+  <Service>
+    <Name>OGC:WMS</Name>
+    <Title>GeoServer Web Map Service</Title>
+    <Abstract>A compliant implementation of WMS plus most of the SLD extension (dynamic styling). Can also generate PDF, SVG, KML, GeoRSS</Abstract>
+    <KeywordList>
+      <Keyword>WFS</Keyword>
+      <Keyword>WMS</Keyword>
+      <Keyword>GEOSERVER</Keyword>
+    </KeywordList>
+    <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geoserver.sourceforge.net/html/index.php"/>
+    <ContactInformation>
+      <ContactPersonPrimary>
+        <ContactPerson>nsdi</ContactPerson>
+        <ContactOrganization>gistda</ContactOrganization>
+      </ContactPersonPrimary>
+      <ContactPosition>-</ContactPosition>
+      <ContactAddress>
+        <AddressType>Work</AddressType>
+        <Address>120 The Government Complex Commemorating His Majesty The King's 80th Birthday Anniversary, 5th December, B.E.2550(2007) Ratthaprasasanabhakti Building 6th and 7th Floor, Chaeng Wattana Road Lak Si</Address>
+        <City>-</City>
+        <StateOrProvince>-</StateOrProvince>
+        <PostCode>10210</PostCode>
+        <Country>thailand</Country>
+      </ContactAddress>
+      <ContactVoiceTelephone>0-2143-0569</ContactVoiceTelephone>
+      <ContactFacsimileTelephone>0-2143-9594</ContactFacsimileTelephone>
+      <ContactElectronicMailAddress>thainsdi@gmail.com</ContactElectronicMailAddress>
+    </ContactInformation>
+    <Fees>NONE</Fees>
+    <AccessConstraints>NONE</AccessConstraints>
+  </Service>
+  <Capability>
+    <Request>
+      <GetCapabilities>
+        <Format>application/vnd.ogc.wms_xml</Format>
+        <DCPType>
+          <HTTP>
+            <Get>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://wms.ngis.go.th:8081/geoserver/FGDS_YASOTHON/wms?SERVICE=WMS&amp;"/>
+            </Get>
+            <Post>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://wms.ngis.go.th:8081/geoserver/FGDS_YASOTHON/wms?SERVICE=WMS&amp;"/>
+            </Post>
+          </HTTP>
+        </DCPType>
+      </GetCapabilities>
+      <GetMap>
+        <Format>image/png</Format>
+        <Format>application/atom xml</Format>
+        <Format>application/atom+xml</Format>
+        <Format>application/openlayers</Format>
+        <Format>application/pdf</Format>
+        <Format>application/rss xml</Format>
+        <Format>application/rss+xml</Format>
+        <Format>application/vnd.google-earth.kml</Format>
+        <Format>application/vnd.google-earth.kml xml</Format>
+        <Format>application/vnd.google-earth.kml+xml</Format>
+        <Format>application/vnd.google-earth.kml+xml;mode=networklink</Format>
+        <Format>application/vnd.google-earth.kmz</Format>
+        <Format>application/vnd.google-earth.kmz xml</Format>
+        <Format>application/vnd.google-earth.kmz+xml</Format>
+        <Format>application/vnd.google-earth.kmz;mode=networklink</Format>
+        <Format>atom</Format>
+        <Format>image/geotiff</Format>
+        <Format>image/geotiff8</Format>
+        <Format>image/gif</Format>
+        <Format>image/gif;subtype=animated</Format>
+        <Format>image/jpeg</Format>
+        <Format>image/png8</Format>
+        <Format>image/png; mode=8bit</Format>
+        <Format>image/svg</Format>
+        <Format>image/svg xml</Format>
+        <Format>image/svg+xml</Format>
+        <Format>image/tiff</Format>
+        <Format>image/tiff8</Format>
+        <Format>kml</Format>
+        <Format>kmz</Format>
+        <Format>openlayers</Format>
+        <Format>rss</Format>
+        <Format>text/html; subtype=openlayers</Format>
+        <DCPType>
+          <HTTP>
+            <Get>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://wms.ngis.go.th:8081/geoserver/FGDS_YASOTHON/wms?SERVICE=WMS&amp;"/>
+            </Get>
+          </HTTP>
+        </DCPType>
+      </GetMap>
+      <GetFeatureInfo>
+        <Format>text/plain</Format>
+        <Format>application/vnd.ogc.gml</Format>
+        <Format>application/vnd.ogc.gml/3.1.1</Format>
+        <Format>text/html</Format>
+        <Format>application/json</Format>
+        <DCPType>
+          <HTTP>
+            <Get>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://wms.ngis.go.th:8081/geoserver/FGDS_YASOTHON/wms?SERVICE=WMS&amp;"/>
+            </Get>
+            <Post>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://wms.ngis.go.th:8081/geoserver/FGDS_YASOTHON/wms?SERVICE=WMS&amp;"/>
+            </Post>
+          </HTTP>
+        </DCPType>
+      </GetFeatureInfo>
+      <DescribeLayer>
+        <Format>application/vnd.ogc.wms_xml</Format>
+        <DCPType>
+          <HTTP>
+            <Get>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://wms.ngis.go.th:8081/geoserver/FGDS_YASOTHON/wms?SERVICE=WMS&amp;"/>
+            </Get>
+          </HTTP>
+        </DCPType>
+      </DescribeLayer>
+      <GetLegendGraphic>
+        <Format>image/png</Format>
+        <Format>image/jpeg</Format>
+        <Format>image/gif</Format>
+        <DCPType>
+          <HTTP>
+            <Get>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://wms.ngis.go.th:8081/geoserver/FGDS_YASOTHON/wms?SERVICE=WMS&amp;"/>
+            </Get>
+          </HTTP>
+        </DCPType>
+      </GetLegendGraphic>
+      <GetStyles>
+        <Format>application/vnd.ogc.sld+xml</Format>
+        <DCPType>
+          <HTTP>
+            <Get>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://wms.ngis.go.th:8081/geoserver/FGDS_YASOTHON/wms?SERVICE=WMS&amp;"/>
+            </Get>
+          </HTTP>
+        </DCPType>
+      </GetStyles>
+    </Request>
+    <Exception>
+      <Format>application/vnd.ogc.se_xml</Format>
+      <Format>application/vnd.ogc.se_inimage</Format>
+    </Exception>
+    <UserDefinedSymbolization SupportSLD="1" UserLayer="1" UserStyle="1" RemoteWFS="1"/>
+    <Layer>
+      <Title>GeoServer Web Map Service</Title>
+      <Abstract>A compliant implementation of WMS plus most of the SLD extension (dynamic styling). Can also generate PDF, SVG, KML, GeoRSS</Abstract>
+      <!--Limited list of EPSG projections:-->
+      <SRS>EPSG:24047</SRS>
+      <SRS>EPSG:24048</SRS>
+      <SRS>EPSG:32647</SRS>
+      <SRS>EPSG:32648</SRS>
+      <SRS>EPSG:3857</SRS>
+      <SRS>EPSG:4326</SRS>
+      <SRS>EPSG:900913</SRS>
+      <LatLonBoundingBox minx="104.00458087745665" miny="15.361989283566759" maxx="104.7237790139623" maxy="16.340191971011954"/>
+      <Layer queryable="1">
+        <Name>L14_ท่าเรือจังหวัดนนทบุรี</Name>
+        <Title>L14_ท่าเรือจังหวัดนนทบุรี</Title>
+        <Abstract>Layer-Group type layer: L14_ท่าเรือจังหวัดนนทบุรี</Abstract>
+        <SRS>EPSG:32647</SRS>
+        <LatLonBoundingBox minx="100.42420220028411" miny="13.804705475756348" maxx="100.51415532958582" maxy="13.94294869357561"/>
+        <BoundingBox SRS="EPSG:32647" minx="653943.4909773174" miny="1526643.3881021102" maxx="663572.3928953629" maxy="1541878.0894244888"/>
+      </Layer>
+      <Layer queryable="1">
+        <Name>L14_โครงการชลประทานจังหวัดสระบุรี</Name>
+        <Title>L14_โครงการชลประทานจังหวัดสระบุรี</Title>
+        <Abstract>Layer-Group type layer: L14_โครงการชลประทานจังหวัดสระบุรี</Abstract>
+        <SRS>EPSG:32647</SRS>
+        <LatLonBoundingBox minx="100.89212766279502" miny="14.596500015482974" maxx="100.94125337661065" maxy="14.63684275122644"/>
+        <BoundingBox SRS="EPSG:32647" minx="703826.4787247032" miny="1614590.5944561982" maxx="709082.8024771918" maxy="1619010.6552038267"/>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>L14_ฝายทดน้ำจังหวัดยโสธร</Name>
+        <Title>L14_ฝายทดน้ำจังหวัดยโสธร</Title>
+        <Abstract/>
+        <KeywordList>
+          <Keyword>L14_ฝายทดน้ำจังหวัดยโสธร</Keyword>
+          <Keyword>features</Keyword>
+        </KeywordList>
+        <SRS>EPSG:32647</SRS>
+
+        <LatLonBoundingBox minx="104.03346094006697" miny="15.507376683784996" maxx="104.63295249738427" maxy="16.321737019100436"/>
+        <BoundingBox SRS="EPSG:32647" minx="1040401.102305738" miny="1722351.7659691696" maxx="1102572.9572196167" maxy="1811234.6511710389"/>
+        <Style>
+          <Name>point</Name>
+          <Title>Default Point</Title>
+          <Abstract>A sample style that draws a point</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://wms.ngis.go.th:8081/geoserver/FGDS_YASOTHON/wms?request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=L14_%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>L14_พื้นที่ชลประทานจังหวัดยโสธร</Name>
+        <Title>L14_พื้นที่ชลประทานจังหวัดยโสธร</Title>
+        <Abstract/>
+        <KeywordList>
+          <Keyword>features</Keyword>
+          <Keyword>L14_พื้นที่ชลประทานจังหวัดยโสธร</Keyword>
+        </KeywordList>
+        <SRS>EPSG:32647</SRS>
+        <!--WKT definition of this CRS:
+PROJCS["WGS 84 / UTM zone 47N", 
+  GEOGCS["WGS 84", 
+    DATUM["World Geodetic System 1984", 
+      SPHEROID["WGS 84", 6378137.0, 298.257223563, AUTHORITY["EPSG","7030"]], 
+      AUTHORITY["EPSG","6326"]], 
+    PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]], 
+    UNIT["degree", 0.017453292519943295], 
+    AXIS["Geodetic longitude", EAST], 
+    AXIS["Geodetic latitude", NORTH], 
+    AUTHORITY["EPSG","4326"]], 
+  PROJECTION["Transverse_Mercator", AUTHORITY["EPSG","9807"]], 
+  PARAMETER["central_meridian", 99.0], 
+  PARAMETER["latitude_of_origin", 0.0], 
+  PARAMETER["scale_factor", 0.9996], 
+  PARAMETER["false_easting", 500000.0], 
+  PARAMETER["false_northing", 0.0], 
+  UNIT["m", 1.0], 
+  AXIS["Easting", EAST], 
+  AXIS["Northing", NORTH], 
+  AUTHORITY["EPSG","32647"]]-->
+        <LatLonBoundingBox minx="104.14812327416047" miny="15.361989283566759" maxx="104.68816904074954" maxy="16.283074600701287"/>
+        <BoundingBox SRS="EPSG:32647" minx="1053130.8252094467" miny="1706350.6893220996" maxx="1108611.6759474673" maxy="1807260.4298430004"/>
+        <Style>
+          <Name>polygon</Name>
+          <Title>Default Polygon</Title>
+          <Abstract>A sample style that draws a polygon</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://wms.ngis.go.th:8081/geoserver/FGDS_YASOTHON/wms?request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=L14_%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>L14_สถานีสูบน้ำด้วยไฟฟ้าจังหวัดยโสธร</Name>
+        <Title>L14_สถานีสูบน้ำด้วยไฟฟ้าจังหวัดยโสธร</Title>
+        <Abstract/>
+        <KeywordList>
+          <Keyword>features</Keyword>
+          <Keyword>L14_สถานีสูบน้ำด้วยไฟฟ้าจังหวัดยโสธร</Keyword>
+        </KeywordList>
+        <SRS>EPSG:32647</SRS>
+
+        <LatLonBoundingBox minx="104.00458087745665" miny="15.39043291609308" maxx="104.69528837991342" maxy="16.279685901472593"/>
+        <BoundingBox SRS="EPSG:32647" minx="1037591.2648" miny="1709533.0048999991" maxx="1109397.5190000003" maxy="1806495.3477999996"/>
+        <Style>
+          <Name>L14_สถานีสูบน้ำด้วยไฟฟ้าจังหวัดยโสธร</Name>
+          <Title/>
+          <Abstract/>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://wms.ngis.go.th:8081/geoserver/FGDS_YASOTHON/wms?request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=L14_%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>L14_อ่างเก็บน้ำจังหวัดยโสธร</Name>
+        <Title>L14_อ่างเก็บน้ำจังหวัดยโสธร</Title>
+        <Abstract/>
+        <KeywordList>
+          <Keyword>L14_อ่างเก็บน้ำจังหวัดยโสธร</Keyword>
+          <Keyword>features</Keyword>
+        </KeywordList>
+        <SRS>EPSG:32647</SRS>
+        <!--WKT definition of this CRS:
+PROJCS["WGS 84 / UTM zone 47N", 
+  GEOGCS["WGS 84", 
+    DATUM["World Geodetic System 1984", 
+      SPHEROID["WGS 84", 6378137.0, 298.257223563, AUTHORITY["EPSG","7030"]], 
+      AUTHORITY["EPSG","6326"]], 
+    PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]], 
+    UNIT["degree", 0.017453292519943295], 
+    AXIS["Geodetic longitude", EAST], 
+    AXIS["Geodetic latitude", NORTH], 
+    AUTHORITY["EPSG","4326"]], 
+  PROJECTION["Transverse_Mercator", AUTHORITY["EPSG","9807"]], 
+  PARAMETER["central_meridian", 99.0], 
+  PARAMETER["latitude_of_origin", 0.0], 
+  PARAMETER["scale_factor", 0.9996], 
+  PARAMETER["false_easting", 500000.0], 
+  PARAMETER["false_northing", 0.0], 
+  UNIT["m", 1.0], 
+  AXIS["Easting", EAST], 
+  AXIS["Northing", NORTH], 
+  AUTHORITY["EPSG","32647"]]-->
+        <LatLonBoundingBox minx="104.01396147297102" miny="15.394429489646292" maxx="104.7237790139623" maxy="16.340191971011954"/>
+        <BoundingBox SRS="EPSG:32647" minx="1038589.5768186325" miny="1710053.0810240915" maxx="1112267.3948443024" maxy="1813239.112279064"/>
+        <Style>
+          <Name>L14_อ่างเก็บน้ำจังหวัดยโสธร</Name>
+          <Title/>
+          <Abstract/>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://wms.ngis.go.th:8081/geoserver/FGDS_YASOTHON/wms?request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=L14_%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>L14_แนวคลองชลประทานจังหวัดยโสธร</Name>
+        <Title>L14_แนวคลองชลประทานจังหวัดยโสธร</Title>
+        <Abstract/>
+        <KeywordList>
+          <Keyword>L14_แนวคลองชลประทานจังหวัดยโสธร</Keyword>
+          <Keyword>features</Keyword>
+        </KeywordList>
+        <SRS>EPSG:32647</SRS>
+        <LatLonBoundingBox minx="104.15362675768532" miny="15.367077771961261" maxx="104.68853307967619" maxy="16.279594630578778"/>
+        <BoundingBox SRS="EPSG:32647" minx="1053710.2987884106" miny="1706917.5932498416" maxx="1108661.1418542124" maxy="1806888.6117866472"/>
+        <Style>
+          <Name>L14_คลองชลประทานจังหวัดยโสธร</Name>
+          <Title/>
+          <Abstract/>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://wms.ngis.go.th:8081/geoserver/FGDS_YASOTHON/wms?request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=L14_%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F%3F"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+    </Layer>
+  </Capability>
+</WMT_MS_Capabilities>

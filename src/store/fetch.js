@@ -46,13 +46,18 @@ export async function submitFormData(formData) {
         const response = await fetch(url, {
             method: 'POST',
             headers: {
-                Accept: 'application/json',
+                'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                Authorization: 'Bearer FqpKh7GbRPsBoH1nPGmMaPfCOyNjUg',
+                'Authorization': 'Bearer FqpKh7GbRPsBoH1nPGmMaPfCOyNjUg',
             },
             body: JSON.stringify(formData)
         });
+
         const responseJson = await response.json();
+
+        console.log('Response JSON:');
+        console.log(responseJson);
+        console.log(JSON.stringify(responseJson));
 
         const statusCode = responseJson.result.status_code;
         const message = responseJson.result.description;

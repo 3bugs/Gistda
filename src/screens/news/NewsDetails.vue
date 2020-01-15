@@ -153,21 +153,21 @@
 
     .date {
         font-family: DBHeavent;
-        font-size: 18;
+        font-size: 20;
         color: #aaaaaa;
         margin-bottom: 5;
     }
 
     .title {
         font-family: DBHeavent-Bold;
-        font-size: 22;
+        font-size: 24;
         color: #333333;
         margin-bottom: 12;
     }
 
     .body {
         font-family: DBHeavent;
-        font-size: 20;
+        font-size: 22;
         color: #333333;
         margin-bottom: 10;
     }

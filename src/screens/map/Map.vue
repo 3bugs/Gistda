@@ -25,6 +25,37 @@
                     :style="{marginTop: MAP_HEADER.height}"
                     :on-map-ready="handleMapReady">
 
+                <!--<w-m-s-tile
+                    url-template="http://wms.ngis.go.th:8081/geoserver/A_ORCHARD/wms?service=WMS&version=1.1.0&request=GetMap&layers=A_ORCHARD:orchard&bbox={minX},{minY},{maxX},{maxY}&width={width}&height={height}&srs=EPSG:900913&format=image/png&transparent=true"
+                    _url-template="http://wms.ngis.go.th:8081/geoserver/A_DROUGHT3Y/wms?service=WMS&version=1.1.0&request=GetMap&layers=A_DROUGHT3Y:drought3y_wgs84&bbox={minX},{minY},{maxX},{maxY}&width={width}&height={height}&srs=EPSG:900913&format=image/png&transparent=true"
+                    __url-template="http://wms.ngis.go.th:8081/geoserver/admin_test/wms?service=WMS&version=1.1.0&request=GetMap&layers=admin_test:L050302_PROVINCE_AREA&styles=&bbox={minX},{minY},{maxX},{maxY}&width={width}&height={height}&srs=EPSG:900913&format=image/png&transparent=true"
+                    :z-index="100"
+                    :opacity="1"
+                    :tile-size="512"
+                />
+
+                <w-m-s-tile
+                    url-template="http://wms.ngis.go.th:8081/geoserver/EEC_CHACHOENGSAO/wms?service=WMS&version=1.1.0&request=GetMap&layers=EEC_CHACHOENGSAO:เส้นทางน้ำ&bbox={minX},{minY},{maxX},{maxY}&width={width}&height={height}&srs=EPSG:900913&format=image/png&transparent=true"
+                    :z-index="100"
+                    :opacity="1"
+                    :tile-size="512"
+                />
+
+                <w-m-s-tile
+                    url-template="http://wms.ngis.go.th:8081/geoserver/FGDS_YASOTHON/wms?service=WMS&request=GetMap&version=1.1.0&layers=L14_แนวคลองชลประทานจังหวัดยโสธร,L14_อ่างเก็บน้ำจังหวัดยโสธร,L14_สถานีสูบน้ำด้วยไฟฟ้าจังหวัดยโสธร,L14_พื้นที่ชลประทานจังหวัดยโสธร,L14_ฝายทดน้ำจังหวัดยโสธร&bbox={minX},{minY},{maxX},{maxY}&width={width}&height={height}&srs=EPSG:900913&format=image/png&transparent=true"
+                    :z-index="100"
+                    :opacity="1"
+                    :tile-size="512"
+                />-->
+
+                <!--<w-m-s-tile
+                    :urlTemplate="'https://maps-public.geo.nyu.edu/geoserver/sdr/wms?service=WMS&version=1.1.0&request=GetMap&layers=sdr:nyu_2451_36011&styles=&bbox={minX},{minY},{maxX},{maxY}&width={width}&height={height}&srs=EPSG:4326&format=image/png&transparent=true&format_options=dpi:213'"
+                    :zIndex="1"
+                    :opacity="1"
+                    :tileSize="512"
+                    epsgSpec="EPSG:4326"
+                />-->
+
                 <view v-for="(categoryType, categoryTypeIndex) in mapDataList">
                     <view v-for="(category, categoryIndex) in categoryType.list">
                         <!--จุด-->
@@ -190,7 +221,7 @@
     import {StyleSheet} from 'react-native';
     import {Fragment} from 'react';
     import MapView from 'react-native-maps';
-    import {Marker, Polyline} from 'react-native-maps';
+    import {Marker, Polyline, WMSTile} from 'react-native-maps';
     import LinearGradient from 'react-native-linear-gradient';
     import CardView from 'react-native-cardview';
     import Drawer from 'react-native-drawer';
@@ -205,7 +236,7 @@
     import imageLightOn from '../../../assets/images/sidebar/ic_light_on.png';
 
     export default {
-        components: {Fragment, MapView, Marker, Polyline, LinearGradient, CardView, Drawer, FilterPanel, Slider, BottomSheet},
+        components: {Fragment, MapView, Marker, Polyline, WMSTile, LinearGradient, CardView, Drawer, FilterPanel, Slider, BottomSheet},
         props: {
             navigation: { // bottom nav
                 type: Object

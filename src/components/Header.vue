@@ -1,9 +1,9 @@
 <template>
     <linear-gradient class="container"
                      :colors="[
-                                 MAP_HEADER.background[province].startColor,
-                                 MAP_HEADER.background[province].endColor
-                                 ]"
+                         transparent ? 'rgba(0, 0, 0, 0)' : MAP_HEADER.background[province].startColor,
+                         transparent ? 'rgba(0, 0, 0, 0)' : MAP_HEADER.background[province].endColor
+                     ]"
                      :style="{paddingTop: STATUS_BAR_HEIGHT}">
         <touchable-opacity class="left-icon-touchable"
                            :on-press="leftIcon.callback">
@@ -44,6 +44,9 @@
             rightIcon: {
                 type: Object
             },
+            transparent: {
+                type: Boolean
+            },
         },
         computed: {
             province() {
@@ -77,7 +80,7 @@
         font-family: DBHeavent-Bold;
         letter-spacing: 0;
         color: white;
-        font-size: 24;
+        font-size: 26;
         border-width: 0;
         border-color: yellow;
     }

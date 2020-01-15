@@ -1,5 +1,6 @@
 import {provinceCode, fetchNewsDetails, fetchPosts, fetchSuggest, submitFormData} from './fetch';
 import {INCIDENT_FORM_DATA} from '../constants/index';
+import {DISTRICT_DATA} from '../constants/district';
 import {AsyncStorage} from 'react-native';
 
 // ensure data for rendering given list type
@@ -128,8 +129,9 @@ export async function SUBMIT_INCIDENT_FORM_DATA({commit, state}, {callback}) {
         type: state.incidentFormData[INCIDENT_FORM_DATA.KEY_INCIDENT_CATEGORY],
         detail: state.incidentFormData[INCIDENT_FORM_DATA.KEY_DETAILS],
         address: '',
-        subdistrict: state.incidentFormData[INCIDENT_FORM_DATA.KEY_SUB_DISTRICT],
-        district: state.incidentFormData[INCIDENT_FORM_DATA.KEY_DISTRICT],
+        subdistrict: DISTRICT_DATA[state.province][state.incidentFormData[INCIDENT_FORM_DATA.KEY_DISTRICT]]
+            .subDistricts[state.incidentFormData[INCIDENT_FORM_DATA.KEY_SUB_DISTRICT]],
+        district: DISTRICT_DATA[state.province][state.incidentFormData[INCIDENT_FORM_DATA.KEY_DISTRICT]].district,
         province_code: provinceCode[state.province],
         lat: state.incidentFormData[INCIDENT_FORM_DATA.KEY_LATITUDE],
         lng: state.incidentFormData[INCIDENT_FORM_DATA.KEY_LONGITUDE],
@@ -139,8 +141,9 @@ export async function SUBMIT_INCIDENT_FORM_DATA({commit, state}, {callback}) {
         images: state.incidentImages,
     };
 
-    console.log(`Incident form data:`);
+    console.log(`Request Body JSON:`);
     console.log(formData);
+    console.log(JSON.stringify(formData));
 
     const apiResult = await submitFormData(formData);
     commit('SUBMITTING_INCIDENT_FORM_DATA', {isSubmitting: false});

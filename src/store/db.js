@@ -20,6 +20,31 @@ async function loadData() {
     }
 }
 
+const KEY_USER = 'user';
+
+export async function setUser(user) {
+    try {
+        await AsyncStorage.setItem(KEY_USER, JSON.stringify(user));
+        console.log(`Saving user: ${JSON.stringify(user)}`);
+
+        return true;
+    } catch (error) {
+        return false;
+    }
+}
+
+export async function getUser() {
+    try {
+        const userJson = await AsyncStorage.getItem(KEY_USER);
+        const user = JSON.parse(userJson);
+        console.log(`Loading user: ${userJson}`);
+
+        return user;
+    } catch (error) {
+        return null;
+    }
+}
+
 export async function setLocalCategoryData(province, category, data) {
     const KEY = _getCategoryDataMapKey(province, category);
 

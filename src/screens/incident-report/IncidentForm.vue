@@ -76,6 +76,7 @@
                 </view>
                 <scroll-view
                         class="content"
+                        keyboard-should-persist-taps="handled"
                         :style="{
                             flex: 1,
                             backgroundColor: 'white',
@@ -252,42 +253,16 @@
                                         marginTop: 8, marginRight: 8,
                                         borderRadius: 10,
                                    }"
-                                   :source="{ uri: `data:image/jpeg;base64,${data}`}"/>
+                                   :source="{ uri: `${data}`}"/>
                         </touchable-opacity>
                     </view>
 
                     <view :style="{marginBottom: 25}"/>
 
-                    <!--<button
-                        title="แจ้งเหตุ"
-                        :on-press="handleClickSubmitButton"
-                        color="#1665D8"
-                        :style="{
-                            fontFamily: 'DBHeavent-Med',
-                            fontSize: 22,
-                        }"
-                    />-->
-
-                    <touchable-opacity
-                            :on-press="handleClickSubmitButton"
-                            :active-opacity="0.6"
-                            :style="{
-
-                            }">
-                        <view :style="{
-                            backgroundColor: '#1665D8',
-                            paddingTop: 12,
-                            paddingBottom: 12,
-                            alignItems: 'center',
-                            borderRadius: 60,
-                        }">
-                            <text :style="{
-                                fontFamily: 'DBHeavent-Med',
-                                fontSize: 22,
-                                color: 'white',
-                            }">แจังเหตุ</text>
-                        </view>
-                    </touchable-opacity>
+                    <my-button
+                            text="แจ้งเหตุ"
+                            bg-color="#1665D8"
+                            :on-click="handleClickSubmitButton"/>
 
                     <view :style="{marginBottom: 25}"/>
                 </scroll-view>
@@ -339,8 +314,9 @@
     import {DISTRICT_DATA} from '../../constants/district';
     import Header from '../../components/Header';
     import FloatingLabelInput from '../../components/FloatingLabelInput';
+    import MyButton from '../../components/MyButton';
 
-    import {Platform, PermissionsAndroid, StyleSheet, Dimensions, Picker} from 'react-native';
+    import {Alert, Platform, PermissionsAndroid, StyleSheet, Dimensions, Picker} from 'react-native';
     import CardView from 'react-native-cardview';
     import ImagePicker from 'react-native-image-picker';
     import ImageResizer from 'react-native-image-resizer';
@@ -359,7 +335,7 @@
     export default {
         components: {
             Header, CardView, Picker, PickerItem: Picker.Item,
-            ImagePicker, ImageResizer, ImgToBase64, FloatingLabelInput,
+            ImagePicker, ImageResizer, ImgToBase64, FloatingLabelInput, MyButton,
             DialogContainer: Dialog.Container,
             DialogTitle: Dialog.Title,
             DialogButton: Dialog.Button,
@@ -516,7 +492,7 @@
                                 .then(base64String => {
                                     console.log(`Base64 length: ${base64String.length}`);
                                     store.dispatch('ADD_INCIDENT_IMAGE', {
-                                        imageData: base64String,
+                                        imageData: `data:image/jpeg;base64,${base64String}`,
                                     });
                                 })
                                 .catch(err => {
@@ -608,7 +584,20 @@
                 store.dispatch('SUBMIT_INCIDENT_FORM_DATA', {
                     callback: (success, message) => {
                         if (success) {
-                            alert('Submit data successfully.');
+                            Alert.alert(
+                                'สำเร็จ',
+                                'ส่งข้อมูลสำเร็จ',
+                                [
+                                    {
+                                        text: 'OK',
+                                        onPress: () => {
+                                            store.dispatch('CLEAR_INCIDENT_FORM_DATA_AND_IMAGES', {});
+                                            this.navigation.goBack();
+                                        }
+                                    }
+                                ],
+                                {cancelable: false}
+                            );
                         } else {
                             alert(message);
                         }
