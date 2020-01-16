@@ -1,7 +1,6 @@
 module.exports = class User {
-    constructor(firstName, lastName, token) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+    constructor(displayName, token) {
+        this.displayName = displayName;
         this.token = token;
     }
 

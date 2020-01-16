@@ -18,6 +18,7 @@
 </template>
 
 <script>
+    import store from '../../store';
     import {Dimensions} from 'react-native';
     import bg from '../../../assets/images/screen_splash/bg_splash.jpg';
     import logo from '../../../assets/images/screen_splash/ic_logo.png';
@@ -43,6 +44,8 @@
             };
         },
         created: function () {
+            // อ่าน user จาก local storage มาเก็บลง vuex store
+            store.dispatch('GET_LOGGED_USER', {});
             this.startHomeDelay();
         },
         methods: {

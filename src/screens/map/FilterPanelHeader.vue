@@ -3,22 +3,26 @@
         <linear-gradient
                 class="gradient-background"
                 :colors="[
-                SIDEBAR.headerBackground[province].startColor,
-                SIDEBAR.headerBackground[province].endColor
+                    SIDEBAR.headerBackground[province].startColor,
+                    SIDEBAR.headerBackground[province].endColor
                 ]">
-            <view class="profile-image-container">
-                <image :source="imageProfilePromlert"
-                       class="profile-image"
-                       resize-mode="contain"/>
-            </view>
-            <view class="profile-name-container">
-                <text class="profile-name">
-                    Hello Guest !
-                </text>
-                <text class="login-text">
-                    Login / Sign Up
-                </text>
-            </view>
+            <touchable-opacity class="profile-touchable"
+                               :on-press="() => onClickProfile()">
+                <view class="profile-image-container">
+                    <image :source="profileImage"
+                           class="profile-image"
+                           resize-mode="contain"/>
+                </view>
+                <view class="profile-name-container">
+                    <text class="profile-name">
+                        {{userToken ? userDisplayName : 'Hello Guest !'}}
+                    </text>
+                    <text class="login-text">
+                        {{userToken ? '' : 'Login / Sign Up'}}
+                    </text>
+                </view>
+            </touchable-opacity>
+
             <touchable-opacity class="bell-icon-touchable"
                                :on-press="null">
                 <image :source="imageBell"
@@ -41,22 +45,37 @@
     import imageProfilePromlert from '../../../assets/images/sidebar/profile_promlert.jpg';
     import imageProfileDummy from '../../../assets/images/sidebar/ic_profile_dummy.png';
     import imageBell from '../../../assets/images/sidebar/ic_bell.png';
+    import imageLogo from '../../../assets/images/sidebar/ic_logo.png';
 
     export default {
         components: {LinearGradient},
-        props: {},
+        props: {
+            onClickProfile: {
+                type: Function
+            },
+        },
         computed: {
             province() {
                 return store.state.province;
             },
+            userDisplayName() {
+                return store.state.userDisplayName;
+            },
+            userToken() {
+                return store.state.userToken;
+            },
+            profileImage() {
+                return this.userToken ? imageProfilePromlert : imageLogo;
+            }
         },
         data: () => {
             return {
                 SIDEBAR,
-                imageProfilePromlert, imageProfileDummy, imageBell
+                imageProfilePromlert, imageProfileDummy, imageBell, imageLogo,
             };
         },
-        methods: {},
+        methods: {
+        },
     }
 </script>
 
@@ -71,6 +90,7 @@
     .gradient-background {
         flex: 1;
         flex-direction: row;
+        justify-content: space-between;
         align-items: center;
         padding-left: 20;
         padding-right: 20;
@@ -96,6 +116,12 @@
         height: 34;
     }
 
+    .profile-touchable {
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+    }
+
     .bell-icon-touchable {
         width: 40;
         height: 49;
@@ -117,7 +143,6 @@
     }
 
     .profile-name-container {
-        flex: 1;
         justify-content: center;
         padding-left: 12;
     }

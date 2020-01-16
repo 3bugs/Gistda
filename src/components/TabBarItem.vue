@@ -126,13 +126,13 @@
         margin-top: 3;
         font-family: DBHeaventt-Light;
         color: rgba(255, 255, 255, 0.5);
-        font-size: 16;
+        font-size: 18;
     }
 
     .item-text-on {
         margin-top: 3;
         font-family: DBHeavent;
         color: rgba(255, 255, 255, 1);
-        font-size: 16;
+        font-size: 18;
     }
 </style>

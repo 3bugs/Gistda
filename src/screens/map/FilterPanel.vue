@@ -18,10 +18,36 @@
                             :typeIndex="args.index"/>
                 </view>
                 <view render-prop="ListHeaderComponent">
-                    <filter-panel-header/>
+                    <filter-panel-header
+                            :on-click-profile="handleClickProfile"/>
                 </view>
+
                 <view render-prop="ListFooterComponent">
-                    <view :style="{height: 80}"/>
+                    <view :style="{marginBottom: 20}"/>
+
+                    <view :style="{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        paddingLeft: 20,
+                        paddingRight: 20,
+                    }">
+                        <!--<touchable-opacity :on-press="handleClickAbout">-->
+                            <text :style="{
+                                fontFamily: 'DBHeavent',
+                                fontSize: 20,
+                                color: 'rgba(255, 255, 255, 0.4)',
+                            }">v{{APP_VERSION}}</text>
+                        <!--</touchable-opacity>-->
+                        <touchable-opacity :on-press="handleClickLogout">
+                            <text :style="{
+                                fontFamily: 'DBHeavent',
+                                fontSize: 20,
+                                color: 'rgba(255, 255, 255, 0.4)',
+                            }">ออกจากระบบ</text>
+                        </touchable-opacity>
+                    </view>
+
+                    <view :style="{marginBottom: 140}"/>
                 </view>
             </flat-list>
         </linear-gradient>
@@ -30,8 +56,9 @@
 
 <script>
     import store from '../../store';
-    import {DEBUG, SIDEBAR, PROVINCE_NAME_EN} from '../../constants';
+    import {DEBUG, SIDEBAR, PROVINCE_NAME_EN, APP_VERSION} from '../../constants';
 
+    import {Alert} from 'react-native';
     import LinearGradient from 'react-native-linear-gradient';
     import FilterPanelHeader from './FilterPanelHeader';
     import FilterType from './FilterType';
@@ -50,13 +77,55 @@
             coordinateCategoryList() {
                 return store.state.coordinateCategoryList[PROVINCE_NAME_EN[this.province]];
             },
+            isLoggedIn() {
+                return store.state.userToken !== null
+            },
         },
         data: () => {
             return {
-                SIDEBAR
+                SIDEBAR, APP_VERSION,
             };
         },
-        methods: {},
+        methods: {
+            handleClickProfile: function () {
+                alert('Click profile!'); //todo: *************************
+            },
+            handleClickAbout: function () {
+
+            },
+            handleClickLogout: function () {
+                if (this.isLoggedIn) {
+                    Alert.alert(
+                        'ออกจากระบบ',
+                        'ยืนยันออกจากระบบ?',
+                        [
+                            {
+                                text: 'ออกจากระบบ',
+                                onPress: () => {
+                                    store.dispatch('LOGOUT', {
+                                        callback: () => {
+
+                                        }
+                                    });
+                                }
+                            },
+                            {
+                                text: 'ยกเลิก',
+                                onPress: () => {
+                                },
+                                style: 'cancel'
+                            },
+                        ],
+                        {cancelable: true}
+                    );
+                } else {
+                    Alert.alert(
+                        'ออกจากระบบ',
+                        'คุณยังไม่ได้เข้าสู่ระบบ'
+                    );
+                }
+            },
+        },
     }
 </script>
 

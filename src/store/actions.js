@@ -1,6 +1,8 @@
-import {provinceCode, fetchNewsDetails, fetchPosts, fetchSuggest, submitFormData} from './fetch';
+import {provinceCode, fetchNewsDetails, fetchPosts, fetchSuggest, submitFormData, doLogin} from './fetch';
 import {INCIDENT_FORM_DATA} from '../constants/index';
 import {DISTRICT_DATA} from '../constants/district';
+import User from '../model/User';
+import {setUser, getUser} from '../store/db';
 import {AsyncStorage} from 'react-native';
 
 // ensure data for rendering given list type
@@ -271,6 +273,58 @@ export function DELETE_INCIDENT_IMAGE({commit, state}, {imageIndex}) {
     commit('DELETE_INCIDENT_IMAGE', {
         imageIndex
     });
+}
+
+export async function LOGIN({commit, state}, {email, password, callback}) {
+    commit('LOGGING_IN');
+
+    const apiResult = await doLogin(email, password);
+    if (apiResult.success) {
+        await setUser(new User(
+            apiResult.data.name,
+            apiResult.data.token
+        ));
+        commit('SET_USER', {
+            userDisplayName: apiResult.data.name,
+            userToken: apiResult.data.token,
+        });
+        callback(true, null);
+    } else {
+        commit('SET_USER', {
+            userDisplayName: null,
+            userToken: null,
+        });
+        callback(false, apiResult.message);
+    }
+}
+
+export async function LOGOUT({commit, state}, {callback}) {
+    await setUser(new User(
+        null,
+        null
+    ));
+    commit('SET_USER', {
+        userDisplayName: null,
+        userToken: null,
+    });
+    callback();
+}
+
+export async function GET_LOGGED_USER({commit, state}, {}) {
+    console.log('Get logged user');
+
+    const user = await getUser();
+    if (user) {
+        commit('SET_USER', {
+            userDisplayName: user.displayName,
+            userToken: user.token,
+        });
+    } else {
+        commit('SET_USER', {
+            userDisplayName: null,
+            userToken: null,
+        });
+    }
 }
 
 /*

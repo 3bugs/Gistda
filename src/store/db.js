@@ -36,11 +36,16 @@ export async function setUser(user) {
 export async function getUser() {
     try {
         const userJson = await AsyncStorage.getItem(KEY_USER);
+        if (userJson == null) {
+            console.log(`Loading user: NULL`);
+            return null;
+        }
         const user = JSON.parse(userJson);
         console.log(`Loading user: ${userJson}`);
 
         return user;
     } catch (error) {
+        console.log(`Loading user: NULL (error)`);
         return null;
     }
 }

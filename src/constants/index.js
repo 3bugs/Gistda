@@ -16,6 +16,7 @@ import imageSliderThumbYasothon from '../../assets/images/sidebar/ic_slider_thum
 
 export const DEBUG = true;
 export const APP_NAME = "SAFE SAFE";
+export const APP_VERSION = "1.0";
 
 export const PROVINCE_NAME_TH = ['นครปฐม', 'ยโสธร'];
 export const PROVINCE_NAME_EN = ['Nakhon Pathom', 'Yasothon'];

@@ -353,7 +353,7 @@
         font-family: DBHeavent-Bold;
         letter-spacing: 1;
         color: white;
-        font-size: 24;
+        font-size: 26;
         border-width: 0;
         border-color: yellow;
     }

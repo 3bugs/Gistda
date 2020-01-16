@@ -6,13 +6,29 @@ export const provinceCode = [
     35, // ยโสธร
 ];
 
-export async function _fetch(path) {
+async function _fetch(method, path, bodyData) {
     const url = `${baseURL}/${path}`;
+
+    console.log(`_fetch(\n\t${method}\n\t${url}\n\t${JSON.stringify(bodyData)}\n)`);
+
     try {
-        const response = await fetch(url, {
-            method: 'GET',
-        });
+        const params = {
+            method
+        };
+        if (method === 'POST') {
+            params['headers'] = {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            };
+            params['body'] = JSON.stringify(bodyData);
+        }
+
+        const response = await fetch(url, params);
         const responseJson = await response.json();
+
+        console.log('Response JSON:');
+        console.log(responseJson);
+        console.log(JSON.stringify(responseJson));
 
         const statusCode = responseJson.result.status_code;
         const message = responseJson.result.description;
@@ -86,7 +102,7 @@ export async function submitFormData(formData) {
 
 export async function fetchCoordinateCategories(province) {
     //todo: รเบุ province
-    return await _fetch(`coords/categories`);
+    return await _fetch('GET', `coords/categories`, null);
 }
 
 export async function fetchCoordinates(province, idList) {
@@ -123,6 +139,36 @@ export async function fetchCoordinates(province, idList) {
             null
         );
     }
+}
+
+// todo: **************************************************
+export async function doLogin(email, password) {
+    return await _fetch('POST', 'users/login', {
+        email, password
+    });
+
+    /*return await _login('POST', 'users/login', {
+        email, password
+    });*/
+
+    //return await fakeLogin();
+}
+
+async function fakeLogin() {
+    await timeout(2000);
+
+    return new ApiResult(
+        true,
+        '',
+        {
+            name: 'Promlert Lovichit',
+            token: 'Ejk4xGtC1LTtUwEs2QcAiwP2KVWS9q'
+        }
+    );
+}
+
+function timeout(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 export function fetchCoordinates_old() {
@@ -247,24 +293,36 @@ export async function fetchNews(province) {
     //news/pr?province_code=35&limit=20&offset=0
     const LIMIT = 20;
     const OFFSET = 0;
-    return await _fetch(`news/pr?province_code=${provinceCode[province]}&limit=${LIMIT}&offset=${OFFSET}`);
+    return await _fetch(
+        'GET',
+        `news/pr?province_code=${provinceCode[province]}&limit=${LIMIT}&offset=${OFFSET}`,
+        null
+    );
 }
 
 export async function fetchNewsDetails(newsId) {
     //news/1
-    return await _fetch(`news/${newsId}`);
+    return await _fetch('GET', `news/${newsId}`, null);
 }
 
 export async function fetchEr(province) {
     //er?province_code=35
     const LIMIT = 20;
     const OFFSET = 0;
-    return await _fetch(`er?province_code=${provinceCode[province]}&limit=${LIMIT}&offset=${OFFSET}`);
+    return await _fetch(
+        'GET',
+        `er?province_code=${provinceCode[province]}&limit=${LIMIT}&offset=${OFFSET}`,
+        null
+    );
 }
 
 export async function fetchSuggest(province) {
     //news/suggest?province_code=35&limit=20&offset=0
     const LIMIT = 20;
     const OFFSET = 0;
-    return await _fetch(`news/suggest?province_code=${provinceCode[province]}&limit=${LIMIT}&offset=${OFFSET}`);
+    return await _fetch(
+        'GET',
+        `news/suggest?province_code=${provinceCode[province]}&limit=${LIMIT}&offset=${OFFSET}`,
+        null
+    );
 }

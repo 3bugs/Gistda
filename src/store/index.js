@@ -24,6 +24,10 @@ const store = new Vuex.Store({
         loadingCoordinateCategories: false,
         submittingFormData: false,
 
+        loggingIn: false,
+        userDisplayName: null,
+        userToken: null,
+
         incidentFormData: {
             [INCIDENT_FORM_DATA.KEY_INCIDENT_CATEGORY]: 0,
             [INCIDENT_FORM_DATA.KEY_DETAILS]: 'ทดสอบรายละเอียด',

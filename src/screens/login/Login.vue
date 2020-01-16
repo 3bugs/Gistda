@@ -152,12 +152,18 @@
                         callback: null
                     }"/>
         </view>
+
+        <activity-indicator
+                class="progress"
+                size="large"
+                :color="COLOR_PRIMARY[province]"
+                v-if="isLoading"/>
     </linear-gradient>
 </template>
 
 <script>
     import store from '../../store';
-    import {DEBUG, DIMENSION, SCREEN_LOGIN} from '../../constants';
+    import {DEBUG, DIMENSION, SCREEN_LOGIN, COLOR_PRIMARY} from '../../constants';
     import Header from '../../components/Header';
     import MyButton from '../../components/MyButton';
 
@@ -182,13 +188,20 @@
             province() {
                 return store.state.province;
             },
+            isLoading() {
+                return store.state.loggingIn;
+            },
+            isLoggedIn() {
+                return store.state.userToken !== null;
+            },
         },
         data: () => {
             return {
-                DEBUG, DIMENSION, SCREEN_LOGIN,
+                DEBUG, DIMENSION, SCREEN_LOGIN, COLOR_PRIMARY,
                 Dimensions,
                 imageBack, imageLogo, imageFacebook, imageLine, imageGoogle,
-                emailContent: '', passwordContent: '',
+                emailContent: 'promlert3@safesafe.com',
+                passwordContent: '12345678',
                 showPassword: false,
             };
         },
@@ -205,7 +218,37 @@
             handleClickLogin: function () {
                 console.log(`Email: ${this.emailContent}, Password: ${this.passwordContent}`);
                 if (this.emailContent && this.passwordContent) {
+                    store.dispatch('LOGIN', {
+                        email: this.emailContent,
+                        password: this.passwordContent,
+                        callback: (success, message) => {
+                            if (success) {
+                                Alert.alert(
+                                    'สำเร็จ',
+                                    'เข้าสู่ระบบสำเร็จ',
+                                    [
+                                        {
+                                            text: 'OK',
+                                            onPress: () => {
+                                                this.navigation.goBack();
 
+                                                const nextScreen = this.navigation.getParam('forward');
+                                                if (nextScreen) {
+                                                    this.navigation.navigate(nextScreen);
+                                                }
+                                            }
+                                        }
+                                    ],
+                                    {cancelable: false}
+                                );
+                            } else {
+                                Alert.alert(
+                                    'ผิดพลาด',
+                                    message
+                                );
+                            }
+                        }
+                    });
                 } else {
                     Alert.alert(
                         'ผิดพลาด',
@@ -232,6 +275,8 @@
 
             },
         },
+        created: function () {
+        }
     }
 </script>
 
@@ -292,5 +337,13 @@
         color: white;
         border-bottom-width: 0;
         border-bottom-color: #adadad;
+    }
+
+    .progress {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-width: 0;
+        border-color: yellow;
     }
 </style>

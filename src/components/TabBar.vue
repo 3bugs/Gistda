@@ -118,7 +118,10 @@
                 return this.navigation.state.index === 0
                     ? -1
                     : this.navigation.state.index;
-            }
+            },
+            isLoggedIn() {
+                return store.state.userToken !== null
+            },
         },
         data: () => {
             return {
@@ -181,11 +184,13 @@
                 /*this.navigation.navigate('IncidentForm');
                 return;*/
 
-                const user = await getUser();
-                if (user === null) {
-                    this.navigation.navigate('Login');
-                } else {
+                //const user = await getUser();
+                if (this.isLoggedIn /*user === null*/) {
                     this.navigation.navigate('IncidentForm');
+                } else {
+                    this.navigation.navigate('Login', {
+                        forward: 'IncidentForm'
+                    });
                 }
             }
         }
@@ -217,9 +222,9 @@
     }
 
     .item-text-highlight {
-        margin-top: 4;
+        margin-top: 2;
         font-family: DBHeaventt-Light;
         color: white;
-        font-size: 18;
+        font-size: 20;
     }
 </style>

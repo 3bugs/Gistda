@@ -254,6 +254,21 @@ export function DELETE_INCIDENT_IMAGE(state, {imageIndex}) {
     console.log(`Incident images count: ${state.incidentImages.length}`);
 }
 
+export function LOGGING_IN(state) {
+    state.loggingIn = true;
+
+    console.log(`Logging in...`);
+}
+
+export function SET_USER(state, {userDisplayName, userToken}) {
+    state.loggingIn = false;
+    state.userDisplayName = userDisplayName;
+    state.userToken = userToken;
+
+    console.log(`Set user:`);
+    console.log(`Display name: ${userDisplayName}, Token: ${userToken}`);
+}
+
 function logObjectProperties(objectName, object) {
     console.log(`Properties of ${objectName}:`);
     if (object) {
