@@ -6,8 +6,9 @@
                     SIDEBAR.headerBackground[province].startColor,
                     SIDEBAR.headerBackground[province].endColor
                 ]">
-            <touchable-opacity class="profile-touchable"
-                               :on-press="() => onClickProfile()">
+            <!--<touchable-opacity class="profile-touchable"
+                               :on-press="handleClickProfile">-->
+            <view class="profile-touchable">
                 <view class="profile-image-container">
                     <image :source="profileImage"
                            class="profile-image"
@@ -15,15 +16,16 @@
                 </view>
                 <view class="profile-name-container">
                     <text class="profile-name">
-                        {{userToken ? userDisplayName : 'Hello Guest !'}}
+                        {{userToken ? userDisplayName : 'SAFE SAFE'}}
                     </text>
                     <text class="login-text">
-                        {{userToken ? '' : 'Login / Sign Up'}}
+                        {{userToken ? 'Logged In' : 'Powered By GISTDA' /*'Login / Sign Up'*/}}
                     </text>
                 </view>
-            </touchable-opacity>
+            </view>
+            <!--</touchable-opacity>-->
 
-            <touchable-opacity class="bell-icon-touchable"
+            <!--<touchable-opacity class="bell-icon-touchable"
                                :on-press="null">
                 <image :source="imageBell"
                        class="bell-icon"
@@ -31,7 +33,7 @@
                 <text class="badge">
                     {{8}}
                 </text>
-            </touchable-opacity>
+            </touchable-opacity>-->
         </linear-gradient>
     </view>
 </template>
@@ -50,8 +52,8 @@
     export default {
         components: {LinearGradient},
         props: {
-            onClickProfile: {
-                type: Function
+            navigation: {
+                type: Object
             },
         },
         computed: {
@@ -66,7 +68,10 @@
             },
             profileImage() {
                 return this.userToken ? imageProfilePromlert : imageLogo;
-            }
+            },
+            isLoggedIn() {
+                return store.state.userToken !== null
+            },
         },
         data: () => {
             return {
@@ -75,6 +80,13 @@
             };
         },
         methods: {
+            handleClickProfile: function () {
+                if (this.isLoggedIn) {
+                    //todo: ********************
+                } else {
+                    this.navigation.navigate('Login');
+                }
+            },
         },
     }
 </script>

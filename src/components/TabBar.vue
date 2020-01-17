@@ -16,7 +16,7 @@
                         paddingRight: paddingHorizontal,
                   }">
                 <tab-bar-item
-                        v-for="itemIndex in [0, 1]"
+                        v-for="itemIndex in [0]"
                         :itemIndex="itemIndex"
                         :state="currentRouteIndex === itemIndex"
                         :callback="handleClickItem"/>
@@ -30,7 +30,7 @@
                     </view>
                 </touchable-opacity>
                 <tab-bar-item
-                        v-for="itemIndex in [2, 3]"
+                        v-for="itemIndex in [1]"
                         :itemIndex="itemIndex"
                         :state="currentRouteIndex === itemIndex"
                         :callback="handleClickItem"/>
@@ -188,9 +188,10 @@
                 if (this.isLoggedIn /*user === null*/) {
                     this.navigation.navigate('IncidentForm');
                 } else {
-                    this.navigation.navigate('Login', {
+                    /*this.navigation.navigate('Login', {
                         forward: 'IncidentForm'
-                    });
+                    });*/
+                    this.navigation.navigate('IncidentForm');
                 }
             }
         }

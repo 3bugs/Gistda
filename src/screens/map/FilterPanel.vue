@@ -19,7 +19,7 @@
                 </view>
                 <view render-prop="ListHeaderComponent">
                     <filter-panel-header
-                            :on-click-profile="handleClickProfile"/>
+                            :navigation="navigation"/>
                 </view>
 
                 <view render-prop="ListFooterComponent">
@@ -32,22 +32,22 @@
                         paddingRight: 20,
                     }">
                         <!--<touchable-opacity :on-press="handleClickAbout">-->
-                            <text :style="{
+                            <!--<text :style="{
                                 fontFamily: 'DBHeavent',
                                 fontSize: 20,
                                 color: 'rgba(255, 255, 255, 0.4)',
-                            }">v{{APP_VERSION}}</text>
+                            }">v{{APP_VERSION}}</text>-->
                         <!--</touchable-opacity>-->
-                        <touchable-opacity :on-press="handleClickLogout">
+                        <!--<touchable-opacity :on-press="handleClickLogout">
                             <text :style="{
                                 fontFamily: 'DBHeavent',
                                 fontSize: 20,
                                 color: 'rgba(255, 255, 255, 0.4)',
                             }">ออกจากระบบ</text>
-                        </touchable-opacity>
+                        </touchable-opacity>-->
                     </view>
 
-                    <view :style="{marginBottom: 140}"/>
+                    <view :style="{marginBottom: 100}"/>
                 </view>
             </flat-list>
         </linear-gradient>
@@ -66,6 +66,9 @@
     export default {
         components: {LinearGradient, FilterPanelHeader, FilterType},
         props: {
+            navigation: {
+                type: Object
+            },
             onChangeOpacity: {
                 type: Function
             }
@@ -87,9 +90,6 @@
             };
         },
         methods: {
-            handleClickProfile: function () {
-                alert('Click profile!'); //todo: *************************
-            },
             handleClickAbout: function () {
 
             },
@@ -104,7 +104,10 @@
                                 onPress: () => {
                                     store.dispatch('LOGOUT', {
                                         callback: () => {
-
+                                            Alert.alert(
+                                                'สำเร็จ',
+                                                'ออกจากระบบสำเร็จ',
+                                            );
                                         }
                                     });
                                 }

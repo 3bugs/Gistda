@@ -88,6 +88,8 @@ export async function SET_PROVINCE({commit, state}, {province, callback}) {
                             }
                         }
                     });
+                } else {
+                    callback(true, null);
                 }
             }
         });
@@ -131,9 +133,9 @@ export async function SUBMIT_INCIDENT_FORM_DATA({commit, state}, {callback}) {
         type: state.incidentFormData[INCIDENT_FORM_DATA.KEY_INCIDENT_CATEGORY],
         detail: state.incidentFormData[INCIDENT_FORM_DATA.KEY_DETAILS],
         address: '',
-        subdistrict: DISTRICT_DATA[state.province][state.incidentFormData[INCIDENT_FORM_DATA.KEY_DISTRICT]]
+        /*subdistrict: DISTRICT_DATA[state.province][state.incidentFormData[INCIDENT_FORM_DATA.KEY_DISTRICT]]
             .subDistricts[state.incidentFormData[INCIDENT_FORM_DATA.KEY_SUB_DISTRICT]],
-        district: DISTRICT_DATA[state.province][state.incidentFormData[INCIDENT_FORM_DATA.KEY_DISTRICT]].district,
+        district: DISTRICT_DATA[state.province][state.incidentFormData[INCIDENT_FORM_DATA.KEY_DISTRICT]].district,*/
         province_code: provinceCode[state.province],
         lat: state.incidentFormData[INCIDENT_FORM_DATA.KEY_LATITUDE],
         lng: state.incidentFormData[INCIDENT_FORM_DATA.KEY_LONGITUDE],

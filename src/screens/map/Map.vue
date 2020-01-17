@@ -9,7 +9,7 @@
             :on-open="handleOpenFilterPanel"
             :on-close="handleCloseFilterPanel">
         <view render-prop="content">
-            <FilterPanel/>
+            <FilterPanel :navigation="navigation"/>
         </view>
 
         <view class="container"
@@ -109,41 +109,28 @@
                     </text>
 
                     <touchable-opacity class="alert-icon-touchable">
-                        <image :source="MAP_HEADER.alertIcon[province]"
+                        <!--<image :source="MAP_HEADER.alertIcon[province]"
+                               class="alert-icon"
+                               resize-mode="contain"/>-->
+                        <image :source="null"
                                class="alert-icon"
                                resize-mode="contain"/>
                     </touchable-opacity>
                 </linear-gradient>
-                <view class="search-input-container">
-                    <!--<image-background :style="{
-                    flexDirection: 'row',
-                    paddingTop: 8,
-                    paddingBottom: 8,
-                    paddingLeft: 15,
-                    paddingRight: 15,
-                    height: 50,
-                    backgroundColor: '#fff',
-                    shadowColor: '#808080',
-                    shadowRadius: 5,
-                    shadowOffset: { height: 0, width: 0},
-                    shadowOpacity: 0.75,
-                    elevation: 1,
-                    borderWidth: 1,
-                    borderRadius: 25,
-                    borderColor: '#e0e0e0'}">-->
+                <!--<view class="search-input-container">
                     <card-view
                             :card-elevation="4"
                             :card-maxElevation="4"
                             :corner-radius="25"
                             :style="{
-                flexDirection: 'row',
-                paddingTop: 6,
-                paddingBottom: 6,
-                paddingLeft: 15,
-                paddingRight: 15,
-                height: 50,
-                backgroundColor: '#fff'
-                }">
+                                flexDirection: 'row',
+                                paddingTop: 6,
+                                paddingBottom: 6,
+                                paddingLeft: 15,
+                                paddingRight: 15,
+                                height: 50,
+                                backgroundColor: '#fff'
+                            }">
                         <text-input class="search-input"
                                     placeholder="Search"
                                     placeholder-text-color="#aaa"/>
@@ -156,8 +143,7 @@
                                    resize-mode="contain"/>
                         </touchable-opacity>
                     </card-view>
-                    <!--</image-background>-->
-                </view>
+                </view>-->
             </view>
         </view>
 

@@ -13,7 +13,7 @@
                       :style="{fontSize: isTallScreen ? 65 : 55, marginTop: isTallScreen ? 68 : 68}">
                     {{provinceNameTh}}
                 </text>
-                <text class="temperature"
+                <!--<text class="temperature"
                       :on-layout="handleTemperatureLayoutChange"
                       :style="{fontSize: isTallScreen ? 120 : 90}">
                     {{temperature}}
@@ -25,7 +25,7 @@
                 <text class="status"
                       :style="{marginTop: isTallScreen ? 203 : 175}">
                     {{status}}
-                </text>
+                </text>-->
             </view>
             <view-pager class="view-pager"
                         :initial-page="0"

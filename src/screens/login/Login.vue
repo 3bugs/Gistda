@@ -78,7 +78,7 @@
                     :on-click="handleClickLogin"/>
             <view :style="{marginBottom: 20}"/>
 
-            <view :style="{
+            <!--<view :style="{
                 flexDirection: 'row',
                 alignItems: 'center',
             }">
@@ -127,8 +127,8 @@
                 <touchable-opacity :on-press="handleClickSignUp">
                     <text class="action">SIGN UP</text>
                 </touchable-opacity>
-            </view>
-            <view :style="{marginBottom: 30}"/>
+            </view>-->
+            <view :style="{marginBottom: 40}"/>
         </scroll-view>
 
         <view :style="{
@@ -200,8 +200,8 @@
                 DEBUG, DIMENSION, SCREEN_LOGIN, COLOR_PRIMARY,
                 Dimensions,
                 imageBack, imageLogo, imageFacebook, imageLine, imageGoogle,
-                emailContent: 'promlert3@safesafe.com',
-                passwordContent: '12345678',
+                emailContent: '',
+                passwordContent: '',
                 showPassword: false,
             };
         },
@@ -218,37 +218,44 @@
             handleClickLogin: function () {
                 console.log(`Email: ${this.emailContent}, Password: ${this.passwordContent}`);
                 if (this.emailContent && this.passwordContent) {
-                    store.dispatch('LOGIN', {
-                        email: this.emailContent,
-                        password: this.passwordContent,
-                        callback: (success, message) => {
-                            if (success) {
-                                Alert.alert(
-                                    'สำเร็จ',
-                                    'เข้าสู่ระบบสำเร็จ',
-                                    [
-                                        {
-                                            text: 'OK',
-                                            onPress: () => {
-                                                this.navigation.goBack();
+                    if (this.validateEmail(this.emailContent)) {
+                        store.dispatch('LOGIN', {
+                            email: this.emailContent,
+                            password: this.passwordContent,
+                            callback: (success, message) => {
+                                if (success) {
+                                    Alert.alert(
+                                        'สำเร็จ',
+                                        'เข้าสู่ระบบสำเร็จ',
+                                        [
+                                            {
+                                                text: 'OK',
+                                                onPress: () => {
+                                                    this.navigation.goBack();
 
-                                                const nextScreen = this.navigation.getParam('forward');
-                                                if (nextScreen) {
-                                                    this.navigation.navigate(nextScreen);
+                                                    const nextScreen = this.navigation.getParam('forward');
+                                                    if (nextScreen) {
+                                                        this.navigation.navigate(nextScreen);
+                                                    }
                                                 }
                                             }
-                                        }
-                                    ],
-                                    {cancelable: false}
-                                );
-                            } else {
-                                Alert.alert(
-                                    'ผิดพลาด',
-                                    message
-                                );
+                                        ],
+                                        {cancelable: false}
+                                    );
+                                } else {
+                                    Alert.alert(
+                                        'ผิดพลาด',
+                                        message
+                                    );
+                                }
                             }
-                        }
-                    });
+                        });
+                    } else {
+                        Alert.alert(
+                            'ผิดพลาด',
+                            'รูปแบบอีเมลไม่ถูกต้อง'
+                        );
+                    }
                 } else {
                     Alert.alert(
                         'ผิดพลาด',
@@ -273,6 +280,9 @@
             },
             handleClickSignUp: function () {
 
+            },
+            validateEmail: function (value) {
+                return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value);
             },
         },
         created: function () {

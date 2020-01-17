@@ -154,7 +154,7 @@
                     <!--<floating-label-input name="district" label="อำเภอ" :marginTop="25"/>-->
                     <!--<floating-label-input name="subDistrict" label="ตำบล" :marginTop="25"/>-->
 
-                    <text class="label">อำเภอ</text>
+                    <!--<text class="label">อำเภอ</text>
                     <picker :selected-value="districtValue"
                             :on-value-change="handleDistrictChange"
                             :item-style="{
@@ -165,7 +165,7 @@
                                 margin: 0,
                             }">
                         <picker-item
-                                label="-- เลือกอำเภอ --"
+                                label="&#45;&#45; เลือกอำเภอ &#45;&#45;"
                                 :value="-1"/>
                         <picker-item
                                 v-for="(item, index) in DISTRICT_DATA[province]"
@@ -184,19 +184,20 @@
                                 margin: 0,
                             }">
                         <picker-item
-                                label="-- เลือกตำบล --"
+                                label="&#45;&#45; เลือกตำบล &#45;&#45;"
                                 :value="-1"/>
                         <picker-item
                                 v-for="(item, index) in subDistricts"
                                 :label="item"
                                 :value="index"/>
-                    </picker>
+                    </picker>-->
 
-                    <floating-label-input
+                    <!--<floating-label-input
                             :name="INCIDENT_FORM_DATA.KEY_REPORTER"
                             label="ผู้แจ้ง"
-                            :marginTop="10"
-                            :editable="false"/>
+                            :marginTop-Old="10"
+                            :marginTop="25"
+                            :editable="false"/>-->
                     <floating-label-input
                             :name="INCIDENT_FORM_DATA.KEY_EMAIL"
                             label="อีเมล"
@@ -428,7 +429,27 @@
                 this.navigation.goBack();
             },
             handleClickClose: function () {
-                //todo:
+                Alert.alert(
+                    'ล้างข้อมูล',
+                    'ยืนยันล้างข้อมูลที่กรอก?',
+                    [
+                        {
+                            text: 'ล้างข้อมูล',
+                            onPress: () => {
+                                store.dispatch('CLEAR_INCIDENT_FORM_DATA_AND_IMAGES', {});
+                            }
+                        },
+                        {
+                            text: 'ยกเลิก',
+                            onPress: () => {
+                            },
+                            style: 'cancel'
+                        },
+                    ],
+                    {cancelable: true}
+                );
+
+
             },
             handleIncidentCategoryChange: function (value, index) {
                 store.dispatch('SET_INCIDENT_FORM_DATA', {
@@ -608,6 +629,7 @@
         created: function () {
             store.dispatch('SET_INCIDENT_FORM_DATA', {
                 formData: {
+                    [INCIDENT_FORM_DATA.KEY_REPORTER]: store.state.userDisplayName,
                     [INCIDENT_FORM_DATA.KEY_PROVINCE]: this.PROVINCE_NAME_TH[this.province],
                 },
             });

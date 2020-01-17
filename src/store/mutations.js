@@ -228,10 +228,10 @@ export function SET_INCIDENT_FORM_DATA(state, {formData}) {
 export function CLEAR_INCIDENT_FORM_DATA_AND_IMAGES(state, {}) {
     state.incidentFormData[INCIDENT_FORM_DATA.KEY_INCIDENT_CATEGORY] = 0;
     state.incidentFormData[INCIDENT_FORM_DATA.KEY_DETAILS] = '';
-    state.incidentFormData[INCIDENT_FORM_DATA.KEY_PROVINCE] = '';
-    state.incidentFormData[INCIDENT_FORM_DATA.KEY_DISTRICT] = -1;
-    state.incidentFormData[INCIDENT_FORM_DATA.KEY_SUB_DISTRICT] = -1;
-    state.incidentFormData[INCIDENT_FORM_DATA.KEY_REPORTER] = ''; //todo: ***
+    //state.incidentFormData[INCIDENT_FORM_DATA.KEY_PROVINCE] = '';
+    //state.incidentFormData[INCIDENT_FORM_DATA.KEY_DISTRICT] = -1;
+    //state.incidentFormData[INCIDENT_FORM_DATA.KEY_SUB_DISTRICT] = -1;
+    //state.incidentFormData[INCIDENT_FORM_DATA.KEY_REPORTER] = state.userDisplayName;
     state.incidentFormData[INCIDENT_FORM_DATA.KEY_EMAIL] = '';
     state.incidentFormData[INCIDENT_FORM_DATA.KEY_PHONE] = '';
     state.incidentFormData[INCIDENT_FORM_DATA.KEY_LATITUDE] = null;

@@ -47,10 +47,19 @@
         data: () => {
             return {
                 isFocused: false,
-                textContent: '',
             };
         },
         computed: {
+            textContent() {
+                const incidentFormData = store.state.incidentFormData;
+                if (!incidentFormData) {
+                    return '';
+                } else {
+                    return incidentFormData[this.name]
+                        ? incidentFormData[this.name]
+                        : '';
+                }
+            }
         },
         methods: {
             handleFocus: function () {
@@ -68,14 +77,14 @@
             },
         },
         created: function () {
-            const incidentFormData = store.state.incidentFormData;
+            /*const incidentFormData = store.state.incidentFormData;
             if (!incidentFormData) {
                 this.textContent = '';
             } else {
                 this.textContent = incidentFormData[this.name]
                     ? incidentFormData[this.name]
                     : '';
-            }
+            }*/
         }
     }
 </script>

@@ -8,7 +8,8 @@
                     callback: handleClickBack
                 }"
                 :right-icon="{
-                    icon: imageShare,
+                    icon_old: imageShare,
+                    icon: null,
                     width: 14,
                     height: 16.5,
                     callback: handleClickShare
