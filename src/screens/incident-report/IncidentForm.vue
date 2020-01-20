@@ -1,215 +1,138 @@
 <template>
     <view class="container">
-        <header title="ข้อมูลจุดแจ้งเหตุ"
-                :left-icon="{
-                    icon: imageBack,
-                    width: 24,
-                    height: 18,
-                    callback: handleClickBack
-                }"
-                :right-icon="{
-                    icon: null,
-                    width: 22,
-                    height: 22,
-                    callback: null
-                }"/>
-        <view class="content-container">
-            <view :style="{
-                    height: DIMENSION.horizontal_margin + 10,
-                    backgroundColor: COLOR_PRIMARY[province],
-                }">
-            </view>
+        <form-header
+                title="ข้อมูลจุดแจ้งเหตุ"
+                header-text="เพิ่มข้อมูลจุดเกิดเหตุ"
+                sub-header-text="กรุณากรอกข้อมูลให้ครบ"
+                :button-text="null"
+                :on-click-back="handleClickBack"
+                :on-click-close="handleClickClose">
+            <view>
+                <text class="label">หมวดหมู่ของเหตุ</text>
+                <picker :selected-value="incidentCategoryValue"
+                        :on-value-change="handleIncidentCategoryChange"
+                        :item-style="{
+                            fontFamily: 'DBHeavent',
+                            fontSize: 22,
+                            color: '#666666',
+                            padding: 0,
+                            margin: 0,
+                        }">
+                    <picker-item
+                            v-for="(item, index) in incidentCategories"
+                            :label="item"
+                            :value="index"/>
+                </picker>
 
-            <view :style="{
-                position: 'absolute',
-                width: '100%', height: '100%',
-            }">
+                <incident-form-text-input
+                        :name="INCIDENT_FORM_DATA.KEY_DETAILS"
+                        label="รายละเอียด"
+                        :margin-top="10"
+                        :multiline="true"
+                        :editable="true"/>
+
+                <text class="label">พิกัดจุดเกิดเหตุ</text>
                 <view :style="{
-                    backgroundColor: 'white',
-                    borderTopLeftRadius: DIMENSION.horizontal_margin * 1.5,
-                    borderTopRightRadius: DIMENSION.horizontal_margin * 1.5,
+                    height: (Dimensions.get('window').width - (2 * DIMENSION.horizontal_margin)) * 0.67,
+                    marginTop: 15,
                 }">
+                    <map-view
+                            ref="mapView"
+                            :style="{
+                                width: '100%',
+                                height: '100%',
+                            }"
+                            :initial-region="{
+                                latitude: (PROVINCE_DIMENSION[province].minLatitude + PROVINCE_DIMENSION[province].maxLatitude) / 2,
+                                longitude: (PROVINCE_DIMENSION[province].minLongitude + PROVINCE_DIMENSION[province].maxLongitude) / 2,
+                                latitudeDelta: 0.005,
+                                longitudeDelta: 0.005,
+                            }"
+                            :on-region-change-complete="handleRegionChange">
+
+                    </map-view>
+
                     <view :style="{
-                                flexDirection: 'row',
-                                alignItems: 'flex-start',
-                                marginTop: DIMENSION.horizontal_margin,
-                                marginBottom: 15,
-                                marginLeft: DIMENSION.horizontal_margin,
-                                marginRight: DIMENSION.horizontal_margin,
-                                borderWidth: 0,
-                                borderColor: 'red',
-                          }">
-                        <view :style="{
-                            flex: 1,
-                        }">
-                            <text class="title">เพิ่มข้อมูลจุดเกิดเหตุ</text>
-                            <text :style="{
-                                fontFamily: 'DBHeaventt-Light',
-                                fontSize: 22,
-                                color: '#626B80',
-                                borderWidth: 0,
-                                borderColor: 'blue',
-                            }">กรุณากรอกข้อมูลให้ครบ
-                            </text>
-                        </view>
-                        <touchable-opacity
-                                :on-press="handleClickClose"
-                                :style="{
-                                    marginTop: 10,
-                                }">
-                            <image :source="imageClose"
-                                   :style="{
-                                    width: 24,
-                                    height: 24,
-                                    padding: 10,
-                                }"/>
-                        </touchable-opacity>
-                    </view>
-                    <view :style="{
-                        marginTop: 0,
-                        marginBottom: 0,
-                        marginLeft: 0,
-                        marginRight: 0,
-                        borderBottomWidth: StyleSheet.hairlineWidth,
-                        borderBottomColor: '#cccccc'
-                    }"/>
-                </view>
-                <scroll-view
-                        class="content"
-                        keyboard-should-persist-taps="handled"
-                        :style="{
-                            flex: 1,
-                            backgroundColor: 'white',
-                            paddingLeft: DIMENSION.horizontal_margin,
-                            paddingRight: DIMENSION.horizontal_margin,
-                        }">
-                    <view :style="{marginBottom: 0}"/>
-
-                    <text class="label">หมวดหมู่ของเหตุ</text>
-                    <picker :selected-value="incidentCategoryValue"
-                            :on-value-change="handleIncidentCategoryChange"
-                            :item-style="{
-                                fontFamily: 'DBHeavent',
-                                fontSize: 22,
-                                color: '#666666',
-                                padding: 0,
-                                margin: 0,
-                            }">
-                        <picker-item
-                                v-for="(item, index) in incidentCategories"
-                                :label="item"
-                                :value="index"/>
-                    </picker>
-
-                    <floating-label-input
-                            :name="INCIDENT_FORM_DATA.KEY_DETAILS"
-                            label="รายละเอียด"
-                            :marginTop="10"
-                            :multiline="true"
-                            :editable="true"/>
-
-                    <text class="label">พิกัดจุดเกิดเหตุ</text>
-                    <view :style="{
-                                height: (Dimensions.get('window').width - (2 * DIMENSION.horizontal_margin)) * 0.67,
-                                marginTop: 15,
-                          }">
-                        <map-view
-                                ref="mapView"
-                                :style="{
-                                    width: '100%',
-                                    height: '100%',
-                                }"
-                                :initial-region="{
-                                    latitude: (PROVINCE_DIMENSION[province].minLatitude + PROVINCE_DIMENSION[province].maxLatitude) / 2,
-                                    longitude: (PROVINCE_DIMENSION[province].minLongitude + PROVINCE_DIMENSION[province].maxLongitude) / 2,
-                                    latitudeDelta: 0.005,
-                                    longitudeDelta: 0.005,
-                                }"
-                                :on-region-change-complete="handleRegionChange">
-
-                        </map-view>
-
-                        <view :style="{
                             position: 'absolute',
                             left: '50%',
                             top: '50%',
                             marginLeft: -20,
                             marginTop: -20
                         }">
-                            <image :style="{
-                                        width: 40,
-                                        height: 40,
-                                    }"
-                                   :source="imageMarker"
-                                   resize-mode="contain"/>
-                        </view>
+                        <image :style="{
+                                    width: 40,
+                                    height: 40,
+                                }"
+                               :source="imageMarker"
+                               resize-mode="contain"/>
                     </view>
+                </view>
 
-                    <floating-label-input
-                            :name="INCIDENT_FORM_DATA.KEY_PROVINCE"
-                            label="จังหวัด"
-                            :marginTop="25"
-                            :editable="false"/>
+                <incident-form-text-input
+                        :name="INCIDENT_FORM_DATA.KEY_PROVINCE"
+                        label="จังหวัด"
+                        :margin-top="25"
+                        :editable="false"/>
 
-                    <!--<floating-label-input name="district" label="อำเภอ" :marginTop="25"/>-->
-                    <!--<floating-label-input name="subDistrict" label="ตำบล" :marginTop="25"/>-->
+                <!--<incident-form-text-input name="district" label="อำเภอ" :marginTop="25"/>-->
+                <!--<incident-form-text-input name="subDistrict" label="ตำบล" :marginTop="25"/>-->
 
-                    <!--<text class="label">อำเภอ</text>
-                    <picker :selected-value="districtValue"
-                            :on-value-change="handleDistrictChange"
-                            :item-style="{
-                                fontFamily: 'DBHeavent',
-                                fontSize: 22,
-                                color: '#666666',
-                                padding: 0,
-                                margin: 0,
-                            }">
-                        <picker-item
-                                label="&#45;&#45; เลือกอำเภอ &#45;&#45;"
-                                :value="-1"/>
-                        <picker-item
-                                v-for="(item, index) in DISTRICT_DATA[province]"
-                                :label="item.district"
-                                :value="index"/>
-                    </picker>
+                <!--<text class="label">อำเภอ</text>
+                <picker :selected-value="districtValue"
+                        :on-value-change="handleDistrictChange"
+                        :item-style="{
+                            fontFamily: 'DBHeavent',
+                            fontSize: 22,
+                            color: '#666666',
+                            padding: 0,
+                            margin: 0,
+                        }">
+                    <picker-item
+                            label="&#45;&#45; เลือกอำเภอ &#45;&#45;"
+                            :value="-1"/>
+                    <picker-item
+                            v-for="(item, index) in DISTRICT_DATA[province]"
+                            :label="item.district"
+                            :value="index"/>
+                </picker>
 
-                    <text class="label" :style="{marginTop: 10}">ตำบล</text>
-                    <picker :selected-value="subDistrictValue"
-                            :on-value-change="handleSubDistrictChange"
-                            :item-style="{
-                                fontFamily: 'DBHeavent',
-                                fontSize: 22,
-                                color: '#666666',
-                                padding: 0,
-                                margin: 0,
-                            }">
-                        <picker-item
-                                label="&#45;&#45; เลือกตำบล &#45;&#45;"
-                                :value="-1"/>
-                        <picker-item
-                                v-for="(item, index) in subDistricts"
-                                :label="item"
-                                :value="index"/>
-                    </picker>-->
+                <text class="label" :style="{marginTop: 10}">ตำบล</text>
+                <picker :selected-value="subDistrictValue"
+                        :on-value-change="handleSubDistrictChange"
+                        :item-style="{
+                            fontFamily: 'DBHeavent',
+                            fontSize: 22,
+                            color: '#666666',
+                            padding: 0,
+                            margin: 0,
+                        }">
+                    <picker-item
+                            label="&#45;&#45; เลือกตำบล &#45;&#45;"
+                            :value="-1"/>
+                    <picker-item
+                            v-for="(item, index) in subDistricts"
+                            :label="item"
+                            :value="index"/>
+                </picker>-->
 
-                    <!--<floating-label-input
-                            :name="INCIDENT_FORM_DATA.KEY_REPORTER"
-                            label="ผู้แจ้ง"
-                            :marginTop-Old="10"
-                            :marginTop="25"
-                            :editable="false"/>-->
-                    <floating-label-input
-                            :name="INCIDENT_FORM_DATA.KEY_EMAIL"
-                            label="อีเมล"
-                            :marginTop="25"
-                            :editable="true"/>
-                    <floating-label-input
-                            :name="INCIDENT_FORM_DATA.KEY_PHONE"
-                            label="เบอร์โทร"
-                            :marginTop="25"
-                            :editable="true"/>
+                <incident-form-text-input
+                        :name="INCIDENT_FORM_DATA.KEY_REPORTER"
+                        label="ผู้แจ้ง"
+                        :margin-top_old="10"
+                        :margin-top="25"
+                        :editable="false"/>
+                <incident-form-text-input
+                        :name="INCIDENT_FORM_DATA.KEY_EMAIL"
+                        label="อีเมล"
+                        :margin-top="25"
+                        :editable="true"/>
+                <incident-form-text-input
+                        :name="INCIDENT_FORM_DATA.KEY_PHONE"
+                        label="เบอร์โทร"
+                        :margin-top="25"
+                        :editable="true"/>
 
-                    <text :style="{
+                <text :style="{
                         fontFamily: 'DBHeaventt-Light',
                         fontSize: 22,
                         color: '#626B80',
@@ -218,15 +141,15 @@
                         borderWidth: 0,
                         borderColor: 'blue',
                     }">อัพโหลดรูปภาพ
-                    </text>
+                </text>
 
-                    <view :style="{
+                <view :style="{
                         flexDirection: 'row',
                         flexWrap: 'wrap',
                     }">
-                        <touchable-opacity
-                                :on-press="handleClickAddImage">
-                            <view :style="{
+                    <touchable-opacity
+                            :on-press="handleClickAddImage">
+                        <view :style="{
                                 justifyContent: 'center',
                                 alignItems: 'center',
                                 width: THUMB_IMAGE_SIZE,
@@ -237,38 +160,37 @@
                                 borderColor: '#999999',
                                 borderRadius: 10,
                             }">
-                                <image :source="imageAdd"
-                                       :style="{
+                            <image :source="imageAdd"
+                                   :style="{
                                             width: 19,
                                             height: 20,
                                         }"/>
-                            </view>
-                        </touchable-opacity>
+                        </view>
+                    </touchable-opacity>
 
-                        <touchable-opacity
-                                v-for="(data, index) in incidentImages"
-                                :on-press="() => handleClickDeleteImage(index)">
-                            <image :style="{
+                    <touchable-opacity
+                            v-for="(data, index) in incidentImages"
+                            :on-press="() => handleClickDeleteImage(index)">
+                        <image :style="{
                                         width: THUMB_IMAGE_SIZE,
                                         height: THUMB_IMAGE_SIZE,
                                         marginTop: 8, marginRight: 8,
                                         borderRadius: 10,
                                    }"
-                                   :source="{ uri: `${data}`}"/>
-                        </touchable-opacity>
-                    </view>
+                               :source="{ uri: `${data}`}"/>
+                    </touchable-opacity>
+                </view>
 
-                    <view :style="{marginBottom: 25}"/>
+                <view :style="{marginBottom: 25}"/>
 
-                    <my-button
-                            text="แจ้งเหตุ"
-                            bg-color="#1665D8"
-                            :on-click="handleClickSubmitButton"/>
+                <my-button
+                        text="แจ้งเหตุ"
+                        :bg-color="FORM.buttonColor[province]"
+                        :on-click="handleClickSubmitButton"/>
 
-                    <view :style="{marginBottom: 25}"/>
-                </scroll-view>
+                <view :style="{marginBottom: 25}"/>
             </view>
-        </view>
+        </form-header>
 
         <view>
             <dialog-container :visible="showImageDialog"
@@ -301,23 +223,23 @@
             </dialog-container>
         </view>
 
-        <activity-indicator
+        <!--<activity-indicator
                 class="progress"
                 size="large"
                 :color="COLOR_PRIMARY[province]"
-                v-if="isSubmitting"/>
+                v-if="isSubmitting"/>-->
     </view>
 </template>
 
 <script>
     import store from '../../store';
-    import {DEBUG, PROVINCE_NAME_TH, DIMENSION, COLOR_PRIMARY, COLOR_PRIMARY_DARK, INCIDENT_FORM_DATA, PROVINCE_DIMENSION} from '../../constants';
+    import {DEBUG, PROVINCE_NAME_TH, DIMENSION, COLOR_PRIMARY, COLOR_PRIMARY_DARK, INCIDENT_FORM_DATA, PROVINCE_DIMENSION, FORM} from '../../constants';
     import {DISTRICT_DATA} from '../../constants/district';
-    import Header from '../../components/Header';
-    import FloatingLabelInput from '../../components/FloatingLabelInput';
+    import FormHeader from '../../components/FormHeader';
+    import IncidentFormTextInput from '../../components/IncidentFormTextInput';
     import MyButton from '../../components/MyButton';
 
-    import {Alert, Platform, PermissionsAndroid, StyleSheet, Dimensions, Picker} from 'react-native';
+    import {Alert, Platform, PermissionsAndroid, Dimensions, Picker} from 'react-native';
     import CardView from 'react-native-cardview';
     import ImagePicker from 'react-native-image-picker';
     import ImageResizer from 'react-native-image-resizer';
@@ -335,8 +257,8 @@
 
     export default {
         components: {
-            Header, CardView, Picker, PickerItem: Picker.Item,
-            ImagePicker, ImageResizer, ImgToBase64, FloatingLabelInput, MyButton,
+            FormHeader, CardView, Picker, PickerItem: Picker.Item,
+            ImagePicker, ImageResizer, ImgToBase64, IncidentFormTextInput, MyButton,
             DialogContainer: Dialog.Container,
             DialogTitle: Dialog.Title,
             DialogButton: Dialog.Button,
@@ -412,8 +334,8 @@
         data: () => {
             return {
                 DEBUG, PROVINCE_NAME_TH, DIMENSION, COLOR_PRIMARY, COLOR_PRIMARY_DARK,
-                DISTRICT_DATA, INCIDENT_FORM_DATA, PROVINCE_DIMENSION,
-                Dimensions, StyleSheet,
+                DISTRICT_DATA, INCIDENT_FORM_DATA, PROVINCE_DIMENSION, FORM,
+                Dimensions,
                 imageBack, imageClose, imageAdd, imageMarker,
                 incidentCategories: [
                     '-- เลือกหมวดหมู่ของเหตุ --',
@@ -553,22 +475,30 @@
                 }
             },
             doGetCurrentLocation: function () {
-                Geolocation.getCurrentPosition(
-                    (position) => {
-                        console.log(position.coords);
+                try {
+                    Geolocation.getCurrentPosition(
+                        (position) => {
+                            console.log(position.coords);
 
-                        this.$refs['mapView'].animateToRegion({
-                            latitude: position.coords.latitude,
-                            longitude: position.coords.longitude,
-                            latitudeDelta: 0.005,
-                            longitudeDelta: 0.005,
-                        });
-                    },
-                    (error) => {
-                        console.log(`Error getting location: ${error.message}`);
-                    },
-                    { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
-                );
+                            try {
+                                this.$refs['mapView'].animateToRegion({
+                                    latitude: position.coords.latitude,
+                                    longitude: position.coords.longitude,
+                                    latitudeDelta: 0.005,
+                                    longitudeDelta: 0.005,
+                                });
+                            } catch (e) {
+                                console.log('Error animate to region: ' + e);
+                            }
+                        },
+                        (error) => {
+                            console.log(`Error getting location: ${error.message}`);
+                        },
+                        {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000}
+                    );
+                } catch (e) {
+                    console.log('Error get current position: ' + e);
+                }
             },
             requestLocationPermission: async function (callback) {
                 try {
@@ -644,43 +574,6 @@
         flex: 1;
     }
 
-    .content-container {
-        flex: 1;
-        border-width: 0;
-        border-color: red;
-    }
-
-    .content {
-
-    }
-
-    .cover-image {
-        margin-bottom: 8;
-    }
-
-    .date {
-        font-family: DBHeavent;
-        font-size: 22;
-        color: #aaaaaa;
-        margin-bottom: 5;
-    }
-
-    .title {
-        font-family: DBHeavent-Med;
-        font-size: 32;
-        color: #212529;
-        margin-bottom: 0;
-        border-width: 0;
-        border-color: red;
-    }
-
-    .body {
-        font-family: DBHeavent;
-        font-size: 22;
-        color: #333333;
-        margin-bottom: 10;
-    }
-
     .label {
         font-family: DBHeavent;
         font-size: 22;
@@ -689,13 +582,5 @@
         padding-bottom: 0;
         margin-top: 25;
         margin-bottom: 0;
-    }
-
-    .progress {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        border-width: 0;
-        border-color: yellow;
     }
 </style>

@@ -148,3 +148,9 @@ export const SCREEN_LOGIN = {
         },
     ],
 };
+export const FORM = {
+    buttonColor: [
+        COLOR_PRIMARY[0],
+        COLOR_PRIMARY[1],
+    ]
+};

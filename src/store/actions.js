@@ -1,4 +1,4 @@
-import {provinceCode, fetchNewsDetails, fetchPosts, fetchSuggest, submitFormData, doLogin} from './fetch';
+import {provinceCode, fetchNewsDetails, fetchPosts, fetchSuggest, submitFormData, doLogin, doRegister} from './fetch';
 import {INCIDENT_FORM_DATA} from '../constants/index';
 import {DISTRICT_DATA} from '../constants/district';
 import User from '../model/User';
@@ -281,6 +281,29 @@ export async function LOGIN({commit, state}, {email, password, callback}) {
     commit('LOGGING_IN');
 
     const apiResult = await doLogin(email, password);
+    if (apiResult.success) {
+        await setUser(new User(
+            apiResult.data.name,
+            apiResult.data.token
+        ));
+        commit('SET_USER', {
+            userDisplayName: apiResult.data.name,
+            userToken: apiResult.data.token,
+        });
+        callback(true, null);
+    } else {
+        commit('SET_USER', {
+            userDisplayName: null,
+            userToken: null,
+        });
+        callback(false, apiResult.message);
+    }
+}
+
+export async function REGISTER({commit, state}, {formData, callback}) {
+    commit('REGISTERING');
+
+    const apiResult = await doRegister(formData);
     if (apiResult.success) {
         await setUser(new User(
             apiResult.data.name,

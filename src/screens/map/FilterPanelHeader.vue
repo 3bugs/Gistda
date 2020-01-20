@@ -6,24 +6,24 @@
                     SIDEBAR.headerBackground[province].startColor,
                     SIDEBAR.headerBackground[province].endColor
                 ]">
-            <!--<touchable-opacity class="profile-touchable"
-                               :on-press="handleClickProfile">-->
-            <view class="profile-touchable">
-                <view class="profile-image-container">
-                    <image :source="profileImage"
-                           class="profile-image"
-                           resize-mode="contain"/>
+            <touchable-opacity class="profile-touchable"
+                               :on-press="handleClickProfile">
+                <view class="profile-touchable">
+                    <view class="profile-image-container">
+                        <image :source="profileImage"
+                               class="profile-image"
+                               resize-mode="contain"/>
+                    </view>
+                    <view class="profile-name-container">
+                        <text class="profile-name">
+                            {{userToken ? userDisplayName : 'Hello Guest !'}}
+                        </text>
+                        <text class="login-text">
+                            {{userToken ? 'Logged In' : 'Login / Sign Up'}}
+                        </text>
+                    </view>
                 </view>
-                <view class="profile-name-container">
-                    <text class="profile-name">
-                        {{userToken ? userDisplayName : 'SAFE SAFE'}}
-                    </text>
-                    <text class="login-text">
-                        {{userToken ? 'Logged In' : 'Powered By GISTDA' /*'Login / Sign Up'*/}}
-                    </text>
-                </view>
-            </view>
-            <!--</touchable-opacity>-->
+            </touchable-opacity>
 
             <!--<touchable-opacity class="bell-icon-touchable"
                                :on-press="null">

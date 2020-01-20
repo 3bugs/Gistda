@@ -188,10 +188,9 @@
                 if (this.isLoggedIn /*user === null*/) {
                     this.navigation.navigate('IncidentForm');
                 } else {
-                    /*this.navigation.navigate('Login', {
+                    this.navigation.navigate('Login', {
                         forward: 'IncidentForm'
-                    });*/
-                    this.navigation.navigate('IncidentForm');
+                    });
                 }
             }
         }

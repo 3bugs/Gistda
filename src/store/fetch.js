@@ -34,7 +34,7 @@ async function _fetch(method, path, bodyData) {
         const message = responseJson.result.description;
         const data = responseJson.result.data;
 
-        if (statusCode === 200) {
+        if (statusCode === 200 || statusCode === 201) {
             return new ApiResult(
                 true,
                 message,
@@ -141,17 +141,16 @@ export async function fetchCoordinates(province, idList) {
     }
 }
 
-// todo: **************************************************
 export async function doLogin(email, password) {
     return await _fetch('POST', 'users/login', {
         email, password
     });
 
-    /*return await _login('POST', 'users/login', {
-        email, password
-    });*/
-
     //return await fakeLogin();
+}
+
+export async function doRegister(formData) {
+    return await _fetch('POST', 'users/register', formData);
 }
 
 async function fakeLogin() {

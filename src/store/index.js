@@ -34,7 +34,7 @@ const store = new Vuex.Store({
             [INCIDENT_FORM_DATA.KEY_PROVINCE]: '',
             //[INCIDENT_FORM_DATA.KEY_DISTRICT]: -1,
             //[INCIDENT_FORM_DATA.KEY_SUB_DISTRICT]: -1,
-            [INCIDENT_FORM_DATA.KEY_REPORTER]: 'Anonymous',
+            [INCIDENT_FORM_DATA.KEY_REPORTER]: '',
             [INCIDENT_FORM_DATA.KEY_EMAIL]: '',
             [INCIDENT_FORM_DATA.KEY_PHONE]: '',
             [INCIDENT_FORM_DATA.KEY_LATITUDE]: null,

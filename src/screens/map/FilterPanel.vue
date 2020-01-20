@@ -23,7 +23,7 @@
                 </view>
 
                 <view render-prop="ListFooterComponent">
-                    <view :style="{marginBottom: 20}"/>
+                    <view :style="{marginBottom: 10}"/>
 
                     <view :style="{
                         flexDirection: 'row',
@@ -32,22 +32,22 @@
                         paddingRight: 20,
                     }">
                         <!--<touchable-opacity :on-press="handleClickAbout">-->
-                            <!--<text :style="{
+                            <text :style="{
                                 fontFamily: 'DBHeavent',
                                 fontSize: 20,
                                 color: 'rgba(255, 255, 255, 0.4)',
-                            }">v{{APP_VERSION}}</text>-->
+                            }">v{{APP_VERSION}}</text>
                         <!--</touchable-opacity>-->
-                        <!--<touchable-opacity :on-press="handleClickLogout">
+                        <touchable-opacity :on-press="handleClickLogout">
                             <text :style="{
                                 fontFamily: 'DBHeavent',
                                 fontSize: 20,
                                 color: 'rgba(255, 255, 255, 0.4)',
                             }">ออกจากระบบ</text>
-                        </touchable-opacity>-->
+                        </touchable-opacity>
                     </view>
 
-                    <view :style="{marginBottom: 100}"/>
+                    <view :style="{marginBottom: 140}"/>
                 </view>
             </flat-list>
         </linear-gradient>

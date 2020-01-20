@@ -78,7 +78,7 @@
                     :on-click="handleClickLogin"/>
             <view :style="{marginBottom: 20}"/>
 
-            <!--<view :style="{
+            <view :style="{
                 flexDirection: 'row',
                 alignItems: 'center',
             }">
@@ -127,7 +127,7 @@
                 <touchable-opacity :on-press="handleClickSignUp">
                     <text class="action">SIGN UP</text>
                 </touchable-opacity>
-            </view>-->
+            </view>
             <view :style="{marginBottom: 40}"/>
         </scroll-view>
 
@@ -200,8 +200,8 @@
                 DEBUG, DIMENSION, SCREEN_LOGIN, COLOR_PRIMARY,
                 Dimensions,
                 imageBack, imageLogo, imageFacebook, imageLine, imageGoogle,
-                emailContent: '',
-                passwordContent: '',
+                emailContent: DEBUG ? 'promlert3@safesafe.com' : '',
+                passwordContent: DEBUG ? '12345678' : '',
                 showPassword: false,
             };
         },
@@ -279,7 +279,10 @@
 
             },
             handleClickSignUp: function () {
-
+                const nextScreen = this.navigation.getParam('forward');
+                this.navigation.navigate('Register', {
+                    forward: nextScreen
+                });
             },
             validateEmail: function (value) {
                 return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value);

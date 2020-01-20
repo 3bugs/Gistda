@@ -19,6 +19,7 @@
     import News from './src/screens/news/News';
     import NewsDetails from './src/screens/news/NewsDetails';
     import Login from './src/screens/login/Login';
+    import Register from './src/screens/login/Register';
     import IncidentForm from './src/screens/incident-report/IncidentForm';
     import SettingsScreen from './src/screens/map/SettingsScreen';
     import TabBar from './src/components/TabBar';
@@ -85,14 +86,20 @@
                     header: null,
                 }
             },
+            IncidentForm: {
+                screen: IncidentForm,
+                navigationOptions: {
+                    header: null,
+                }
+            },
             Login: {
                 screen: Login,
                 navigationOptions: {
                     header: null,
                 }
             },
-            IncidentForm: {
-                screen: IncidentForm,
+            Register: {
+                screen: Register,
                 navigationOptions: {
                     header: null,
                 }

@@ -260,8 +260,16 @@ export function LOGGING_IN(state) {
     console.log(`Logging in...`);
 }
 
+export function REGISTERING(state) {
+    state.submittingFormData = true;
+
+    console.log(`Registering...`);
+}
+
 export function SET_USER(state, {userDisplayName, userToken}) {
-    state.loggingIn = false;
+    state.loggingIn = false; // กรณี login
+    state.submittingFormData = false; // กรณี register
+
     state.userDisplayName = userDisplayName;
     state.userToken = userToken;
 
