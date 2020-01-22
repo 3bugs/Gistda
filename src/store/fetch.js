@@ -6,21 +6,33 @@ export const provinceCode = [
     35, // ยโสธร
 ];
 
-async function _fetch(method, path, bodyData) {
+async function _fetch(method, path, bodyData, headerData) {
     const url = `${baseURL}/${path}`;
 
     console.log(`_fetch(\n\t${method}\n\t${url}\n\t${JSON.stringify(bodyData)}\n)`);
 
     try {
         const params = {
-            method
-        };
-        if (method === 'POST') {
-            params['headers'] = {
+            method,
+            headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-            };
+            }
+        };
+        if (method === 'POST') {
+            /*params['headers'] = {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            };*/
             params['body'] = JSON.stringify(bodyData);
+        }
+        if (headerData) {
+            for (let prop in headerData) {
+                if (Object.prototype.hasOwnProperty.call(headerData, prop)) {
+                    params['headers'][prop] = headerData[prop];
+                }
+            }
+            //params['headers'] = headerData;
         }
 
         const response = await fetch(url, params);
@@ -56,7 +68,7 @@ async function _fetch(method, path, bodyData) {
     }
 }
 
-export async function submitFormData(formData) {
+export async function submitFormData(userToken, formData) {
     const url = `${baseURL}/alarms/send`;
     try {
         const response = await fetch(url, {
@@ -64,7 +76,7 @@ export async function submitFormData(formData) {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer FqpKh7GbRPsBoH1nPGmMaPfCOyNjUg',
+                'Authorization': `Bearer ${userToken}`,
             },
             body: JSON.stringify(formData)
         });
@@ -151,6 +163,24 @@ export async function doLogin(email, password) {
 
 export async function doRegister(formData) {
     return await _fetch('POST', 'users/register', formData);
+}
+
+export async function doGetProfile(userToken) {
+    return await _fetch('GET', 'users/profile', null, {
+        Authorization: `Bearer ${userToken}`,
+    });
+}
+
+export async function doUpdateProfile(userToken, formData) {
+    return await _fetch('POST', 'users/update', formData, {
+        Authorization: `Bearer ${userToken}`,
+    });
+}
+
+export async function doChangePasword(userToken, formData) {
+    return await _fetch('POST', 'users/changepassword', formData, {
+        Authorization: `Bearer ${userToken}`,
+    });
 }
 
 async function fakeLogin() {

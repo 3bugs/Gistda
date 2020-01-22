@@ -23,9 +23,11 @@ const store = new Vuex.Store({
         loadingMessage: null,
         loadingCoordinateCategories: false,
         submittingFormData: false,
-
         loggingIn: false,
+
         userDisplayName: null,
+        userPhone: null,
+        userEmail: null,
         userToken: null,
 
         incidentFormData: {

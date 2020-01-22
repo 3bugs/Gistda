@@ -20,6 +20,9 @@
     import NewsDetails from './src/screens/news/NewsDetails';
     import Login from './src/screens/login/Login';
     import Register from './src/screens/login/Register';
+    import Profile from './src/screens/profile/Profile';
+    import EditProfile from './src/screens/profile/EditProfile';
+    import ChangePassword from './src/screens/profile/ChangePassword';
     import IncidentForm from './src/screens/incident-report/IncidentForm';
     import SettingsScreen from './src/screens/map/SettingsScreen';
     import TabBar from './src/components/TabBar';
@@ -100,6 +103,24 @@
             },
             Register: {
                 screen: Register,
+                navigationOptions: {
+                    header: null,
+                }
+            },
+            Profile: {
+                screen: Profile,
+                navigationOptions: {
+                    header: null,
+                }
+            },
+            EditProfile: {
+                screen: EditProfile,
+                navigationOptions: {
+                    header: null,
+                }
+            },
+            ChangePassword: {
+                screen: ChangePassword,
                 navigationOptions: {
                     header: null,
                 }

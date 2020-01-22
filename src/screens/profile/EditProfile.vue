@@ -1,10 +1,10 @@
 <template>
     <view class="container">
         <form-header
-                title="ลงทะเบียน"
-                header-text="ลงทะเบียน"
-                sub-header-text="สมัครใช้งาน"
-                button-text="ต่อไป"
+                title="แก้ไขข้อมูลส่วนตัว"
+                header-text="แก้ไขข้อมูลส่วนตัว"
+                sub-header-text="สำหรับใช้งาน"
+                button-text="บันทึก"
                 :on-click-back="handleClickBack"
                 :on-click-close="handleClickClose"
                 :on-click-button="handleClickButton">
@@ -29,25 +29,6 @@
                         keyboard-type="email-address"
                         :form-data="formData"
                         :margin-top="25"
-                        :editable="true"
-                        :not-allow-space="true"/>
-                <my-text-input
-                        label="รหัสผ่าน"
-                        name="password"
-                        keyboard-type="default"
-                        :form-data="formData"
-                        :secure="true"
-                        :margin-top="25"
-                        :editable="true"
-                        :not-allow-space="true"/>
-                <my-text-input
-                        label="รหัสผ่านอีกครั้ง"
-                        name="confirmPassword"
-                        keyboard-type="default"
-                        :form-data="formData"
-                        :secure="true"
-                        :margin-top="25"
-                        :margin-bottom="15"
                         :editable="true"
                         :not-allow-space="true"/>
             </view>
@@ -80,11 +61,9 @@
                 DEBUG,
                 Dimensions,
                 formData: {
-                    name: DEBUG ? 'Promlert Lovichit' : '',
-                    phone: DEBUG ? '0123456789' : '',
-                    email: DEBUG ? 'promlert@gmail.com' : '',
-                    password: DEBUG ? '123456' : '',
-                    confirmPassword: DEBUG ? '123456' : '',
+                    name: store.state.userDisplayName,
+                    phone: store.state.userPhone,
+                    email: store.state.userEmail,
                 },
             };
         },
@@ -103,8 +82,6 @@
                                 this.formData.name = '';
                                 this.formData.phone = '';
                                 this.formData.email = '';
-                                this.formData.password = '';
-                                this.formData.confirmPassword = '';
                             }
                         },
                         {
@@ -119,23 +96,18 @@
             },
             handleClickButton: function () {
                 if (this.isFormValid()) {
-                    store.dispatch('REGISTER', {
+                    store.dispatch('UPDATE_PROFILE', {
                         formData: this.formData,
                         callback: (success, message) => {
                             if (success) {
                                 Alert.alert(
                                     'สำเร็จ',
-                                    'สมัครสำเร็จ',
+                                    'แก้ไขข้อมูลส่วนตัวสำเร็จ',
                                     [
                                         {
                                             text: 'OK',
                                             onPress: () => {
-                                                this.navigation.pop(2);
-
-                                                const nextScreen = this.navigation.getParam('forward');
-                                                if (nextScreen) {
-                                                    this.navigation.navigate(nextScreen);
-                                                }
+                                                this.navigation.goBack();
                                             }
                                         }
                                     ],
@@ -158,8 +130,6 @@
                 this.formData.name = this.formData.name.trim();
                 this.formData.phone = this.formData.phone.trim();
                 this.formData.email = this.formData.email.trim();
-                this.formData.password = this.formData.password.trim();
-                this.formData.confirmPassword = this.formData.confirmPassword.trim();
 
                 if (this.formData.name.length === 0) {
                     valid = false;
@@ -177,14 +147,6 @@
                 } else if (!this.validateEmail(this.formData.email)) {
                     valid = false;
                     reason += '- รูปแบบอีเมลไม่ถูกต้อง\n';
-                }
-
-                if (this.formData.password.length === 0) {
-                    valid = false;
-                    reason += '- ต้องกรอกรหัสผ่าน\n';
-                } else if (this.formData.password !== this.formData.confirmPassword) {
-                    valid = false;
-                    reason += '- ต้องกรอกรหัสผ่านอีกครั้งให้ตรงกัน\n';
                 }
 
                 if (!valid) {

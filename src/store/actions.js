@@ -1,4 +1,16 @@
-import {provinceCode, fetchNewsDetails, fetchPosts, fetchSuggest, submitFormData, doLogin, doRegister} from './fetch';
+import {
+    provinceCode,
+    fetchNewsDetails,
+    fetchPosts,
+    fetchSuggest,
+    submitFormData,
+    doLogin,
+    doRegister,
+    doGetProfile,
+    doUpdateProfile,
+    doChangePasword,
+} from './fetch';
+
 import {INCIDENT_FORM_DATA} from '../constants/index';
 import {DISTRICT_DATA} from '../constants/district';
 import User from '../model/User';
@@ -149,7 +161,7 @@ export async function SUBMIT_INCIDENT_FORM_DATA({commit, state}, {callback}) {
     console.log(formData);
     console.log(JSON.stringify(formData));
 
-    const apiResult = await submitFormData(formData);
+    const apiResult = await submitFormData(state.userToken, formData);
     commit('SUBMITTING_INCIDENT_FORM_DATA', {isSubmitting: false});
 
     if (apiResult.success) {
@@ -312,13 +324,87 @@ export async function REGISTER({commit, state}, {formData, callback}) {
         commit('SET_USER', {
             userDisplayName: apiResult.data.name,
             userToken: apiResult.data.token,
+            userPhone: null,
+            userEmail: null,
         });
         callback(true, null);
     } else {
         commit('SET_USER', {
             userDisplayName: null,
             userToken: null,
+            userPhone: null,
+            userEmail: null,
         });
+        callback(false, apiResult.message);
+    }
+}
+
+export async function GET_PROFILE({commit, state}, {}) {
+    commit('GETTING_PROFILE');
+
+    const apiResult = await doGetProfile(state.userToken);
+    if (apiResult.success) {
+        await setUser(new User(
+            apiResult.data.name,
+            state.userToken
+        ));
+        commit('SET_USER', {
+            userDisplayName: apiResult.data.name,
+            userToken: state.userToken,
+            userPhone: apiResult.data.phone,
+            userEmail: apiResult.data.email,
+        });
+        //callback(true, null);
+    } else {
+        commit('SET_USER', {
+            userDisplayName: state.userDisplayName,
+            userToken: state.userToken,
+            userPhone: state.userPhone,
+            userEmail: state.userEmail,
+        });
+        //callback(false, apiResult.message);
+    }
+}
+
+export async function UPDATE_PROFILE({commit, state}, {formData, callback}) {
+    commit('UPDATING_PROFILE');
+
+    const apiResult = await doUpdateProfile(state.userToken, formData);
+    if (apiResult.success) {
+        await setUser(new User(
+            formData.name,
+            state.userToken
+        ));
+        commit('SET_USER', {
+            userDisplayName: formData.name,
+            userToken: state.userToken,
+            userPhone: formData.phone,
+            userEmail: formData.email,
+        });
+        callback(true, null);
+    } else {
+        commit('SET_USER', {
+            userDisplayName: state.userDisplayName,
+            userToken: state.userToken,
+            userPhone: state.userPhone,
+            userEmail: state.userEmail,
+        });
+        callback(false, apiResult.message);
+    }
+}
+
+export async function CHANGE_PASSWORD({commit, state}, {formData, callback}) {
+    commit('CHANGING_PASSWORD');
+
+    const apiResult = await doChangePasword(state.userToken, {
+        old_password: formData.oldPassword,
+        password: formData.newPassword,
+    });
+    if (apiResult.success) {
+        commit('FINISH_CHANGING_PASSWORD');
+        callback(true, null);
+    } else {
+        commit('FINISH_CHANGING_PASSWORD');
         callback(false, apiResult.message);
     }
 }
@@ -343,11 +429,15 @@ export async function GET_LOGGED_USER({commit, state}, {}) {
         commit('SET_USER', {
             userDisplayName: user.displayName,
             userToken: user.token,
+            userPhone: null,
+            userEmail: null,
         });
     } else {
         commit('SET_USER', {
             userDisplayName: null,
             userToken: null,
+            userPhone: null,
+            userEmail: null,
         });
     }
 }

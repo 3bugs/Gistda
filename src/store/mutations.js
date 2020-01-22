@@ -266,11 +266,35 @@ export function REGISTERING(state) {
     console.log(`Registering...`);
 }
 
-export function SET_USER(state, {userDisplayName, userToken}) {
+export function GETTING_PROFILE(state) {
+    state.submittingFormData = true;
+
+    console.log(`Getting profile...`);
+}
+
+export function UPDATING_PROFILE(state) {
+    state.submittingFormData = true;
+
+    console.log(`Updating profile...`);
+}
+
+export function CHANGING_PASSWORD(state) {
+    state.submittingFormData = true;
+
+    console.log(`Changing password...`);
+}
+
+export function FINISH_CHANGING_PASSWORD(state) {
+    state.submittingFormData = false;
+}
+
+export function SET_USER(state, {userDisplayName, userPhone, userEmail, userToken}) {
     state.loggingIn = false; // กรณี login
-    state.submittingFormData = false; // กรณี register
+    state.submittingFormData = false; // กรณี register, get profile
 
     state.userDisplayName = userDisplayName;
+    state.userPhone = userPhone;
+    state.userEmail = userEmail;
     state.userToken = userToken;
 
     console.log(`Set user:`);

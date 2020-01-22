@@ -82,7 +82,7 @@
         methods: {
             handleClickProfile: function () {
                 if (this.isLoggedIn) {
-                    //todo: ********************
+                    this.navigation.navigate('Profile');
                 } else {
                     this.navigation.navigate('Login');
                 }

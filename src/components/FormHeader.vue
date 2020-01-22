@@ -54,16 +54,17 @@
                             </text>
                         </view>
                         <touchable-opacity
+                                v-if="!noCloseButton"
                                 :on-press="onClickClose"
                                 :style="{
                                     marginTop: 10,
                                 }">
                             <image :source="imageClose"
                                    :style="{
-                                    width: 24,
-                                    height: 24,
-                                    padding: 10,
-                                }"/>
+                                        width: 24,
+                                        height: 24,
+                                        padding: 10,
+                                    }"/>
                         </touchable-opacity>
                     </view>
                     <view :style="{
@@ -76,6 +77,7 @@
                     }"/>
                 </view>
                 <scroll-view
+                        v-if="!overrideScrollView"
                         keyboard-should-persist-taps="handled"
                         :style="{
                             flex: 1,
@@ -84,9 +86,17 @@
                             paddingRight: DIMENSION.horizontal_margin,
                         }">
 
-                    <slot></slot>
+                    <slot/>
 
                 </scroll-view>
+
+                <view
+                        v-if="overrideScrollView"
+                        :style="{
+                            flex: 1,
+                        }">
+                    <slot/>
+                </view>
 
                 <view
                         v-if="buttonText != null"
@@ -140,6 +150,12 @@
             },
             buttonText: {
                 type: String
+            },
+            noCloseButton: {
+                type: Boolean
+            },
+            overrideScrollView: {
+                type: Boolean
             },
             onClickBack: {
                 type: Function

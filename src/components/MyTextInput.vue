@@ -56,6 +56,9 @@
             },
             keyboardType: {
                 type: String
+            },
+            notAllowSpace: {
+                type: Boolean
             }
         },
         data: () => {
@@ -75,7 +78,9 @@
                 this.isFocused = false;
             },
             handleTextChange: function (text) {
-                this.formData[this.name] = text == null ? '' : text;
+                this.formData[this.name] = text == null
+                    ? ''
+                    : (this.notAllowSpace ? text.trim() : text);
             },
         },
         created: function () {
