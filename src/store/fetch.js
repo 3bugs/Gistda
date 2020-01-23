@@ -177,7 +177,7 @@ export async function doUpdateProfile(userToken, formData) {
     });
 }
 
-export async function doChangePasword(userToken, formData) {
+export async function doChangePassword(userToken, formData) {
     return await _fetch('POST', 'users/changepassword', formData, {
         Authorization: `Bearer ${userToken}`,
     });
@@ -318,9 +318,9 @@ export function fetchCoordinates_old() {
     ];
 }
 
-export async function fetchNews(province) {
+export async function doGetNews(province) {
     //news/pr?province_code=35&limit=20&offset=0
-    const LIMIT = 20;
+    const LIMIT = 100;
     const OFFSET = 0;
     return await _fetch(
         'GET',
@@ -329,14 +329,14 @@ export async function fetchNews(province) {
     );
 }
 
-export async function fetchNewsDetails(newsId) {
+export async function doGetNewsDetails(newsId) {
     //news/1
     return await _fetch('GET', `news/${newsId}`, null);
 }
 
-export async function fetchEr(province) {
+export async function doGetEr(province) {
     //er?province_code=35
-    const LIMIT = 20;
+    const LIMIT = 100;
     const OFFSET = 0;
     return await _fetch(
         'GET',
@@ -345,13 +345,27 @@ export async function fetchEr(province) {
     );
 }
 
-export async function fetchSuggest(province) {
+export async function doGetSuggest(province) {
     //news/suggest?province_code=35&limit=20&offset=0
-    const LIMIT = 20;
+    const LIMIT = 100;
     const OFFSET = 0;
     return await _fetch(
         'GET',
         `news/suggest?province_code=${provinceCode[province]}&limit=${LIMIT}&offset=${OFFSET}`,
         null
+    );
+}
+
+export async function doGetHistory(province, userToken) {
+    //news/alarms?province_code=35&limit=20&offset=0
+    const LIMIT = 100;
+    const OFFSET = 0;
+    return await _fetch(
+        'GET',
+        `alarms?province_code=${provinceCode[province]}&limit=${LIMIT}&offset=${OFFSET}`,
+        null,
+        {
+            Authorization: `Bearer ${userToken}`,
+        }
     );
 }

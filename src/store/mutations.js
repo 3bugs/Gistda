@@ -164,6 +164,15 @@ export function SET_SUGGEST(state, {dataList}) {
     state.loadingSuggest[PROVINCE_NAME_EN[state.province]] = false;
 }
 
+export function FETCHING_HISTORY(state) {
+    state.loadingHistory[PROVINCE_NAME_EN[state.province]] = true;
+}
+
+export function SET_HISTORY(state, {dataList}) {
+    state.historyList[PROVINCE_NAME_EN[state.province]] = dataList;
+    state.loadingHistory[PROVINCE_NAME_EN[state.province]] = false;
+}
+
 export function FETCHING_NEWS_DETAILS(state) {
     state.loadingNewsDetails[PROVINCE_NAME_EN[state.province]] = true;
 }

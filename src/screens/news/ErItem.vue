@@ -119,7 +119,7 @@
 
     .detail {
         font-family: DBHeavent;
-        font-size: 18;
+        font-size: 20;
         color: #626b80;
     }
 
@@ -136,7 +136,7 @@
 
     .phone {
         font-family: DBHeavent;
-        font-size: 15;
+        font-size: 17;
         color: #626b80;
     }
 </style>

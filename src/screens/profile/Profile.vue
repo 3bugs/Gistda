@@ -93,6 +93,7 @@
                         this.navigation.navigate('ChangePassword');
                         break;
                     case 2:
+                        this.navigation.navigate('History');
                         break;
                 }
             }

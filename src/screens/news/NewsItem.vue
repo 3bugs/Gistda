@@ -27,10 +27,11 @@
                     {{item.title}}
                 </text>
                 <text class="caption"
-                      :numberOfLines="2">
+                      :numberOfLines="showDate ? 2 : 3">
                     {{item.caption}}
                 </text>
-                <text class="date">
+                <text class="date"
+                      v-if="showDate">
                     {{'20/20/2020'}}
                 </text>
             </view>
@@ -62,6 +63,10 @@
             },
             index: {
                 type: Number
+            },
+            showDate: {
+                type: Boolean,
+                default: true,
             },
             onClick: {
                 type: Function
@@ -111,16 +116,16 @@
 
     .title {
         font-family: DBHeavent-Bold;
-        font-size: 20;
+        font-size: 22;
         color: #333333;
-        margin-bottom: 5;
+        margin-bottom: 1;
     }
 
     .caption {
         font-family: DBHeavent;
-        font-size: 18;
+        font-size: 20;
         color: #626b80;
-        margin-bottom: 5;
+        margin-bottom: 2;
     }
 
     .date {

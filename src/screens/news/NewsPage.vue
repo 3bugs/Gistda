@@ -234,7 +234,7 @@
                     break;
             }
 
-            if (!this.dataList && storeAction) {
+            if (/*!this.dataList &&*/ storeAction) {
                 store.dispatch(storeAction, {
                     province: this.province,
                     callback: (success, data) => {

@@ -100,6 +100,15 @@ const store = new Vuex.Store({
             [PROVINCE_NAME_EN[0]]: [],
             [PROVINCE_NAME_EN[1]]: [],
         },
+
+        loadingHistory: {
+            [PROVINCE_NAME_EN[0]]: false,
+            [PROVINCE_NAME_EN[1]]: false,
+        },
+        historyList: {
+            [PROVINCE_NAME_EN[0]]: null,
+            [PROVINCE_NAME_EN[1]]: null,
+        },
     }
 });
 

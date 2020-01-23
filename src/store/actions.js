@@ -1,14 +1,20 @@
 import {
     provinceCode,
-    fetchNewsDetails,
+    fetchCoordinateCategories,
+    fetchCoordinates,
+    fetchCoordinates_old,
+    doGetNews,
+    doGetEr,
+    doGetNewsDetails,
     fetchPosts,
-    fetchSuggest,
+    doGetSuggest,
+    doGetHistory,
     submitFormData,
     doLogin,
     doRegister,
     doGetProfile,
     doUpdateProfile,
-    doChangePasword,
+    doChangePassword,
 } from './fetch';
 
 import {INCIDENT_FORM_DATA} from '../constants/index';
@@ -52,14 +58,6 @@ export function LOGOUT({commit, state}, callback) {
     })
 }
 */
-
-import {
-    fetchCoordinateCategories,
-    fetchCoordinates,
-    fetchCoordinates_old,
-    fetchNews,
-    fetchEr,
-} from './fetch';
 
 import imageFilterGeoAccident from '../../assets/images/sidebar/ic_filter_geo_accident.png';
 import imageFilterGeoRiskArea from '../../assets/images/sidebar/ic_filter_geo_risk_area.png';
@@ -174,13 +172,17 @@ export async function SUBMIT_INCIDENT_FORM_DATA({commit, state}, {callback}) {
 export async function FETCH_NEWS({commit, state}, {province, callback}) {
     commit('FETCHING_NEWS');
 
-    const apiResult = await fetchNews(province);
+    const apiResult = await doGetNews(province);
     if (apiResult.success) {
+        console.log(`News list count: ${apiResult.data.list.length}`);
+
         commit('SET_NEWS', {
             dataList: apiResult.data.list
         });
         callback(true, null);
     } else {
+        console.log(`Error get news list`);
+
         commit('SET_NEWS', {
             dataList: null
         });
@@ -191,7 +193,7 @@ export async function FETCH_NEWS({commit, state}, {province, callback}) {
 export async function FETCH_NEWS_DETAILS({commit, state}, {newsId, callback}) {
     commit('FETCHING_NEWS_DETAILS');
 
-    const apiResult = await fetchNewsDetails(newsId);
+    const apiResult = await doGetNewsDetails(newsId);
     if (apiResult.success) {
         const newsDetails = apiResult.data;
         // ใส่ id เพิ่มเข้าไปเอง เพื่อจำ id ของแต่ละ news details (api ไม่ได้ส่ง id กลับมาให้)
@@ -212,13 +214,17 @@ export async function FETCH_NEWS_DETAILS({commit, state}, {newsId, callback}) {
 export async function FETCH_ER({commit, state}, {province, callback}) {
     commit('FETCHING_ER');
 
-    const apiResult = await fetchEr(province);
+    const apiResult = await doGetEr(province);
     if (apiResult.success) {
+        console.log(`Er list count: ${apiResult.data.list.length}`);
+
         commit('SET_ER', {
             dataList: apiResult.data.list
         });
         callback(true, null);
     } else {
+        console.log(`Error get er list`);
+
         commit('SET_ER', {
             dataList: null
         });
@@ -229,14 +235,39 @@ export async function FETCH_ER({commit, state}, {province, callback}) {
 export async function FETCH_SUGGEST({commit, state}, {province, callback}) {
     commit('FETCHING_SUGGEST');
 
-    const apiResult = await fetchSuggest(province);
+    const apiResult = await doGetSuggest(province);
     if (apiResult.success) {
+        console.log(`Suggest list count: ${apiResult.data.list.length}`);
+
         commit('SET_SUGGEST', {
             dataList: apiResult.data.list
         });
         callback(true, null);
     } else {
+        console.log(`Error get suggest list`);
+
         commit('SET_SUGGEST', {
+            dataList: null
+        });
+        callback(false, apiResult.message);
+    }
+}
+
+export async function FETCH_HISTORY({commit, state}, {province, callback}) {
+    commit('FETCHING_HISTORY');
+
+    const apiResult = await doGetHistory(province, state.userToken /*'FqpKh7GbRPsBoH1nPGmMaPfCOyNjUg'*/);
+    if (apiResult.success) {
+        console.log(`History list count: ${apiResult.data.list.length}`);
+
+        commit('SET_HISTORY', {
+            dataList: apiResult.data.list
+        });
+        callback(true, null);
+    } else {
+        console.log(`Error get history list`);
+
+        commit('SET_HISTORY', {
             dataList: null
         });
         callback(false, apiResult.message);
@@ -396,7 +427,7 @@ export async function UPDATE_PROFILE({commit, state}, {formData, callback}) {
 export async function CHANGE_PASSWORD({commit, state}, {formData, callback}) {
     commit('CHANGING_PASSWORD');
 
-    const apiResult = await doChangePasword(state.userToken, {
+    const apiResult = await doChangePassword(state.userToken, {
         old_password: formData.oldPassword,
         password: formData.newPassword,
     });
