@@ -39,7 +39,7 @@
                             width: '100%',
                             aspectRatio: 1.78,
                        }"/>
-                <text class="date">{{'20/20/2020'}}</text>
+                <text class="date">{{item.date}}</text>
                 <text class="title">{{item.title}}</text>
 
                 <!--ที่อยู่-->

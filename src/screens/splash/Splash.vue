@@ -45,7 +45,16 @@
         },
         created: function () {
             // อ่าน user จาก local storage มาเก็บลง vuex store
-            store.dispatch('GET_LOGGED_USER', {});
+            store.dispatch('GET_LOGGED_USER', {
+                callback: (success, message) => {
+                    if (success) {
+                        if (store.state.userToken) {
+                            store.dispatch('GET_PROFILE', {});
+                        }
+                    }
+                }
+            });
+
             this.startHomeDelay();
         },
         methods: {

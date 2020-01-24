@@ -4,7 +4,10 @@
                 marginTop: this.props.marginTop ? this.props.marginTop : 0,
                 marginBottom: this.props.marginBottom ? this.props.marginBottom : 0,
           }">
-        <text class="label">
+        <text class="label"
+              :style="{
+                    color: FORM.labelTextColor[province]
+              }">
             {{label}}
         </text>
         <text-input
@@ -23,6 +26,7 @@
 
 <script>
     import store from '../store';
+    import {FORM} from '../constants';
 
     export default {
         components: {},
@@ -55,7 +59,8 @@
                 type: Boolean
             },
             keyboardType: {
-                type: String
+                type: String,
+                default: 'default'
             },
             notAllowSpace: {
                 type: Boolean
@@ -63,10 +68,14 @@
         },
         data: () => {
             return {
+                FORM,
                 isFocused: false,
             };
         },
         computed: {
+            province() {
+                return store.state.province;
+            },
             /*textContent() {
             }*/
         },
@@ -96,7 +105,6 @@
     .label {
         font-family: DBHeavent;
         font-size: 22;
-        color: #1665D8;
         padding-top: 0;
         padding-bottom: 0;
         margin-top: 0;

@@ -1,38 +1,19 @@
 <template>
     <view class="container">
         <form-header
-                title="เปลี่ยนรหัสผ่าน"
-                header-text="เปลี่ยนรหัสผ่าน"
-                sub-header-text="สำหรับใช้งาน"
-                button-text="บันทึก"
+                title="ลืมรหัสผ่าน"
+                header-text="ลืมรหัสผ่าน"
+                sub-header-text="ระบบจะให้คุณตั้งรหัสผ่านใหม่อีกครั้ง"
+                button-text="ต่อไป"
                 :on-click-back="handleClickBack"
                 :on-click-close="handleClickClose"
                 :on-click-button="handleClickButton">
             <view>
                 <my-text-input
-                        label="รหัสผ่านเดิม"
-                        name="oldPassword"
-                        keyboard-type="default"
+                        label="อีเมลที่ใช้สมัคร"
+                        name="email"
+                        keyboard-type="email-address"
                         :form-data="formData"
-                        :secure="true"
-                        :margin-top="25"
-                        :editable="true"
-                        :not-allow-space="true"/>
-                <my-text-input
-                        label="รหัสผ่านใหม่"
-                        name="newPassword"
-                        keyboard-type="default"
-                        :form-data="formData"
-                        :secure="true"
-                        :margin-top="25"
-                        :editable="true"
-                        :not-allow-space="true"/>
-                <my-text-input
-                        label="รหัสผ่านใหม่อีกครั้ง"
-                        name="confirmNewPassword"
-                        keyboard-type="default"
-                        :form-data="formData"
-                        :secure="true"
                         :margin-top="25"
                         :margin-bottom="15"
                         :editable="true"
@@ -67,9 +48,7 @@
                 DEBUG,
                 Dimensions,
                 formData: {
-                    oldPassword: '',
-                    newPassword: '',
-                    confirmNewPassword: '',
+                    email: '',
                 },
             };
         },
@@ -85,9 +64,7 @@
                         {
                             text: 'ล้างข้อมูล',
                             onPress: () => {
-                                this.formData.oldPassword = '';
-                                this.formData.newPassword = '';
-                                this.formData.confirmNewPassword = '';
+                                this.formData.email = '';
                             }
                         },
                         {
@@ -102,7 +79,7 @@
             },
             handleClickButton: function () {
                 if (this.isFormValid()) {
-                    store.dispatch('CHANGE_PASSWORD', {
+                    /*store.dispatch('CHANGE_PASSWORD', {
                         formData: this.formData,
                         callback: (success, message) => {
                             if (success) {
@@ -126,28 +103,21 @@
                                 );
                             }
                         }
-                    });
+                    });*/
                 }
             },
             isFormValid: function () {
                 let valid = true;
                 let reason = '';
 
-                this.formData.oldPassword = this.formData.oldPassword.trim();
-                this.formData.newPassword = this.formData.newPassword.trim();
-                this.formData.confirmNewPassword = this.formData.confirmNewPassword.trim();
+                this.formData.email = this.formData.email.trim();
 
-                if (this.formData.oldPassword.length === 0) {
+                if (this.formData.email.length === 0) {
                     valid = false;
-                    reason += '- ต้องกรอกรหัสผ่านเดิม\n';
-                }
-
-                if (this.formData.newPassword.length === 0) {
+                    reason += '- ต้องกรอกอีเมล\n';
+                } else if (!this.validateEmail(this.formData.email)) {
                     valid = false;
-                    reason += '- ต้องกรอกรหัสผ่านใหม่\n';
-                } else if (this.formData.newPassword !== this.formData.confirmNewPassword) {
-                    valid = false;
-                    reason += '- ต้องกรอกรหัสผ่านใหม่อีกครั้งให้ตรงกัน\n';
+                    reason += '- รูปแบบอีเมลไม่ถูกต้อง\n';
                 }
 
                 if (!valid) {

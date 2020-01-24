@@ -8,7 +8,10 @@
                 :on-click-back="handleClickBack"
                 :on-click-close="handleClickClose">
             <view>
-                <text class="label">หมวดหมู่ของเหตุ</text>
+                <text class="label"
+                      :style="{
+                            color: FORM.labelTextColor[province]
+                      }">หมวดหมู่ของเหตุ</text>
                 <picker :selected-value="incidentCategoryValue"
                         :on-value-change="handleIncidentCategoryChange"
                         :item-style="{
@@ -31,7 +34,10 @@
                         :multiline="true"
                         :editable="true"/>
 
-                <text class="label">พิกัดจุดเกิดเหตุ</text>
+                <text class="label"
+                      :style="{
+                            color: FORM.labelTextColor[province]
+                      }">พิกัดจุดเกิดเหตุ</text>
                 <view :style="{
                     height: (Dimensions.get('window').width - (2 * DIMENSION.horizontal_margin)) * 0.67,
                     marginTop: 15,
@@ -120,17 +126,19 @@
                         label="ผู้แจ้ง"
                         :margin-top_old="10"
                         :margin-top="25"
-                        :editable="false"/>
+                        :editable="true"/>
                 <incident-form-text-input
                         :name="INCIDENT_FORM_DATA.KEY_EMAIL"
                         label="อีเมล"
                         :margin-top="25"
-                        :editable="true"/>
+                        :editable="true"
+                        keyboard-type="email-address"/>
                 <incident-form-text-input
                         :name="INCIDENT_FORM_DATA.KEY_PHONE"
                         label="เบอร์โทร"
                         :margin-top="25"
-                        :editable="true"/>
+                        :editable="true"
+                        keyboard-type="phone-pad"/>
 
                 <text :style="{
                         fontFamily: 'DBHeaventt-Light',
@@ -233,7 +241,7 @@
 
 <script>
     import store from '../../store';
-    import {DEBUG, PROVINCE_NAME_TH, DIMENSION, COLOR_PRIMARY, COLOR_PRIMARY_DARK, INCIDENT_FORM_DATA, PROVINCE_DIMENSION, FORM} from '../../constants';
+    import {DEBUG, FORM, PROVINCE_NAME_TH, DIMENSION, COLOR_PRIMARY, COLOR_PRIMARY_DARK, INCIDENT_FORM_DATA, PROVINCE_DIMENSION} from '../../constants';
     import {DISTRICT_DATA} from '../../constants/district';
     import FormHeader from '../../components/FormHeader';
     import IncidentFormTextInput from '../../components/IncidentFormTextInput';
@@ -532,34 +540,92 @@
             handleClickSubmitButton: function () {
                 if (this.isSubmitting) return;
 
-                store.dispatch('SUBMIT_INCIDENT_FORM_DATA', {
-                    callback: (success, message) => {
-                        if (success) {
-                            Alert.alert(
-                                'สำเร็จ',
-                                'ส่งข้อมูลสำเร็จ',
-                                [
-                                    {
-                                        text: 'OK',
-                                        onPress: () => {
-                                            store.dispatch('CLEAR_INCIDENT_FORM_DATA_AND_IMAGES', {});
-                                            this.navigation.goBack();
+                if (this.isFormValid()) {
+                    store.dispatch('SUBMIT_INCIDENT_FORM_DATA', {
+                        callback: (success, message) => {
+                            if (success) {
+                                Alert.alert(
+                                    'สำเร็จ',
+                                    'ส่งข้อมูลสำเร็จ',
+                                    [
+                                        {
+                                            text: 'OK',
+                                            onPress: () => {
+                                                store.dispatch('CLEAR_INCIDENT_FORM_DATA_AND_IMAGES', {});
+                                                this.navigation.goBack();
+                                            }
                                         }
-                                    }
-                                ],
-                                {cancelable: false}
-                            );
-                        } else {
-                            alert(message);
-                        }
-                    },
-                });
+                                    ],
+                                    {cancelable: false}
+                                );
+                            } else {
+                                Alert.alert(
+                                    'ผิดพลาด',
+                                    message
+                                );
+                            }
+                        },
+                    });
+                }
+            },
+            isFormValid: function () {
+                let valid = true;
+                let reason = '';
+
+                const incidentCategory = store.state.incidentFormData[INCIDENT_FORM_DATA.KEY_INCIDENT_CATEGORY];
+                if (incidentCategory === 0) {
+                    valid = false;
+                    reason += '- ต้องเลือกหมวดหมู่ของเหตุ\n';
+                }
+
+                const details = store.state.incidentFormData[INCIDENT_FORM_DATA.KEY_DETAILS];
+                if (!details || details.trim().length === 0) {
+                    valid = false;
+                    reason += '- ต้องกรอกรายละเอียด\n';
+                }
+
+                const reporter = store.state.incidentFormData[INCIDENT_FORM_DATA.KEY_REPORTER];
+                if (!reporter || reporter.trim().length === 0) {
+                    valid = false;
+                    reason += '- ต้องกรอกชื่อผู้แจ้ง\n';
+                }
+
+                const email = store.state.incidentFormData[INCIDENT_FORM_DATA.KEY_EMAIL];
+                if (!email || email.trim().length === 0) {
+                    valid = false;
+                    reason += '- ต้องกรอกอีเมลของผู้แจ้ง\n';
+                }
+
+                const phone = store.state.incidentFormData[INCIDENT_FORM_DATA.KEY_PHONE];
+                if (!phone || phone.trim().length === 0) {
+                    valid = false;
+                    reason += '- ต้องกรอกเบอร์โทรของผู้แจ้ง\n';
+                }
+
+                if (!valid) {
+                    Alert.alert(
+                        'ผิดพลาด',
+                        `กรุณากรอกข้อมูลให้ครบ\n\n${reason}`,
+                        [
+                            {
+                                text: 'OK',
+                                onPress: () => {
+                                }
+                            }
+                        ],
+                        {cancelable: false}
+                    );
+                }
+
+                return valid;
             }
         },
         created: function () {
             store.dispatch('SET_INCIDENT_FORM_DATA', {
                 formData: {
                     [INCIDENT_FORM_DATA.KEY_REPORTER]: store.state.userDisplayName,
+                    [INCIDENT_FORM_DATA.KEY_EMAIL]: store.state.userEmail,
+                    [INCIDENT_FORM_DATA.KEY_PHONE]: store.state.userPhone,
                     [INCIDENT_FORM_DATA.KEY_PROVINCE]: this.PROVINCE_NAME_TH[this.province],
                 },
             });
@@ -577,7 +643,6 @@
     .label {
         font-family: DBHeavent;
         font-size: 22;
-        color: #1665D8;
         padding-top: 0;
         padding-bottom: 0;
         margin-top: 25;

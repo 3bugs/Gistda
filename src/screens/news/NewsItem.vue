@@ -24,11 +24,11 @@
             <view class="content">
                 <text class="title"
                       :numberOfLines="1">
-                    {{item.title}}
+                    {{item[titlePropName]}}
                 </text>
                 <text class="caption"
                       :numberOfLines="showDate ? 2 : 3">
-                    {{item.caption}}
+                    {{item[detailsPropName]}}
                 </text>
                 <text class="date"
                       v-if="showDate">
@@ -63,6 +63,14 @@
             },
             index: {
                 type: Number
+            },
+            titlePropName: {
+                type: String,
+                default: 'title'
+            },
+            detailsPropName: {
+                type: String,
+                default: 'caption'
             },
             showDate: {
                 type: Boolean,

@@ -23,6 +23,7 @@
     import Profile from './src/screens/profile/Profile';
     import EditProfile from './src/screens/profile/EditProfile';
     import ChangePassword from './src/screens/profile/ChangePassword';
+    import ForgotPassword from './src/screens/profile/ForgotPassword';
     import History from './src/screens/incident-report/History';
     import IncidentForm from './src/screens/incident-report/IncidentForm';
     import SettingsScreen from './src/screens/map/SettingsScreen';
@@ -122,6 +123,12 @@
             },
             ChangePassword: {
                 screen: ChangePassword,
+                navigationOptions: {
+                    header: null,
+                }
+            },
+            ForgotPassword: {
+                screen: ForgotPassword,
                 navigationOptions: {
                     header: null,
                 }

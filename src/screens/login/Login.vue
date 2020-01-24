@@ -78,7 +78,7 @@
                     :on-click="handleClickLogin"/>
             <view :style="{marginBottom: 20}"/>
 
-            <view :style="{
+            <!--<view :style="{
                 flexDirection: 'row',
                 alignItems: 'center',
             }">
@@ -115,14 +115,14 @@
                     :icon="imageGoogle"
                     bg-color="#DD4B39"
                     :on-click="handleClickLoginGoogle"/>
-            <view :style="{marginBottom: 25}"/>
+            <view :style="{marginBottom: 25}"/>-->
 
             <view :style="{
                 flexDirection: 'row',
                 justifyContent: 'space-between'
             }">
                 <touchable-opacity :on-press="handleClickForgotPassword">
-                    <text class="action">FORGOT PASSWORD</text>
+                    <!--<text class="action">FORGOT PASSWORD</text>-->
                 </touchable-opacity>
                 <touchable-opacity :on-press="handleClickSignUp">
                     <text class="action">SIGN UP</text>
@@ -231,6 +231,10 @@
                                             {
                                                 text: 'OK',
                                                 onPress: () => {
+                                                    if (store.state.userToken) {
+                                                        store.dispatch('GET_PROFILE', {});
+                                                    }
+
                                                     this.navigation.goBack();
 
                                                     const nextScreen = this.navigation.getParam('forward');
@@ -276,7 +280,7 @@
 
             },
             handleClickForgotPassword: function () {
-
+                this.navigation.navigate('ForgotPassword');
             },
             handleClickSignUp: function () {
                 const nextScreen = this.navigation.getParam('forward');

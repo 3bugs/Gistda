@@ -12,6 +12,7 @@
                         v-if="page === 0 || page === 2"
                         :item="args.item"
                         :index="args.index"
+                        :show-date="false"
                         :on-click="handleClickNewsItem"/>
                 <er-item
                         v-if="page === 1"

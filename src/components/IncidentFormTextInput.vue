@@ -4,13 +4,17 @@
                 marginTop: this.props.marginTop ? this.props.marginTop : 0,
                 marginBottom: this.props.marginBottom ? this.props.marginBottom : 0,
           }">
-        <text class="label">
+        <text class="label"
+              :style="{
+                    color: FORM.labelTextColor[province]
+              }">
             {{label}}
         </text>
         <text-input
             class="text-input"
             :multiline="multiline === undefined ? false : multiline"
             :editable="editable === undefined ? true : editable"
+            :keyboard-type="keyboardType"
             v-model="textContent"
             :on-focus="handleFocus"
             :on-blur="handleBlur"
@@ -21,6 +25,7 @@
 
 <script>
     import store from '../store';
+    import {FORM, COLOR_PRIMARY, COLOR_PRIMARY_DARK} from '../constants';
 
     export default {
         components: {},
@@ -42,14 +47,22 @@
             },
             editable: {
                 type: Boolean
-            }
+            },
+            keyboardType: {
+                type: String,
+                default: 'default'
+            },
         },
         data: () => {
             return {
+                FORM, COLOR_PRIMARY, COLOR_PRIMARY_DARK,
                 isFocused: false,
             };
         },
         computed: {
+            province() {
+                return store.state.province;
+            },
             textContent() {
                 const incidentFormData = store.state.incidentFormData;
                 if (!incidentFormData) {

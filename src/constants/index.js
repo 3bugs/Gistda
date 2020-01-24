@@ -14,7 +14,7 @@ import imagePhoneYasothon from '../../assets/images/screen_news/ic_phone_yasotho
 import imageSliderThumbNakhonPathom from '../../assets/images/sidebar/ic_slider_thumb_nakhon_pathom_2.png';
 import imageSliderThumbYasothon from '../../assets/images/sidebar/ic_slider_thumb_yasothon_2.png';
 
-export const DEBUG = true;
+export const DEBUG = false;
 export const APP_NAME = "SAFE SAFE";
 export const APP_VERSION = "1.0";
 
@@ -149,6 +149,10 @@ export const SCREEN_LOGIN = {
     ],
 };
 export const FORM = {
+    labelTextColor: [
+        '#1665D8',
+        '#ed4100',
+    ],
     buttonColor: [
         COLOR_PRIMARY[0],
         COLOR_PRIMARY[1],

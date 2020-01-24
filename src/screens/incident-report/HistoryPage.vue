@@ -11,6 +11,8 @@
                 <news-item
                         :item="args.item"
                         :index="args.index"
+                        titlePropName="detail"
+                        detailsPropName="detail"
                         :show-date="false"
                         :on-click="handleClickItem"/>
             </view>

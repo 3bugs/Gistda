@@ -256,7 +256,10 @@ export async function FETCH_SUGGEST({commit, state}, {province, callback}) {
 export async function FETCH_HISTORY({commit, state}, {province, callback}) {
     commit('FETCHING_HISTORY');
 
-    const apiResult = await doGetHistory(province, state.userToken /*'FqpKh7GbRPsBoH1nPGmMaPfCOyNjUg'*/);
+    //const userToken = 'FqpKh7GbRPsBoH1nPGmMaPfCOyNjUg';
+    const userToken = state.userToken;
+
+    const apiResult = await doGetHistory(province, userToken);
     if (apiResult.success) {
         console.log(`History list count: ${apiResult.data.list.length}`);
 
@@ -452,7 +455,7 @@ export async function LOGOUT({commit, state}, {callback}) {
     callback();
 }
 
-export async function GET_LOGGED_USER({commit, state}, {}) {
+export async function GET_LOGGED_USER({commit, state}, {callback}) {
     console.log('Get logged user');
 
     const user = await getUser();
@@ -463,6 +466,7 @@ export async function GET_LOGGED_USER({commit, state}, {}) {
             userPhone: null,
             userEmail: null,
         });
+        callback(true, null);
     } else {
         commit('SET_USER', {
             userDisplayName: null,
@@ -470,6 +474,7 @@ export async function GET_LOGGED_USER({commit, state}, {}) {
             userPhone: null,
             userEmail: null,
         });
+        callback(false, null);
     }
 }
 

@@ -57,13 +57,13 @@
                                 v-if="!noCloseButton"
                                 :on-press="onClickClose"
                                 :style="{
-                                    marginTop: 10,
+                                    marginTop: 0,
                                 }">
                             <image :source="imageClose"
                                    :style="{
-                                        width: 24,
-                                        height: 24,
-                                        padding: 10,
+                                        width: 48,
+                                        height: 48,
+                                        padding: 0,
                                     }"/>
                         </touchable-opacity>
                     </view>
@@ -131,7 +131,7 @@
     import {Dimensions, StyleSheet} from 'react-native';
 
     import imageBack from '../../assets/images/ic_back.png';
-    import imageClose from '../../assets/images/ic_close.png';
+    import imageClose from '../../assets/images/ic_close2.png';
 
     export default {
         components: {Header, MyButton},
