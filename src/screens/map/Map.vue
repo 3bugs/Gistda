@@ -23,7 +23,8 @@
                         longitudeDelta: PROVINCE_DIMENSION[province].maxLongitude - PROVINCE_DIMENSION[province].minLongitude,
                     }"
                     :style="{marginTop: MAP_HEADER.height}"
-                    :on-map-ready="handleMapReady">
+                    :on-map-ready="handleMapReady"
+                    :on-press="e => {handleClickMap(e.nativeEvent.coordinate)}">
 
                 <!--<w-m-s-tile
                     url-template="http://wms.ngis.go.th:8081/geoserver/A_ORCHARD/wms?service=WMS&version=1.1.0&request=GetMap&layers=A_ORCHARD:orchard&bbox={minX},{minY},{maxX},{maxY}&width={width}&height={height}&srs=EPSG:900913&format=image/png&transparent=true"
@@ -61,7 +62,7 @@
                         <!--จุด-->
                         <marker
                                 v-for="(marker, markerIndex) in category.markerList"
-                                v-if="category.markerVisibility && marker.geometry.type === 'Point'"
+                                v-if="!isMeasureToolOn && category.markerVisibility && marker.geometry.type === 'Point'"
                                 :coordinate="{
                                     latitude: marker.geometry.coordinates[1],
                                     longitude: marker.geometry.coordinates[0]
@@ -74,7 +75,7 @@
                         <!--เส้น-->
                         <polyline
                                 v-for="(marker, markerIndex) in category.markerList"
-                                v-if="category.markerVisibility && marker.geometry.type === 'Linestring'"
+                                v-if="!isMeasureToolOn && category.markerVisibility && marker.geometry.type === 'Linestring'"
                                 :coordinates="getPolylineCoordinates(marker.geometry.coordinates)"
                                 :title="marker.properties.NAME_T"
                                 :strokeColor="'#45b3ff'"
@@ -83,7 +84,149 @@
                                 :on-press="() => handlePressPolyline(marker)"/>
                     </view>
                 </view>
+
+                <!--เส้นวัดระยะทาง-->
+                <polyline
+                        v-if="isLineToolOn"
+                        :coordinates="pointList"
+                        strokeColor="#831313"
+                        :strokeWidth="2"/>
+
+                <!--พื้นที่-->
+                <polyline
+                        v-if="!isLineToolOn && (pointList.length < 3)"
+                        :coordinates="pointList"
+                        strokeColor="#831313"
+                        :strokeWidth="2"/>
+                <polygon
+                        v-if="!isLineToolOn && (pointList.length >= 3)"
+                        :coordinates="pointList"
+                        strokeColor="#831313"
+                        fillColor="#FFB1B180"
+                        :strokeWidth="2"/>
+
+                <marker
+                        v-for="(coord, index) in pointList"
+                        :coordinate="coord"
+                        :anchor="{x: 0.5, y: 0.5}"
+                        :image="index === pointList.length - 1 ? imageDragMarkerEnd : imageDragMarker"
+                        :draggable="true"
+                        :on-drag-start="e => handleDragMarkerStart(coord)"
+                        :on-drag="e => handleDragMarkerStart(coord)"
+                        :on-drag-end="e => handleDragMarkerEnd(coord, e.nativeEvent.coordinate)"/>
+
             </map-view>
+
+            <view class="map-tools-container"
+                  :style="{
+                        right: DIMENSION.horizontal_margin,
+                        bottom: DIMENSION.horizontal_margin,
+                  }">
+                <view v-if="distance !== 0"
+                      :style="{
+                            marginBottom: DIMENSION.horizontal_margin,
+                      }">
+                    <text :style="{
+                        backgroundColor: '#343434',
+                        borderRadius: 16,
+                        fontFamily: 'DBHeavent-Med',
+                        fontSize: 18,
+                        color: 'white',
+                        paddingTop: 2,
+                        paddingBottom: 2,
+                        paddingLeft: 8,
+                        paddingRight: 8,
+                    }">{{distance}}</text>
+                </view>
+
+                <view class="map-tools-measure-container"
+                      :style="{
+                            marginBottom: DIMENSION.horizontal_margin,
+                      }">
+                    <image-background
+                            v-if="isMeasureToolOn"
+                            :source="bgMeasureTools"
+                            class="map-tools-measure-container-background">
+                        <touchable-opacity
+                                class="map-tools-icon-touchable"
+                                :on-press="() => {handleClickLineTool(false)}"
+                                :style="{
+                                    marginTop: 5,
+                                }">
+                            <view class="map-tools-icon"
+                                  :style="{
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                  }">
+                                <image :source="isLineToolOn ? imageMapToolPolygonOff : imageMapToolPolygonOn"
+                                       resize-mode="contain"
+                                       :style="{
+                                        width: 23,
+                                        height: 20,
+                                   }"/>
+                            </view>
+                        </touchable-opacity>
+
+                        <touchable-opacity
+                                class="map-tools-icon-touchable"
+                                :on-press="() => {handleClickLineTool(true)}"
+                                :style="{
+                                    marginTop: 5,
+                                }">
+                            <view class="map-tools-icon"
+                                  :style="{
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                  }">
+                                <image :source="isLineToolOn ? imageMapToolLineOn : imageMapToolLineOff"
+                                       resize-mode="contain"
+                                       :style="{
+                                        width: 20,
+                                        height: 17.5,
+                                   }"/>
+                            </view>
+                        </touchable-opacity>
+
+                        <touchable-opacity
+                                class="map-tools-icon-touchable"
+                                :on-press="null"
+                                :on-press="handleClickMeasureTool">
+                            <image :source="imageMapToolMeasureOn"
+                                   class="map-tools-icon"
+                                   resize-mode="contain"
+                                   :style="{
+                                   }"/>
+                        </touchable-opacity>
+                    </image-background>
+
+                    <touchable-opacity
+                            v-if="!isMeasureToolOn"
+                            class="map-tools-icon-touchable"
+                            :on-press="handleClickMeasureTool">
+                        <image :source="imageMapToolMeasureOff"
+                               class="map-tools-icon"
+                               resize-mode="contain"/>
+                    </touchable-opacity>
+                </view>
+
+                <touchable-opacity
+                        class="map-tools-icon-touchable"
+                        :on-press="null"
+                        :style="{
+                            marginBottom: DIMENSION.horizontal_margin,
+                        }">
+                    <image :source="imageMapToolMarker"
+                           class="map-tools-icon"
+                           resize-mode="contain"/>
+                </touchable-opacity>
+
+                <touchable-opacity class="map-tools-icon-touchable"
+                                   :on-press="null">
+                    <image :source="imageMapToolCurrentLocation"
+                           class="map-tools-icon"
+                           resize-mode="contain"/>
+                </touchable-opacity>
+            </view>
 
             <view class="header-container">
                 <linear-gradient class="header"
@@ -207,13 +350,14 @@
     import {StyleSheet} from 'react-native';
     import {Fragment} from 'react';
     import MapView from 'react-native-maps';
-    import {Marker, Polyline, WMSTile} from 'react-native-maps';
+    import {Marker, Polyline, Polygon, WMSTile} from 'react-native-maps';
     import LinearGradient from 'react-native-linear-gradient';
     import CardView from 'react-native-cardview';
     import Drawer from 'react-native-drawer';
     import FilterPanel from './FilterPanel';
     import Slider from '@react-native-community/slider';
     import BottomSheet from 'reanimated-bottom-sheet'
+    import { getDistance } from 'geolib';
 
     import imageMenu from '../../../assets/images/screen_map/ic_menu.png';
     import imageBack from '../../../assets/images/ic_back.png';
@@ -221,8 +365,24 @@
     import imageLightOff from '../../../assets/images/sidebar/ic_light_off.png';
     import imageLightOn from '../../../assets/images/sidebar/ic_light_on.png';
 
+    import imageMapToolCurrentLocation from '../../../assets/images/screen_map/ic_map_tool_current_location.png';
+    import imageMapToolMarker from '../../../assets/images/screen_map/ic_map_tool_marker.png';
+    import bgMeasureTools from '../../../assets/images/screen_map/bg_measure_tools.png';
+    import imageMapToolMeasureOn from '../../../assets/images/screen_map/ic_map_tool_measure_on.png';
+    import imageMapToolMeasureOff from '../../../assets/images/screen_map/ic_map_tool_measure_off.png';
+    import imageMapToolLineOn from '../../../assets/images/screen_map/ic_map_tool_line_on.png';
+    import imageMapToolLineOff from '../../../assets/images/screen_map/ic_map_tool_line_off.png';
+    import imageMapToolPolygonOn from '../../../assets/images/screen_map/ic_map_tool_polygon_on.png';
+    import imageMapToolPolygonOff from '../../../assets/images/screen_map/ic_map_tool_polygon_off.png';
+
+    import imageDragMarker from '../../../assets/images/screen_map/ic_drag_marker_new.png';
+    import imageDragMarkerEnd from '../../../assets/images/screen_map/ic_drag_marker_end_new.png';
+
     export default {
-        components: {Fragment, MapView, Marker, Polyline, WMSTile, LinearGradient, CardView, Drawer, FilterPanel, Slider, BottomSheet},
+        components: {
+            Fragment, MapView, Marker, Polyline, Polygon, WMSTile, LinearGradient, 
+            CardView, Drawer, FilterPanel, Slider, BottomSheet
+        },
         props: {
             navigation: { // bottom nav
                 type: Object
@@ -238,11 +398,40 @@
             drawerOpen() {
                 return store.state.drawerOpen;
             },
+            distance() {
+                const pointList = this.pointList;
+
+                if (pointList.length < 2) {
+                    return 0;
+                }
+
+                let sum = 0;
+                for (let i = 0; i < pointList.length; i++) {
+                    if (i === 0) continue;
+                    sum += getDistance(pointList[i], pointList[i - 1]);
+                }
+
+                const km = Math.round(((sum / 1000) + Number.EPSILON) * 100) / 100;
+                return `${km} กม.`;
+            }
         },
         data: () => {
             return {
                 StyleSheet, DEBUG, MAP_HEADER, BOTTOM_NAV, DIMENSION, PROVINCE_DIMENSION,
                 imageMenu, imageBack, imageLightOff, imageLightOn,
+                imageMapToolCurrentLocation, imageMapToolMarker,
+                bgMeasureTools, imageMapToolMeasureOn, imageMapToolMeasureOff,
+                imageMapToolLineOn, imageMapToolLineOff,
+                imageMapToolPolygonOn, imageMapToolPolygonOff,
+                imageDragMarker, imageDragMarkerEnd,
+
+                isMeasureToolOn: false,
+                isLineToolOn: true,
+
+                pointList: [
+                    /*{longitude: 99.90637622773647, latitude: 13.739281519255695},
+                    {longitude: 99.93837732821703, latitude: 13.77968939358877}*/
+                ],
             };
         },
         methods: {
@@ -291,8 +480,48 @@
                 });
                 return output;
             },
+
             handleMapReady: function () {
                 //alert('Map ready!');
+            },
+
+            handleClickMap: function (coord) {
+                //console.log(coord);
+
+                if (this.isMeasureToolOn) {
+                    const tempList = Object.assign([], this.pointList);
+                    tempList.push(coord);
+                    this.pointList = tempList;
+
+                    console.log(this.pointList);
+                }
+            },
+            handleDragMarkerStart: function (coord) {
+                console.log(`Drag Start: ${coord}`);
+            },
+            handleDragMarker: function (coord) {
+                console.log(`Drag: ${coord}`);
+            },
+            handleDragMarkerEnd: function (oldCoord, newCoord) {
+                console.log(`Drag End: ${newCoord}`);
+
+                const tempList = Object.assign([], this.pointList);
+                for (let i = 0; i < tempList.length; i++) {
+                    if (tempList[i] === oldCoord) {
+                        tempList[i] = newCoord;
+                    }
+                }
+                this.pointList = tempList;
+            },
+
+            handleClickMeasureTool: function () {
+                this.isMeasureToolOn = !this.isMeasureToolOn;
+            },
+            handleClickLineTool: function (isLine) {
+                if (this.isLineToolOn !== isLine) {
+                    //this.pointList = [];
+                    this.isLineToolOn = isLine;
+                }
             },
         },
         created: function () {
@@ -342,6 +571,33 @@
         font-size: 26;
         border-width: 0;
         border-color: yellow;
+    }
+
+    .map-tools-container {
+        position: absolute;
+        align-items: flex-end;
+        border-width: 0;
+        border-color: greenyellow;
+    }
+
+    .map-tools-measure-container {
+    }
+
+    .map-tools-measure-container-background {
+        width: 40;
+        height: 129;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .map-tools-icon-touchable {
+        border-color: red;
+        border-width: 0;
+    }
+
+    .map-tools-icon {
+        width: 40;
+        height: 40;
     }
 
     .search-input-container {

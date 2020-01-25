@@ -145,7 +145,7 @@
                     console.log('Checking if cache exist');
                     const categoryData = await getLocalCategoryData(this.province, this.item.id);
 
-                    if (!categoryData || !categoryData.markerList) { // ถ้ายังไม่มีในแคช
+                    if (true /*!categoryData || !categoryData.markerList*/) { // ถ้ายังไม่มีในแคช
                         console.log(`Cache NOT found: province-${this.province}-category-${this.item.id}`);
 
                         await store.dispatch('FETCH_COORDINATES', {

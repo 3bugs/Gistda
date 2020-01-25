@@ -80,7 +80,7 @@ export async function SET_PROVINCE({commit, state}, {province, callback}) {
                 coordinateCategoryList.forEach(categoryType => {
                     categoryType.list.forEach(category => {
                         // ถ้า category ถูกเลือกไว้ และยังไม่มีข้อมูลแคช ก็จะดึง coords จาก api
-                        if (category.markerVisibility && !category.markerList) {
+                        if (category.markerVisibility /*&& !category.markerList*/) {
                             idList.push(category.id);
                         }
                     });
