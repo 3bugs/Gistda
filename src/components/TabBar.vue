@@ -201,24 +201,19 @@
     .container {
         flex: 1;
         flex-direction: row;
-        border-width: 0;
-        border-color: red;
+        align-items: flex-end;
     }
 
     .item-container-touchable {
         flex: 1;
         justify-content: flex-end;
         align-items: center;
-        border-width: 0;
-        border-color: yellow;
     }
 
     .item-container {
         justify-content: center;
         align-items: center;
         padding-bottom: 8;
-        border-width: 0;
-        border-color: red;
     }
 
     .item-text-highlight {

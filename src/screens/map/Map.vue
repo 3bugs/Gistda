@@ -57,12 +57,13 @@
                     epsgSpec="EPSG:4326"
                 />-->
 
-                <view v-for="(categoryType, categoryTypeIndex) in mapDataList">
+                <view v-if="!isMeasureToolOn && !isMarkerToolOn"
+                      v-for="(categoryType, categoryTypeIndex) in mapDataList">
                     <view v-for="(category, categoryIndex) in categoryType.list">
                         <!--จุด-->
                         <marker
                                 v-for="(marker, markerIndex) in category.markerList"
-                                v-if="!isMeasureToolOn && category.markerVisibility && marker.geometry.type === 'Point'"
+                                v-if="category.markerVisibility && marker.geometry.type === 'Point'"
                                 :coordinate="{
                                     latitude: marker.geometry.coordinates[1],
                                     longitude: marker.geometry.coordinates[0]
@@ -75,7 +76,7 @@
                         <!--เส้น-->
                         <polyline
                                 v-for="(marker, markerIndex) in category.markerList"
-                                v-if="!isMeasureToolOn && category.markerVisibility && marker.geometry.type === 'Linestring'"
+                                v-if="category.markerVisibility && marker.geometry.type === 'Linestring'"
                                 :coordinates="getPolylineCoordinates(marker.geometry.coordinates)"
                                 :title="marker.properties.NAME_T"
                                 :strokeColor="'#45b3ff'"
@@ -105,39 +106,50 @@
                         fillColor="#FFB1B180"
                         :strokeWidth="2"/>
 
+                <!--จุด handle-->
                 <marker
                         v-for="(coord, index) in pointList"
                         :coordinate="coord"
-                        :anchor="{x: 0.5, y: 0.5}"
-                        :image="index === pointList.length - 1 ? imageDragMarkerEnd : imageDragMarker"
+                        :anchor="draggedMarker === coord ? {x: 0.5, y: 1} : {x: 0.5, y: 0.5}"
+                        :image="draggedMarker === coord ? null : (index === pointList.length - 1 ? imageDragMarkerEnd : imageDragMarker)"
                         :draggable="true"
                         :on-drag-start="e => handleDragMarkerStart(coord)"
-                        :on-drag="e => handleDragMarkerStart(coord)"
+                        :on-drag="e => handleDragMarker(coord)"
                         :on-drag-end="e => handleDragMarkerEnd(coord, e.nativeEvent.coordinate)"/>
+
+                <!--marker เดี่ยว-->
+                <marker
+                        v-if="point"
+                        :coordinate="point"
+                        :draggable="true"/>
 
             </map-view>
 
             <view class="map-tools-container"
                   :style="{
                         right: DIMENSION.horizontal_margin,
-                        bottom: DIMENSION.horizontal_margin,
+                        bottom: 30,
                   }">
-                <view v-if="distance !== 0"
-                      :style="{
-                            marginBottom: DIMENSION.horizontal_margin,
-                      }">
-                    <text :style="{
-                        backgroundColor: '#343434',
-                        borderRadius: 16,
-                        fontFamily: 'DBHeavent-Med',
-                        fontSize: 18,
-                        color: 'white',
-                        paddingTop: 2,
-                        paddingBottom: 2,
-                        paddingLeft: 8,
-                        paddingRight: 8,
-                    }">{{distance}}</text>
-                </view>
+                <touchable-opacity
+                        v-if="distance !== 0"
+                        class="map-tools-icon-touchable"
+                        :on-press="handleClickDeleteMeasure"
+                        :style="{
+                            marginBottom: 5,
+                        }">
+                    <view class="map-tools-icon"
+                          :style="{
+                                justifyContent: 'flex-end',
+                                alignItems: 'flex-end',
+                          }">
+                        <image :source="imageDeleteMeasure"
+                               resize-mode="contain"
+                               :style="{
+                                    width: 26,
+                                    height: 26,
+                               }"/>
+                    </view>
+                </touchable-opacity>
 
                 <view class="map-tools-measure-container"
                       :style="{
@@ -211,11 +223,11 @@
 
                 <touchable-opacity
                         class="map-tools-icon-touchable"
-                        :on-press="null"
+                        :on-press="handleClickMarkerTool"
                         :style="{
                             marginBottom: DIMENSION.horizontal_margin,
                         }">
-                    <image :source="imageMapToolMarker"
+                    <image :source="isMarkerToolOn ? imageMapToolMarkerOn : imageMapToolMarkerOff"
                            class="map-tools-icon"
                            resize-mode="contain"/>
                 </touchable-opacity>
@@ -226,6 +238,26 @@
                            class="map-tools-icon"
                            resize-mode="contain"/>
                 </touchable-opacity>
+            </view>
+
+            <view v-if="distance !== 0"
+                  :style="{
+                        position: 'absolute',
+                        marginTop: MAP_HEADER.height + 40,
+                        width: '100%',
+                        alignItems: 'center',
+                  }">
+                <text :style="{
+                        backgroundColor: '#343434',
+                        borderRadius: 14,
+                        fontFamily: 'DBHeavent-Med',
+                        fontSize: 20,
+                        color: 'white',
+                        paddingTop: 2,
+                        paddingBottom: 2,
+                        paddingLeft: 12,
+                        paddingRight: 12,
+                    }">{{distance}}</text>
             </view>
 
             <view class="header-container">
@@ -260,7 +292,8 @@
                                resize-mode="contain"/>
                     </touchable-opacity>
                 </linear-gradient>
-                <!--<view class="search-input-container">
+
+                <view class="search-input-container">
                     <card-view
                             :card-elevation="4"
                             :card-maxElevation="4"
@@ -286,7 +319,7 @@
                                    resize-mode="contain"/>
                         </touchable-opacity>
                     </card-view>
-                </view>-->
+                </view>
             </view>
         </view>
 
@@ -347,7 +380,7 @@
     import store from '../../store';
     import {DEBUG, MAP_HEADER, BOTTOM_NAV, PROVINCE_NAME_EN, DIMENSION, PROVINCE_DIMENSION} from '../../constants';
 
-    import {StyleSheet} from 'react-native';
+    import {StyleSheet, Alert} from 'react-native';
     import {Fragment} from 'react';
     import MapView from 'react-native-maps';
     import {Marker, Polyline, Polygon, WMSTile} from 'react-native-maps';
@@ -357,7 +390,7 @@
     import FilterPanel from './FilterPanel';
     import Slider from '@react-native-community/slider';
     import BottomSheet from 'reanimated-bottom-sheet'
-    import { getDistance } from 'geolib';
+    import { getDistance, getAreaOfPolygon } from 'geolib';
 
     import imageMenu from '../../../assets/images/screen_map/ic_menu.png';
     import imageBack from '../../../assets/images/ic_back.png';
@@ -366,7 +399,8 @@
     import imageLightOn from '../../../assets/images/sidebar/ic_light_on.png';
 
     import imageMapToolCurrentLocation from '../../../assets/images/screen_map/ic_map_tool_current_location.png';
-    import imageMapToolMarker from '../../../assets/images/screen_map/ic_map_tool_marker.png';
+    import imageMapToolMarkerOff from '../../../assets/images/screen_map/ic_map_tool_marker_off.png';
+    import imageMapToolMarkerOn from '../../../assets/images/screen_map/ic_map_tool_marker_on.png';
     import bgMeasureTools from '../../../assets/images/screen_map/bg_measure_tools.png';
     import imageMapToolMeasureOn from '../../../assets/images/screen_map/ic_map_tool_measure_on.png';
     import imageMapToolMeasureOff from '../../../assets/images/screen_map/ic_map_tool_measure_off.png';
@@ -374,13 +408,14 @@
     import imageMapToolLineOff from '../../../assets/images/screen_map/ic_map_tool_line_off.png';
     import imageMapToolPolygonOn from '../../../assets/images/screen_map/ic_map_tool_polygon_on.png';
     import imageMapToolPolygonOff from '../../../assets/images/screen_map/ic_map_tool_polygon_off.png';
+    import imageDeleteMeasure from '../../../assets/images/screen_map/ic_delete_measure.png';
 
     import imageDragMarker from '../../../assets/images/screen_map/ic_drag_marker_new.png';
     import imageDragMarkerEnd from '../../../assets/images/screen_map/ic_drag_marker_end_new.png';
 
     export default {
         components: {
-            Fragment, MapView, Marker, Polyline, Polygon, WMSTile, LinearGradient, 
+            Fragment, MapView, Marker, Polyline, Polygon, WMSTile, LinearGradient,
             CardView, Drawer, FilterPanel, Slider, BottomSheet
         },
         props: {
@@ -401,40 +436,66 @@
             distance() {
                 const pointList = this.pointList;
 
-                if (pointList.length < 2) {
-                    return 0;
-                }
+                if (this.isLineToolOn) {
+                    if (pointList.length < 2) {
+                        return 0;
+                    }
 
-                let sum = 0;
-                for (let i = 0; i < pointList.length; i++) {
-                    if (i === 0) continue;
-                    sum += getDistance(pointList[i], pointList[i - 1]);
-                }
+                    let sum = 0;
+                    for (let i = 0; i < pointList.length; i++) {
+                        if (i === 0) continue;
+                        sum += getDistance(pointList[i], pointList[i - 1]);
+                    }
 
-                const km = Math.round(((sum / 1000) + Number.EPSILON) * 100) / 100;
-                return `${km} กม.`;
+                    const km = Math.round(((sum / 1000) + Number.EPSILON) * 100) / 100;
+                    return `${this.numberWithCommas(km)} กม.`;
+                } else {
+                    if (pointList.length < 3) {
+                        return 0;
+                    }
+
+                    const areaPoints = [];
+                    for (let i = 0; i < pointList.length; i++) {
+                        areaPoints.push(pointList[i]);
+                    }
+                    areaPoints.push(pointList[0]);
+
+                    /*pointList.forEach(point => {
+                        areaPoints.push([point.latitude, point.longitude]);
+                    });*/
+
+                    const sqKm = Math.round(((getAreaOfPolygon(areaPoints) / 1000000) + Number.EPSILON) * 100) / 100;
+                    return `${this.numberWithCommas(sqKm)} ตร.กม.`;
+                }
             }
         },
         data: () => {
             return {
                 StyleSheet, DEBUG, MAP_HEADER, BOTTOM_NAV, DIMENSION, PROVINCE_DIMENSION,
                 imageMenu, imageBack, imageLightOff, imageLightOn,
-                imageMapToolCurrentLocation, imageMapToolMarker,
+                imageMapToolCurrentLocation, imageMapToolMarkerOff, imageMapToolMarkerOn,
                 bgMeasureTools, imageMapToolMeasureOn, imageMapToolMeasureOff,
                 imageMapToolLineOn, imageMapToolLineOff,
                 imageMapToolPolygonOn, imageMapToolPolygonOff,
-                imageDragMarker, imageDragMarkerEnd,
+                imageDragMarker, imageDragMarkerEnd, imageDeleteMeasure,
 
                 isMeasureToolOn: false,
+                isMarkerToolOn: false,
                 isLineToolOn: true,
+                isDragging: false,
+                draggedMarker: null,
 
                 pointList: [
                     /*{longitude: 99.90637622773647, latitude: 13.739281519255695},
                     {longitude: 99.93837732821703, latitude: 13.77968939358877}*/
                 ],
+                point: null,
             };
         },
         methods: {
+            numberWithCommas: function (num) {
+                return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            },
             openFilterPanel: function () {
                 this.$refs['drawer'].open();
             },
@@ -494,16 +555,24 @@
                     this.pointList = tempList;
 
                     console.log(this.pointList);
+                } else if (this.isMarkerToolOn) {
+                    this.point = coord;
                 }
             },
             handleDragMarkerStart: function (coord) {
                 console.log(`Drag Start: ${coord}`);
+
+                this.isDragging = true;
+                this.draggedMarker = coord;
             },
             handleDragMarker: function (coord) {
                 console.log(`Drag: ${coord}`);
             },
             handleDragMarkerEnd: function (oldCoord, newCoord) {
                 console.log(`Drag End: ${newCoord}`);
+
+                this.isDragging = false;
+                this.draggedMarker = null;
 
                 const tempList = Object.assign([], this.pointList);
                 for (let i = 0; i < tempList.length; i++) {
@@ -516,12 +585,43 @@
 
             handleClickMeasureTool: function () {
                 this.isMeasureToolOn = !this.isMeasureToolOn;
+                if (this.isMeasureToolOn) {
+                    this.isMarkerToolOn = false;
+                }
+            },
+            handleClickMarkerTool: function () {
+                this.isMarkerToolOn = !this.isMarkerToolOn;
+                if (this.isMarkerToolOn) {
+                    this.isMeasureToolOn = false;
+                }
             },
             handleClickLineTool: function (isLine) {
                 if (this.isLineToolOn !== isLine) {
                     //this.pointList = [];
                     this.isLineToolOn = isLine;
                 }
+            },
+            handleClickDeleteMeasure: function () {
+                const self = this;
+                Alert.alert(
+                    'ลบ',
+                    'ยืนยันลบการวัดระยะทาง/พื้นที่?',
+                    [
+                        {
+                            text: 'ลบ',
+                            onPress: () => {
+                                self.pointList = [];
+                            }
+                        },
+                        {
+                            text: 'ยกเลิก',
+                            onPress: () => {
+                            },
+                            style: 'cancel'
+                        },
+                    ],
+                    {cancelable: true}
+                );
             },
         },
         created: function () {

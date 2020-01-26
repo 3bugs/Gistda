@@ -110,16 +110,12 @@
         flex: 1;
         justify-content: flex-end;
         align-items: center;
-        border-width: 0;
-        border-color: yellow;
     }
 
     .item-container {
         justify-content: center;
         align-items: center;
         padding-bottom: 0;
-        border-width: 0;
-        border-color: red;
     }
 
     .item-text-off {
