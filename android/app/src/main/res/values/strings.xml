@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">SAFE SAFE</string>
+    <string name="facebook_app_id">1351343988405712</string>
+    <string name="line_channel_id" translatable="false">1653799230</string>
 </resources>

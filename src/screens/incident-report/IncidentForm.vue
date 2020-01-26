@@ -246,6 +246,7 @@
     import FormHeader from '../../components/FormHeader';
     import IncidentFormTextInput from '../../components/IncidentFormTextInput';
     import MyButton from '../../components/MyButton';
+    import {requestAndroidPermissions} from '../../constants/utils';
 
     import {Alert, Platform, PermissionsAndroid, Dimensions, Picker} from 'react-native';
     import CardView from 'react-native-cardview';
@@ -471,11 +472,17 @@
             },
             getCurrentLocation: function () {
                 if (Platform.OS === 'android') { // android
-                    this.requestLocationPermission((success, message) => {
-                        if (success) {
-                            this.doGetCurrentLocation();
-                        } else {
-                            alert(message);
+                    requestAndroidPermissions({
+                        permission: PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+                        title: this.APP_NAME,
+                        requestMessage: 'แอปจำเป็นต้องขอข้อมูลตำแหน่งปัจจุบันของคุณ',
+                        denyMessage: 'แอปไม่ได้รับอนุญาตจากผู้ใช้ จึงไม่สามารถตรวจสอบตำแหน่งปัจจุบันได้',
+                        callback: (success, message) => {
+                            if (success) {
+                                this.doGetCurrentLocation();
+                            } else {
+                                alert(message);
+                            }
                         }
                     });
                 } else { // ios
@@ -506,27 +513,6 @@
                     );
                 } catch (e) {
                     console.log('Error get current position: ' + e);
-                }
-            },
-            requestLocationPermission: async function (callback) {
-                try {
-                    const granted = await PermissionsAndroid.request(
-                        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-                        {
-                            title: this.APP_NAME,
-                            message:
-                                'แอปจำเป็นต้องขอข้อมูลตำแหน่งปัจจุบันของคุณ',
-                            buttonNegative: 'ยกเลิก',
-                            buttonPositive: 'ตกลง',
-                        },
-                    );
-                    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                        callback(true, null);
-                    } else {
-                        callback(false, 'แอปไม่ได้รับอนุญาตจากผู้ใช้ จึงไม่สามารถตรวจสอบตำแหน่งปัจจุบันได้');
-                    }
-                } catch (err) {
-                    callback(false, err);
                 }
             },
             handleRegionChange: function (region) {

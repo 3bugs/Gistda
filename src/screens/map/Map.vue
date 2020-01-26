@@ -15,6 +15,7 @@
         <view class="container"
               :style="{marginBottom: BOTTOM_NAV.height}">
             <map-view
+                    ref="mapView"
                     class="map-view"
                     :initial-region="{
                         latitude: (PROVINCE_DIMENSION[province].minLatitude + PROVINCE_DIMENSION[province].maxLatitude) / 2,
@@ -24,7 +25,8 @@
                     }"
                     :style="{marginTop: MAP_HEADER.height}"
                     :on-map-ready="handleMapReady"
-                    :on-press="e => {handleClickMap(e.nativeEvent.coordinate)}">
+                    :on-press="e => {handleClickMap(e.nativeEvent.coordinate)}"
+                    :on-region-change-complete="handleRegionChange">
 
                 <!--<w-m-s-tile
                     url-template="http://wms.ngis.go.th:8081/geoserver/A_ORCHARD/wms?service=WMS&version=1.1.0&request=GetMap&layers=A_ORCHARD:orchard&bbox={minX},{minY},{maxX},{maxY}&width={width}&height={height}&srs=EPSG:900913&format=image/png&transparent=true"
@@ -233,13 +235,14 @@
                 </touchable-opacity>
 
                 <touchable-opacity class="map-tools-icon-touchable"
-                                   :on-press="null">
+                                   :on-press="handleClickCurrentLocationTool">
                     <image :source="imageMapToolCurrentLocation"
                            class="map-tools-icon"
                            resize-mode="contain"/>
                 </touchable-opacity>
             </view>
 
+            <!--แสดงระยะทาง, พื้นที่ที่วัดได้-->
             <view v-if="distance !== 0"
                   :style="{
                         position: 'absolute',
@@ -260,6 +263,7 @@
                     }">{{distance}}</text>
             </view>
 
+            <!--screen header-->
             <view class="header-container">
                 <linear-gradient class="header"
                                  :colors="[
@@ -300,6 +304,7 @@
                             :corner-radius="25"
                             :style="{
                                 flexDirection: 'row',
+                                alignItems: 'center',
                                 paddingTop: 6,
                                 paddingBottom: 6,
                                 paddingLeft: 15,
@@ -308,7 +313,7 @@
                                 backgroundColor: '#fff'
                             }">
                         <text-input class="search-input"
-                                    placeholder="Search"
+                                    :placeholder="mapCurrentRegion ? `${mapCurrentRegion.latitude.toFixed(6)}, ${mapCurrentRegion.longitude.toFixed(6)}` : ''"
                                     placeholder-text-color="#aaa"/>
 
                         <view class="divider"/>
@@ -379,8 +384,9 @@
 <script>
     import store from '../../store';
     import {DEBUG, MAP_HEADER, BOTTOM_NAV, PROVINCE_NAME_EN, DIMENSION, PROVINCE_DIMENSION} from '../../constants';
+    import {requestAndroidPermissions} from '../../constants/utils'
 
-    import {StyleSheet, Alert} from 'react-native';
+    import {StyleSheet, Alert, PermissionsAndroid, Platform} from 'react-native';
     import {Fragment} from 'react';
     import MapView from 'react-native-maps';
     import {Marker, Polyline, Polygon, WMSTile} from 'react-native-maps';
@@ -390,7 +396,8 @@
     import FilterPanel from './FilterPanel';
     import Slider from '@react-native-community/slider';
     import BottomSheet from 'reanimated-bottom-sheet'
-    import { getDistance, getAreaOfPolygon } from 'geolib';
+    import {getDistance, getAreaOfPolygon} from 'geolib';
+    import Geolocation from 'react-native-geolocation-service';
 
     import imageMenu from '../../../assets/images/screen_map/ic_menu.png';
     import imageBack from '../../../assets/images/ic_back.png';
@@ -479,6 +486,7 @@
                 imageMapToolPolygonOn, imageMapToolPolygonOff,
                 imageDragMarker, imageDragMarkerEnd, imageDeleteMeasure,
 
+                mapCurrentRegion: null,
                 isMeasureToolOn: false,
                 isMarkerToolOn: false,
                 isLineToolOn: true,
@@ -545,7 +553,6 @@
             handleMapReady: function () {
                 //alert('Map ready!');
             },
-
             handleClickMap: function (coord) {
                 //console.log(coord);
 
@@ -559,6 +566,10 @@
                     this.point = coord;
                 }
             },
+            handleRegionChange: function (region) {
+                this.mapCurrentRegion = region;
+            },
+
             handleDragMarkerStart: function (coord) {
                 console.log(`Drag Start: ${coord}`);
 
@@ -593,6 +604,53 @@
                 this.isMarkerToolOn = !this.isMarkerToolOn;
                 if (this.isMarkerToolOn) {
                     this.isMeasureToolOn = false;
+                }
+            },
+            handleClickCurrentLocationTool: function () {
+                if (Platform.OS === 'android') { // android
+                    requestAndroidPermissions({
+                        permission: PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+                        title: this.APP_NAME,
+                        requestMessage: 'แอปจำเป็นต้องขอข้อมูลตำแหน่งปัจจุบันของคุณ',
+                        denyMessage: 'แอปไม่ได้รับอนุญาตจากผู้ใช้ จึงไม่สามารถตรวจสอบตำแหน่งปัจจุบันได้',
+                        callback: (success, message) => {
+                            if (success) {
+                                this.doGetCurrentLocation();
+                            } else {
+                                Alert.alert('ผิดพลาด', message);
+                            }
+                        }
+                    });
+                } else { // ios
+                    this.doGetCurrentLocation();
+                }
+            },
+            doGetCurrentLocation: function () {
+                try {
+                    Geolocation.getCurrentPosition(
+                        (position) => {
+                            console.log(position.coords);
+
+                            try {
+                                this.$refs['mapView'].animateToRegion({
+                                    latitude: position.coords.latitude,
+                                    longitude: position.coords.longitude,
+                                    latitudeDelta: 0.005,
+                                    longitudeDelta: 0.005,
+                                });
+                            } catch (e) {
+                                console.log('Error animate to region: ' + e);
+                            }
+                        },
+                        (error) => {
+                            console.log(`Error getting location: ${error.message}`);
+                            Alert.alert('ผิดพลาด', 'เกิดปัญหาในการตรวจสอบตำแหน่งปัจจุบันของคุณ');
+                        },
+                        {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000}
+                    );
+                } catch (e) {
+                    console.log('Error get current position: ' + e);
+                    Alert.alert('ผิดพลาด', 'เกิดปัญหาในการตรวจสอบตำแหน่งปัจจุบันของคุณ: ' + e);
                 }
             },
             handleClickLineTool: function (isLine) {

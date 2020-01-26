@@ -78,7 +78,7 @@
                     :on-click="handleClickLogin"/>
             <view :style="{marginBottom: 20}"/>
 
-            <!--<view :style="{
+            <view :style="{
                 flexDirection: 'row',
                 alignItems: 'center',
             }">
@@ -115,7 +115,7 @@
                     :icon="imageGoogle"
                     bg-color="#DD4B39"
                     :on-click="handleClickLoginGoogle"/>
-            <view :style="{marginBottom: 25}"/>-->
+            <view :style="{marginBottom: 25}"/>
 
             <view :style="{
                 flexDirection: 'row',
@@ -170,6 +170,8 @@
     import {Alert, Dimensions} from 'react-native';
     import LinearGradient from 'react-native-linear-gradient';
     import CardView from 'react-native-cardview';
+    import {LoginManager, GraphRequest, GraphRequestManager} from 'react-native-fbsdk';
+    import LineLogin from 'react-native-line-sdk'
 
     import imageBack from '../../../assets/images/ic_back.png';
     import imageLogo from '../../../assets/images/screen_login/ic_logo.png';
@@ -247,34 +249,73 @@
                                         {cancelable: false}
                                     );
                                 } else {
-                                    Alert.alert(
-                                        'ผิดพลาด',
-                                        message
-                                    );
+                                    Alert.alert('ผิดพลาด', message);
                                 }
                             }
                         });
                     } else {
-                        Alert.alert(
-                            'ผิดพลาด',
-                            'รูปแบบอีเมลไม่ถูกต้อง'
-                        );
+                        Alert.alert('ผิดพลาด', 'รูปแบบอีเมลไม่ถูกต้อง');
                     }
                 } else {
-                    Alert.alert(
-                        'ผิดพลาด',
-                        'กรุณากรอกอีเมลและรหัสผ่าน'
-                    );
+                    Alert.alert('ผิดพลาด', 'กรุณากรอกอีเมลและรหัสผ่าน');
                 }
             },
             handleClickShowHidePassword: function () {
                 this.showPassword = !this.showPassword;
             },
             handleClickLoginFacebook: function () {
+                const self = this;
 
+                // Attempt a login using the Facebook login dialog,
+                // asking for default permissions.
+                LoginManager.logInWithPermissions(['public_profile', 'email']).then(
+                    function(result) {
+                        if (result.isCancelled) {
+                            Alert.alert('แจ้งเตือน', 'การเข้าระบบด้วย Facebook ถูกยกเลิก');
+                        } else {
+                            Alert.alert('สำเร็จ', 'เข้าระบบด้วย Facebook สำเร็จ');
+
+                            console.log(`เข้าระบบด้วย Facebook สำเร็จ: ${result.grantedPermissions.toString()}`);
+                            console.log(result);
+
+                            self.requestFacebookProfile();
+                        }
+                    },
+                    function(error) {
+                        Alert.alert('ผิดพลาด', 'เกิดปัญหาในการเข้าระบบด้วย Facebook: ' + error);
+                    }
+                );
+            },
+            requestFacebookProfile: function () {
+                const req = new GraphRequest('/me', {
+                    httpMethod: 'GET',
+                    version: 'v2.5',
+                    parameters: { //https://developers.facebook.com/docs/graph-api/reference/user
+                        fields: {
+                            string : 'name,email,picture'
+                        }
+                    }
+                }, (error, result) => {
+                    if (error) {
+                        console.log(`Error fetching facebook profile: ${JSON.stringify(error)}`);
+                    } else {
+                        console.log(`Success fetching data: ${JSON.stringify(result)}`);
+                        //todo: ส่งข้อมูลให้ API **********
+                    }
+                });
+
+                new GraphRequestManager().addRequest(req).start();
             },
             handleClickLoginLine: function () {
+                LineLogin.login()
+                    .then(user => {
+                        Alert.alert('สำเร็จ', 'เข้าระบบด้วย Facebook สำเร็จ');
 
+                        console.log(JSON.stringify(user.profile));
+                    })
+                    .catch(err => {
+                        Alert.alert('ผิดพลาด', 'เกิดปัญหาในการเข้าระบบด้วย LINE: ' + err);
+                    });
             },
             handleClickLoginGoogle: function () {
 
