@@ -3,7 +3,6 @@ package com.gistda;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-import com.xmartlabs.lineloginmanager.LineLoginPackage;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.agontuk.RNFusedLocation.RNFusedLocationPackage;
 import fr.snapp.imagebase64.RNImgToBase64Package;
@@ -39,7 +38,6 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new LineLoginPackage(),
             new FBSDKPackage(),
             new RNFusedLocationPackage(),
             new RNImgToBase64Package(),

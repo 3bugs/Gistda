@@ -13,19 +13,21 @@
                       :style="{fontSize: isTallScreen ? 65 : 55, marginTop: isTallScreen ? 68 : 68}">
                     {{provinceNameTh}}
                 </text>
-                <!--<text class="temperature"
+                <text class="temperature"
+                      v-if="temperature !== null"
                       :on-layout="handleTemperatureLayoutChange"
                       :style="{fontSize: isTallScreen ? 120 : 90}">
                     {{temperature}}
                 </text>
                 <text class="temperature-unit"
+                      v-if="temperature !== null"
                       :style="{marginLeft: temperatureUnitMarginLeft, fontSize: isTallScreen ? 50 : 43, marginTop: isTallScreen ? 150 : 133}">
                     °C
                 </text>
                 <text class="status"
                       :style="{marginTop: isTallScreen ? 203 : 175}">
                     {{status}}
-                </text>-->
+                </text>
             </view>
             <view-pager class="view-pager"
                         :initial-page="0"
@@ -101,11 +103,12 @@
         },
         data: () => {
             return {
+                currentProvince: 0,
+
                 bg: provinceList[0].bg,
                 provinceNameTh: provinceList[0].nameTh,
                 provinceNameEn: provinceList[0].nameEn,
-                temperature: provinceList[0].temperature,
-                status: provinceList[0].status,
+                //status: provinceList[0].status,
 
                 imageNakhonPathom,
                 imageYasothon,
@@ -113,7 +116,6 @@
                 imageHeight: 0,
                 viewPagerMargin: 0,
                 temperatureUnitMarginLeft: 0,
-                status: false,
 
                 test: false,
 
@@ -125,6 +127,12 @@
         computed: {
             province() {
                 return store.state.province;
+            },
+            temperature() {
+                return store.state.temperature[PROVINCE_NAME_EN[this.currentProvince]];
+            },
+            status() {
+                return store.state.weatherDescription[PROVINCE_NAME_EN[this.currentProvince]];
             },
             loadingCoordinateCategories() {
                 return store.state.loadingCoordinateCategories;
@@ -165,11 +173,13 @@
             },
             handlePageSelect: function (e) {
                 const selectedPageIndex = e.nativeEvent.position;
+                this.currentProvince = selectedPageIndex;
+
                 this.bg = provinceList[selectedPageIndex].bg;
                 this.provinceNameTh = provinceList[selectedPageIndex].nameTh;
                 this.provinceNameEn = provinceList[selectedPageIndex].nameEn;
-                this.temperature = provinceList[selectedPageIndex].temperature;
-                this.status = provinceList[selectedPageIndex].status;
+                //this.temperature = store.state.temperature[PROVINCE_NAME_EN[selectedPageIndex]];
+                //this.status = provinceList[selectedPageIndex].status;
             },
             handleSelectProvince: function (province) {
                 if (this.loadingCoordinateCategories || this.loadingCoordinates) {

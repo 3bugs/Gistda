@@ -30,7 +30,7 @@
                         <image :source="BOTTOM_NAV.addIcon[province]"
                                :style="{width: 56, height: 56}"
                                resize-mode="contain"/>
-                        <text class="item-text-highlight">แจ้งเหตุ</text>
+                        <text class="item-text-highlight">แจ้ง</text>
                     </view>
                     <!--</touchable-opacity>-->
                 </MenuTrigger>
@@ -205,16 +205,19 @@
                     alert('No route to go!');
                 }
             },
-            addIncidentReport: async function (type) {
+            addIncidentReport: async function (formType) {
                 /*this.navigation.navigate('IncidentForm');
                 return;*/
 
                 //const user = await getUser();
                 if (this.isLoggedIn /*user === null*/) {
-                    this.navigation.navigate('IncidentForm');
+                    this.navigation.navigate('IncidentForm', {
+                        formType // 0 = แจ้งเหตุ, 1 = ร้านอาหารปลอดภัย
+                    });
                 } else {
                     this.navigation.navigate('Login', {
-                        forward: 'IncidentForm'
+                        forward: 'IncidentForm',
+                        params: {formType}
                     });
                 }
             }

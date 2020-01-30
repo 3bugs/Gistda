@@ -20,6 +20,7 @@
     import Province from './src/screens/province/Province';
     import Map from './src/screens/map/Map';
     import News from './src/screens/news/News';
+    import SearchResult from './src/screens/search-result/SearchResult';
     import NewsDetails from './src/screens/news/NewsDetails';
     import Login from './src/screens/login/Login';
     import Register from './src/screens/login/Register';
@@ -63,6 +64,9 @@
             },
             News: {
                 screen: News,
+            },
+            SearchResult: {
+                screen: SearchResult,
             },
             News2: {
                 screen: newsNavigator,

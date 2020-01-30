@@ -105,7 +105,7 @@ android {
         applicationId "com.gistda"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 3
+        versionCode 5
         versionName "1.0"
     }
     signingConfigs {
@@ -155,7 +155,6 @@ repositories {
 }
 
 dependencies {
-    implementation project(':react-native-line-sdk')
     implementation project(':react-native-fbsdk')
     implementation project(':react-native-geolocation-service')
     implementation project(':react-native-image-base64')

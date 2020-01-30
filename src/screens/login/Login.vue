@@ -103,7 +103,7 @@
                     :on-click="handleClickLoginFacebook"/>
             <view :style="{marginBottom: 15}"/>
 
-            <my-button
+            <!--<my-button
                     text="LOGIN WITH LINE"
                     :icon="imageLine"
                     bg-color="#00B900"
@@ -114,7 +114,7 @@
                     text="LOGIN WITH GMAIL"
                     :icon="imageGoogle"
                     bg-color="#DD4B39"
-                    :on-click="handleClickLoginGoogle"/>
+                    :on-click="handleClickLoginGoogle"/>-->
             <view :style="{marginBottom: 25}"/>
 
             <view :style="{
@@ -171,7 +171,7 @@
     import LinearGradient from 'react-native-linear-gradient';
     import CardView from 'react-native-cardview';
     import {LoginManager, GraphRequest, GraphRequestManager} from 'react-native-fbsdk';
-    import LineLogin from 'react-native-line-sdk'
+    //import LineLogin from 'react-native-line-sdk'
 
     import imageBack from '../../../assets/images/ic_back.png';
     import imageLogo from '../../../assets/images/screen_login/ic_logo.png';
@@ -241,7 +241,8 @@
 
                                                     const nextScreen = this.navigation.getParam('forward');
                                                     if (nextScreen) {
-                                                        this.navigation.navigate(nextScreen);
+                                                        const params = this.navigation.getParam('params');
+                                                        this.navigation.navigate(nextScreen, params);
                                                     }
                                                 }
                                             }
@@ -273,8 +274,6 @@
                         if (result.isCancelled) {
                             Alert.alert('แจ้งเตือน', 'การเข้าระบบด้วย Facebook ถูกยกเลิก');
                         } else {
-                            Alert.alert('สำเร็จ', 'เข้าระบบด้วย Facebook สำเร็จ');
-
                             console.log(`เข้าระบบด้วย Facebook สำเร็จ: ${result.grantedPermissions.toString()}`);
                             console.log(result);
 
@@ -297,17 +296,60 @@
                     }
                 }, (error, result) => {
                     if (error) {
+                        Alert.alert('ผิดพลาด', 'เกิดปัญหาในการอ่านข้อมูลบัญชีผู้ใช้ Facebook: ' + error);
                         console.log(`Error fetching facebook profile: ${JSON.stringify(error)}`);
                     } else {
                         console.log(`Success fetching data: ${JSON.stringify(result)}`);
-                        //todo: ส่งข้อมูลให้ API **********
+
+                        const {id, email, name, picture} = result;
+
+                        store.dispatch('LOGIN_FACEBOOK', {
+                            formData: {
+                                facebook_id: id,
+                                email, name
+                            },
+                            callback: (success, message) => {
+                                if (success) {
+                                    Alert.alert(
+                                        'สำเร็จ',
+                                        'เข้าระบบด้วย Facebook สำเร็จ',
+                                        [
+                                            {
+                                                text: 'OK',
+                                                onPress: () => {
+                                                    if (store.state.userToken) {
+                                                        store.dispatch('GET_PROFILE', {});
+                                                    }
+
+                                                    this.navigation.goBack();
+
+                                                    const nextScreen = this.navigation.getParam('forward');
+                                                    if (nextScreen) {
+                                                        const params = this.navigation.getParam('params');
+                                                        this.navigation.navigate(nextScreen, params);
+                                                    }
+                                                }
+                                            }
+                                        ],
+                                        {cancelable: false}
+                                    );
+                                } else {
+                                    Alert.alert(
+                                        'ผิดพลาด',
+                                        message
+                                    );
+                                }
+                            }
+                        });
                     }
                 });
 
                 new GraphRequestManager().addRequest(req).start();
             },
             handleClickLoginLine: function () {
-                LineLogin.login()
+                Alert.alert('Under Construction', 'ส่วนนี้อยู่ระหว่างการพัฒนา');
+
+                /*LineLogin.login()
                     .then(user => {
                         Alert.alert('สำเร็จ', 'เข้าระบบด้วย Facebook สำเร็จ');
 
@@ -315,10 +357,10 @@
                     })
                     .catch(err => {
                         Alert.alert('ผิดพลาด', 'เกิดปัญหาในการเข้าระบบด้วย LINE: ' + err);
-                    });
+                    });*/
             },
             handleClickLoginGoogle: function () {
-
+                Alert.alert('Under Construction', 'ส่วนนี้อยู่ระหว่างการพัฒนา'); //todo: ************************
             },
             handleClickForgotPassword: function () {
                 this.navigation.navigate('ForgotPassword');

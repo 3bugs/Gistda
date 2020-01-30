@@ -24,11 +24,14 @@ const store = new Vuex.Store({
         loadingCoordinateCategories: false,
         submittingFormData: false,
         loggingIn: false,
+        loadingTemperature: false,
 
         userDisplayName: null,
         userPhone: null,
         userEmail: null,
         userToken: null,
+
+        categoryData: [], // sparse array เก็บ link รูปภาพตาม category id ไว้ใช้ตอนปักหมูด search result
 
         incidentFormData: {
             [INCIDENT_FORM_DATA.KEY_INCIDENT_CATEGORY]: 0,
@@ -61,11 +64,25 @@ const store = new Vuex.Store({
             [PROVINCE_NAME_EN[0]]: [],
             [PROVINCE_NAME_EN[1]]: [],
         },
-
         loadingCoordinates: false,
+
+        searchResultList: {
+            [PROVINCE_NAME_EN[0]]: [],
+            [PROVINCE_NAME_EN[1]]: [],
+        },
+        searching: false,
 
         /*loadingMapDataList: false,
         mapDataList: [],*/
+
+        temperature: {
+            [PROVINCE_NAME_EN[0]]: null,
+            [PROVINCE_NAME_EN[1]]: null,
+        },
+        weatherDescription: {
+            [PROVINCE_NAME_EN[0]]: null,
+            [PROVINCE_NAME_EN[1]]: null,
+        },
 
         loadingNews: {
             [PROVINCE_NAME_EN[0]]: false,

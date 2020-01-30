@@ -67,7 +67,8 @@
                 return store.state.userToken;
             },
             profileImage() {
-                return this.userToken ? imageProfilePromlert : imageLogo;
+                //return this.userToken ? imageProfilePromlert : imageLogo;
+                return imageLogo;
             },
             isLoggedIn() {
                 return store.state.userToken !== null

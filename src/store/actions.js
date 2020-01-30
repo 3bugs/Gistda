@@ -12,12 +12,14 @@ import {
     submitFormData,
     doLogin,
     doRegister,
+    doLoginFacebook,
     doGetProfile,
     doUpdateProfile,
     doChangePassword,
+    doGetWeather,
 } from './fetch';
 
-import {INCIDENT_FORM_DATA} from '../constants/index';
+import {INCIDENT_FORM_DATA, PROVINCE_NAME_EN} from '../constants/index';
 import {DISTRICT_DATA} from '../constants/district';
 import User from '../model/User';
 import {setUser, getUser} from '../store/db';
@@ -119,7 +121,8 @@ export async function FETCH_COORDINATES({commit, state}, {province, idList, call
     const apiResult = await fetchCoordinates(province, idList);
     if (apiResult.success) {
         commit('SET_COORDINATES', {
-            coordinateList: apiResult.data,
+            coordinateList: apiResult.data.features,
+            wmsList: apiResult.data.wms,
             callback: () => {
                 callback(true, null);
             }
@@ -127,6 +130,30 @@ export async function FETCH_COORDINATES({commit, state}, {province, idList, call
     } else {
         commit('SET_COORDINATES', {
             coordinateList: [],
+            wmsList: [],
+            callback: () => {
+                callback(false, apiResult.message);
+            }
+        });
+    }
+}
+
+export async function SEARCH({commit, state}, {province, searchTerm, callback}) {
+    commit('SEARCHING');
+
+    const apiResult = await fetchCoordinates(province, null, searchTerm);
+    if (apiResult.success) {
+        commit('SET_SEARCH_RESULT', {
+            coordinateList: apiResult.data.features,
+            wmsList: apiResult.data.wms,
+            callback: () => {
+                callback(true, null);
+            }
+        });
+    } else {
+        commit('SET_SEARCH_RESULT', {
+            coordinateList: [],
+            wmsList: [],
             callback: () => {
                 callback(false, apiResult.message);
             }
@@ -373,6 +400,33 @@ export async function REGISTER({commit, state}, {formData, callback}) {
     }
 }
 
+export async function LOGIN_FACEBOOK({commit, state}, {formData, callback}) {
+    commit('LOGGING_IN');
+
+    const apiResult = await doLoginFacebook(formData);
+    if (apiResult.success) {
+        await setUser(new User(
+            apiResult.data.name,
+            apiResult.data.token
+        ));
+        commit('SET_USER', {
+            userDisplayName: apiResult.data.name,
+            userToken: apiResult.data.token,
+            userPhone: null,
+            userEmail: null,
+        });
+        callback(true, null);
+    } else {
+        commit('SET_USER', {
+            userDisplayName: null,
+            userToken: null,
+            userPhone: null,
+            userEmail: null,
+        });
+        callback(false, apiResult.message);
+    }
+}
+
 export async function GET_PROFILE({commit, state}, {}) {
     commit('GETTING_PROFILE');
 
@@ -473,6 +527,27 @@ export async function GET_LOGGED_USER({commit, state}, {callback}) {
             userToken: null,
             userPhone: null,
             userEmail: null,
+        });
+        callback(false, null);
+    }
+}
+
+export async function GET_WEATHER({commit, state}, {province, callback}) {
+    commit('FETCHING_TEMPERATURE');
+
+    const apiResult = await doGetWeather(province);
+    if (apiResult.success) {
+        commit('SET_TEMPERATURE', {
+            province,
+            temperature: apiResult.data.temperature,
+            description: apiResult.data.description,
+        });
+        callback(true, null);
+    } else {
+        commit('SET_TEMPERATURE', {
+            province,
+            temperature: state.temperature[PROVINCE_NAME_EN[province]],
+            description: state.weatherDescription[PROVINCE_NAME_EN[province]],
         });
         callback(false, null);
     }

@@ -55,6 +55,22 @@
                 }
             });
 
+            store.dispatch('GET_WEATHER', {
+                province: 0,
+                callback: (success, message) => {
+                    if (success) {
+                    }
+                }
+            });
+
+            store.dispatch('GET_WEATHER', {
+                province: 1,
+                callback: (success, message) => {
+                    if (success) {
+                    }
+                }
+            });
+
             this.startHomeDelay();
         },
         methods: {

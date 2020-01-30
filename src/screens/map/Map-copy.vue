@@ -355,7 +355,7 @@
             </view>
         </view>
 
-        <bottom-sheet
+        <!--<bottom-sheet
                 ref="bottomSheet"
                 :snap-points="[screenHeight - statusBarHeight, '47%', '0%']"
                 :initialSnap="2">
@@ -434,7 +434,7 @@
                     borderBottomColor: '#cccccc'
                 }"/>
             </view>
-        </bottom-sheet>
+        </bottom-sheet>-->
     </drawer>
 </template>
 
@@ -945,4 +945,4 @@
         height: 38;
         margin-right: 6;
     }
-</style>
+</styl

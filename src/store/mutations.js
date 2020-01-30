@@ -1,5 +1,6 @@
 import {PROVINCE_NAME_EN, INCIDENT_FORM_DATA} from '../constants/index';
 import {getLocalCategoryData, setLocalCategoryData} from './db';
+import {call} from "react-native-reanimated";
 
 export function SET_PROVINCE(state, {province}) {
     state.province = province;
@@ -24,6 +25,23 @@ export async function SET_COORDINATE_CATEGORIES(state, {coordinateCategoryList, 
     console.log("----- SET_COORDINATE_CATEGORIES -----");
     console.log(JSON.stringify(state.coordinateCategoryList[PROVINCE_NAME_EN[state.province]]));
     console.log("----- SET_COORDINATE_CATEGORIES -----");
+
+    // เอา link รูปภาพเก็บเป็น sparse array ไว้ใช้ตอนปักหมูด search result
+    state.categoryData = [];
+    coordinateCategoryList.forEach(categoryType => {
+       categoryType.list.forEach(category => {
+           /*{
+               "id": 1,
+               "name": "ตำแหน่งอุบัติเหตุ",
+               "description": "",
+               "image": "https://fenrir.studio/d/gistda_dev/uploads/1rk1576090326.png",
+               "default": false,
+               "last_update_35": "2020-01-17 11:29:48",
+               "last_update_73": "2020-01-24 15:14:38"
+           }*/
+           state.categoryData[category.id] = category;
+       });
+    });
 
     callback();
 }
@@ -95,7 +113,7 @@ export function FETCHING_COORDINATES(state) {
     state.loadingMessage = getLoadingMessage('Loading maps data');
 }
 
-export async function SET_COORDINATES(state, {coordinateList, callback}) {
+export async function SET_COORDINATES(state, {coordinateList, wmsList, callback}) {
     const coordinateSparseArray = [];
     coordinateList.forEach(coordinate => {
         const category = coordinate.properties.CATEGORY;
@@ -104,6 +122,8 @@ export async function SET_COORDINATES(state, {coordinateList, callback}) {
         }
         coordinateSparseArray[category].push(coordinate);
     });
+
+    //todo: ข้อมูล wms
 
     // แคชไว้ใน local storage
     for (let i = 0; i < coordinateSparseArray.length; i++) {
@@ -133,6 +153,19 @@ export async function SET_COORDINATES(state, {coordinateList, callback}) {
 
     state.loadingCoordinates = false;
     state.loadingMessage = null;
+
+    callback();
+}
+
+export function SEARCHING(state) {
+    state.searching = true;
+    state.loadingMessage = getLoadingMessage('Searching...');
+}
+
+export async function SET_SEARCH_RESULT(state, {coordinateList, wmsList, callback}) {
+    state.searching = false;
+    state.loadingMessage = null;
+    state.searchResultList[PROVINCE_NAME_EN[state.province]] = coordinateList;
 
     callback();
 }
@@ -308,6 +341,19 @@ export function SET_USER(state, {userDisplayName, userPhone, userEmail, userToke
 
     console.log(`Set user:`);
     console.log(`Display name: ${userDisplayName}, Token: ${userToken}`);
+}
+
+export function FETCHING_TEMPERATURE(state) {
+    state.loadingTemperature = true;
+}
+
+export function SET_TEMPERATURE(state, {province, temperature, description}) {
+    state.loadingTemperature = false;
+
+    state.temperature[PROVINCE_NAME_EN[province]] = temperature;
+    state.weatherDescription[PROVINCE_NAME_EN[province]] = description;
+
+    console.log(`Set temperature ${PROVINCE_NAME_EN[province]}: ${temperature}`);
 }
 
 function logObjectProperties(objectName, object) {

@@ -26,7 +26,7 @@
                        paddingBottom: 5
                        }"
                        :on-press="handleCheckChange"
-                       :checked="item.markerVisibility">
+                       :checked="visibilityValue">
                 <view render-prop="checkedIcon">
                     <image :style="{width: 15, height: 15}"
                            :source="imageCheckOn"/>
@@ -141,7 +141,9 @@
             handleCheckChange: async function (e) {
                 //alert(e.target);
 
-                if (!this.visibilityValue) {
+                this.visibilityValue = !this.visibilityValue;
+
+                if (this.visibilityValue) {
                     console.log('Checking if cache exist');
                     const categoryData = await getLocalCategoryData(this.province, this.item.id);
 
@@ -152,7 +154,7 @@
                             province: this.province,
                             idList: [this.item.id],
                             callback: (success, message) => {
-                                this.visibilityValue = !this.visibilityValue;
+                                //this.visibilityValue = !this.visibilityValue;
 
                                 store.dispatch('SET_MARKER_VISIBILITY', {
                                     id: this.item.id,
@@ -167,7 +169,7 @@
                     } else { // ถ้ามีในแคชแล้ว ไม่ต้อง fetch ใหม่
                         console.log(`Cache found: province-${this.province}-category-${this.item.id}`);
 
-                        this.visibilityValue = !this.visibilityValue;
+                        //this.visibilityValue = !this.visibilityValue;
 
                         await store.dispatch('SET_MARKER_VISIBILITY', {
                             id: this.item.id,
@@ -179,7 +181,7 @@
                         await setLocalCategoryData(this.province, this.item.id, {markerVisibility: this.visibilityValue});
                     }
                 } else {
-                    this.visibilityValue = !this.visibilityValue;
+                    //this.visibilityValue = !this.visibilityValue;
 
                     await store.dispatch('SET_MARKER_VISIBILITY', {
                         id: this.item.id,

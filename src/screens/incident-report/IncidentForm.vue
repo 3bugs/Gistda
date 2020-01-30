@@ -1,18 +1,20 @@
 <template>
     <view class="container">
         <form-header
-                title="ข้อมูลจุดแจ้งเหตุ"
-                header-text="เพิ่มข้อมูลจุดเกิดเหตุ"
+                :title="formType === 0 ? 'ข้อมูลจุดแจ้งเหตุ' : 'ข้อมูลร้านอาหารปลอดภัย'"
+                :header-text="formType === 0 ? 'เพิ่มข้อมูลจุดเกิดเหตุ' : 'เพิ่มข้อมูลร้านอาหารปลอดภัย'"
                 sub-header-text="กรุณากรอกข้อมูลให้ครบ"
                 :button-text="null"
                 :on-click-back="handleClickBack"
                 :on-click-close="handleClickClose">
             <view>
-                <text class="label"
+                <text v-if="formType === 0"
+                      class="label"
                       :style="{
                             color: FORM.labelTextColor[province]
                       }">หมวดหมู่ของเหตุ</text>
-                <picker :selected-value="incidentCategoryValue"
+                <picker v-if="formType === 0"
+                        :selected-value="incidentCategoryValue"
                         :on-value-change="handleIncidentCategoryChange"
                         :item-style="{
                             fontFamily: 'DBHeavent',
@@ -30,19 +32,20 @@
                 <incident-form-text-input
                         :name="INCIDENT_FORM_DATA.KEY_DETAILS"
                         label="รายละเอียด"
-                        :margin-top="10"
+                        :margin-top="formType === 0 ? 10 : 25"
                         :multiline="true"
                         :editable="true"/>
 
                 <text class="label"
                       :style="{
                             color: FORM.labelTextColor[province]
-                      }">พิกัดจุดเกิดเหตุ</text>
+                      }">{{formType === 0 ? 'พิกัดจุดเกิดเหตุ' : 'พิกัดร้านอาหาร'}}</text>
                 <view :style="{
                     height: (Dimensions.get('window').width - (2 * DIMENSION.horizontal_margin)) * 0.67,
                     marginTop: 15,
                 }">
                     <map-view
+                            :provider="PROVIDER_GOOGLE"
                             ref="mapView"
                             :style="{
                                 width: '100%',
@@ -192,7 +195,7 @@
                 <view :style="{marginBottom: 25}"/>
 
                 <my-button
-                        text="แจ้งเหตุ"
+                        :text="formType === 0 ? 'แจ้งเหตุ' : 'ส่งข้อมูล'"
                         :bg-color="FORM.buttonColor[province]"
                         :on-click="handleClickSubmitButton"/>
 
@@ -254,7 +257,7 @@
     import ImageResizer from 'react-native-image-resizer';
     import ImgToBase64 from 'react-native-image-base64';
     import Dialog from "react-native-dialog";
-    import MapView from 'react-native-maps';
+    import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
     import Geolocation from 'react-native-geolocation-service';
 
     import imageBack from '../../../assets/images/ic_back.png';
@@ -342,6 +345,7 @@
         },
         data: () => {
             return {
+                PROVIDER_GOOGLE,
                 DEBUG, PROVINCE_NAME_TH, DIMENSION, COLOR_PRIMARY, COLOR_PRIMARY_DARK,
                 DISTRICT_DATA, INCIDENT_FORM_DATA, PROVINCE_DIMENSION, FORM,
                 Dimensions,
@@ -353,6 +357,7 @@
                 THUMB_IMAGE_SIZE,
                 selectedImageIndex: null,
                 showImageDialog: false,
+                formType: 0, // 0 = แจ้งเหตุ, 1 = ร้านอาหารปลอดภัย
             };
         },
         methods: {
@@ -615,6 +620,15 @@
                     [INCIDENT_FORM_DATA.KEY_PROVINCE]: this.PROVINCE_NAME_TH[this.province],
                 },
             });
+
+            const formType = this.navigation.getParam('formType');
+            if (formType === 1) {
+                this.handleIncidentCategoryChange(8);
+            } else if (formType === 0
+                && store.state.incidentFormData[INCIDENT_FORM_DATA.KEY_INCIDENT_CATEGORY] === 8) {
+                this.handleIncidentCategoryChange(0);
+            }
+            this.formType = formType;
 
             this.getCurrentLocation();
         }
