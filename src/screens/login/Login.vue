@@ -234,15 +234,17 @@
                                                 text: 'OK',
                                                 onPress: () => {
                                                     if (store.state.userToken) {
-                                                        store.dispatch('GET_PROFILE', {});
-                                                    }
+                                                        store.dispatch('GET_PROFILE', {
+                                                            callback: (success, message) => { // ไม่ต้องสนใจว่าจะ get profile สำเร็จหรือเปล่า
+                                                                this.navigation.goBack();
 
-                                                    this.navigation.goBack();
-
-                                                    const nextScreen = this.navigation.getParam('forward');
-                                                    if (nextScreen) {
-                                                        const params = this.navigation.getParam('params');
-                                                        this.navigation.navigate(nextScreen, params);
+                                                                const nextScreen = this.navigation.getParam('forward');
+                                                                if (nextScreen) {
+                                                                    const params = this.navigation.getParam('params');
+                                                                    this.navigation.navigate(nextScreen, params);
+                                                                }
+                                                            }
+                                                        });
                                                     }
                                                 }
                                             }
@@ -318,15 +320,17 @@
                                                 text: 'OK',
                                                 onPress: () => {
                                                     if (store.state.userToken) {
-                                                        store.dispatch('GET_PROFILE', {});
-                                                    }
+                                                        store.dispatch('GET_PROFILE', {
+                                                            callback: (success, message) => { // ไม่ต้องสนใจว่าจะ get profile สำเร็จหรือเปล่า
+                                                                this.navigation.goBack();
 
-                                                    this.navigation.goBack();
-
-                                                    const nextScreen = this.navigation.getParam('forward');
-                                                    if (nextScreen) {
-                                                        const params = this.navigation.getParam('params');
-                                                        this.navigation.navigate(nextScreen, params);
+                                                                const nextScreen = this.navigation.getParam('forward');
+                                                                if (nextScreen) {
+                                                                    const params = this.navigation.getParam('params');
+                                                                    this.navigation.navigate(nextScreen, params);
+                                                                }
+                                                            }
+                                                        });
                                                     }
                                                 }
                                             }

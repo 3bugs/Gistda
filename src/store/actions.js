@@ -427,7 +427,7 @@ export async function LOGIN_FACEBOOK({commit, state}, {formData, callback}) {
     }
 }
 
-export async function GET_PROFILE({commit, state}, {}) {
+export async function GET_PROFILE({commit, state}, {callback}) {
     commit('GETTING_PROFILE');
 
     const apiResult = await doGetProfile(state.userToken);
@@ -442,7 +442,10 @@ export async function GET_PROFILE({commit, state}, {}) {
             userPhone: apiResult.data.phone,
             userEmail: apiResult.data.email,
         });
-        //callback(true, null);
+
+        if (callback) {
+            callback(true, null);
+        }
     } else {
         commit('SET_USER', {
             userDisplayName: state.userDisplayName,
@@ -450,7 +453,10 @@ export async function GET_PROFILE({commit, state}, {}) {
             userPhone: state.userPhone,
             userEmail: state.userEmail,
         });
-        //callback(false, apiResult.message);
+
+        if (callback) {
+            callback(false, apiResult.message);
+        }
     }
 }
 

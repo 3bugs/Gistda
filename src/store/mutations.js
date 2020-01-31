@@ -124,6 +124,14 @@ export async function SET_COORDINATES(state, {coordinateList, wmsList, callback}
     });
 
     //todo: ข้อมูล wms
+    const wmsSparseArray = [];
+    wmsList.forEach(wms => {
+        const category = parseInt(wms.CATEGORY);
+        if (!wmsSparseArray[category]) {
+            wmsSparseArray[category] = [];
+        }
+        wmsSparseArray[category].push(wms);
+    });
 
     // แคชไว้ใน local storage
     for (let i = 0; i < coordinateSparseArray.length; i++) {
@@ -142,7 +150,10 @@ export async function SET_COORDINATES(state, {coordinateList, wmsList, callback}
     state.coordinateCategoryList[PROVINCE_NAME_EN[state.province]].forEach(categoryTypeItem => {
         categoryTypeItem.list.forEach(categoryItem => {
             if (coordinateSparseArray[categoryItem.id]) {
+                //coords
                 categoryItem.markerList = coordinateSparseArray[categoryItem.id];
+                //wms
+                categoryItem.wmsList = wmsSparseArray[categoryItem.id];
             }
         });
     });
