@@ -54,7 +54,6 @@
 		743F4DE382EA4378ACE05FE3 /* libRNFetchBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FE52E4B5F4A46239D7F49E5 /* libRNFetchBlob.a */; };
 		764C02A65FAE48B8A198D08A /* libRNImmediatePhoneCall.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 29D438A25A5D42ADBD2C1138 /* libRNImmediatePhoneCall.a */; };
 		7E1036D21B464D3A9B0BD07B /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 81D1F93F865A42B0AFD1C026 /* MaterialIcons.ttf */; };
-		82044CB9516A492DA507931D /* libAirMaps.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2103AEDD54074BF1B4FBCFEF /* libAirMaps.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		85C8936640B344108C42F78B /* libRCTImageResizer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1878AAAA42CD48A197FB6F7F /* libRCTImageResizer.a */; };
 		9B49F9112A3E4E818274AD68 /* libRNReanimated-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D12326E6CB7647DB81D8B888 /* libRNReanimated-tvOS.a */; };
@@ -63,6 +62,7 @@
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
 		AE29836EF994455A985DFF42 /* FontAwesome5_Brands.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AC91E3D347724A2386B25A7A /* FontAwesome5_Brands.ttf */; };
 		BA8D8EEE967947C983BBC096 /* libRNReanimated.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FCCFF96F70D5444BA647742A /* libRNReanimated.a */; };
+		BF326903AA781DD74416C85D /* libPods-gistda.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 94AD7F422121082E2A9A03B5 /* libPods-gistda.a */; };
 		CAD72C80AA6341C4AECA82A3 /* libRNCSlider.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A0FF818876DA44DF8DA5D9BB /* libRNCSlider.a */; };
 		CB2DC72F4CC9458CBF5B9DBA /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6924F9C32EAF44DE9CD7B823 /* Foundation.ttf */; };
 		CCFB2618314B456FBEC63720 /* libBVLinearGradient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C58B2A2637B34E659141AF02 /* libBVLinearGradient.a */; };
@@ -496,6 +496,7 @@
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
 		1878AAAA42CD48A197FB6F7F /* libRCTImageResizer.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTImageResizer.a; sourceTree = "<group>"; };
 		2103AEDD54074BF1B4FBCFEF /* libAirMaps.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libAirMaps.a; sourceTree = "<group>"; };
+		2908465C0BBF2899A89765EF /* Pods-gistda.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-gistda.release.xcconfig"; path = "Target Support Files/Pods-gistda/Pods-gistda.release.xcconfig"; sourceTree = "<group>"; };
 		29D438A25A5D42ADBD2C1138 /* libRNImmediatePhoneCall.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNImmediatePhoneCall.a; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* gistda-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "gistda-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* gistda-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "gistda-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -519,12 +520,14 @@
 		6924F9C32EAF44DE9CD7B823 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		6AA0CA6F2D1448EE9BDEA6B8 /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
 		6BFE95B1C5C7401BBEEDEF6E /* DBHeavent-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "DBHeavent-Bold.ttf"; path = "../assets/fonts/DBHeavent-Bold.ttf"; sourceTree = "<group>"; };
+		6D011EC5FB1A50EFA40D0BA2 /* Pods-gistda.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-gistda.debug.xcconfig"; path = "Target Support Files/Pods-gistda/Pods-gistda.debug.xcconfig"; sourceTree = "<group>"; };
 		6DAFA39E196147E6B14962B3 /* RNImagePicker.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNImagePicker.xcodeproj; path = "../node_modules/react-native-image-picker/ios/RNImagePicker.xcodeproj"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		7EAFC9023D984E1693FF80DC /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
 		81D1F93F865A42B0AFD1C026 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 		8B5650CBFD054ECCA3EB80FE /* libRNGestureHandler.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNGestureHandler.a; sourceTree = "<group>"; };
+		94AD7F422121082E2A9A03B5 /* libPods-gistda.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-gistda.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9880E6C269C747B881D27A9C /* libRNImgToBase64.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNImgToBase64.a; sourceTree = "<group>"; };
 		A0FF818876DA44DF8DA5D9BB /* libRNCSlider.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNCSlider.a; sourceTree = "<group>"; };
 		AA4F677E3AA0448FA4959048 /* RNReanimated.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNReanimated.xcodeproj; path = "../node_modules/react-native-reanimated/ios/RNReanimated.xcodeproj"; sourceTree = "<group>"; };
@@ -585,12 +588,12 @@
 				4863F0E46B1542B6BF1DC1BE /* libRNCViewpager.a in Frameworks */,
 				CCFB2618314B456FBEC63720 /* libBVLinearGradient.a in Frameworks */,
 				CAD72C80AA6341C4AECA82A3 /* libRNCSlider.a in Frameworks */,
-				82044CB9516A492DA507931D /* libAirMaps.a in Frameworks */,
 				764C02A65FAE48B8A198D08A /* libRNImmediatePhoneCall.a in Frameworks */,
 				4E93A0B4E3EC431D88533D37 /* libRNImagePicker.a in Frameworks */,
 				85C8936640B344108C42F78B /* libRCTImageResizer.a in Frameworks */,
 				743F4DE382EA4378ACE05FE3 /* libRNFetchBlob.a in Frameworks */,
 				5951564D02C04A2CA9D07D84 /* libRNImgToBase64.a in Frameworks */,
+				BF326903AA781DD74416C85D /* libPods-gistda.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -683,6 +686,15 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		12F53D34C476EDC65223B35F /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				6D011EC5FB1A50EFA40D0BA2 /* Pods-gistda.debug.xcconfig */,
+				2908465C0BBF2899A89765EF /* Pods-gistda.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		139105B71AF99BAD00B5F7CC /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -746,6 +758,7 @@
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
 				2D16E6891FA4F8E400B85C8A /* libReact.a */,
+				94AD7F422121082E2A9A03B5 /* libPods-gistda.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -949,6 +962,7 @@
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				C7D72FC2AFC64E27BE8A482B /* Resources */,
 				30F9AA4323D17710006DFD15 /* Recovered References */,
+				12F53D34C476EDC65223B35F /* Pods */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -1027,10 +1041,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "gistda" */;
 			buildPhases = (
+				3774C62D9B270CC73C10C234 /* [CP] Check Pods Manifest.lock */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
+				84A742005A828B610D8D34B7 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -1088,11 +1104,11 @@
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
-						DevelopmentTeam = U5MLDYL35L;
+						DevelopmentTeam = DDWPE4NQAQ;
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						DevelopmentTeam = U5MLDYL35L;
+						DevelopmentTeam = DDWPE4NQAQ;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
@@ -1695,6 +1711,46 @@
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
 		};
+		3774C62D9B270CC73C10C234 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-gistda-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		84A742005A828B610D8D34B7 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-gistda/Pods-gistda-resources.sh",
+				"${PODS_ROOT}/GoogleMaps/Maps/Frameworks/GoogleMaps.framework/Resources/GoogleMaps.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleMaps.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-gistda/Pods-gistda-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -1764,7 +1820,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				DEVELOPMENT_TEAM = U5MLDYL35L;
+				DEVELOPMENT_TEAM = DDWPE4NQAQ;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -1810,7 +1866,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/gistda.app/gistda";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SAFE SAFE.app/SAFE SAFE";
 			};
 			name = Debug;
 		};
@@ -1819,7 +1875,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
-				DEVELOPMENT_TEAM = U5MLDYL35L;
+				DEVELOPMENT_TEAM = DDWPE4NQAQ;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
@@ -1861,17 +1917,18 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/gistda.app/gistda";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SAFE SAFE.app/SAFE SAFE";
 			};
 			name = Release;
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6D011EC5FB1A50EFA40D0BA2 /* Pods-gistda.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 7;
 				DEAD_CODE_STRIPPING = NO;
-				DEVELOPMENT_TEAM = U5MLDYL35L;
+				DEVELOPMENT_TEAM = DDWPE4NQAQ;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
@@ -1902,10 +1959,11 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2908465C0BBF2899A89765EF /* Pods-gistda.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CURRENT_PROJECT_VERSION = 4;
-				DEVELOPMENT_TEAM = U5MLDYL35L;
+				CURRENT_PROJECT_VERSION = 7;
+				DEVELOPMENT_TEAM = DDWPE4NQAQ;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",

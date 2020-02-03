@@ -17,7 +17,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>1.1</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
@@ -38,17 +38,17 @@
 		</dict>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>We would like to use your camera to capture photos and insert them in the form</string>
+	<string>แอปต้องการเข้าถึงกล้อง เพื่อให้คุณสามารถถ่ายรูปเหตุการณ์หรือร้านอาหาร และใส่รูปเหล่านั้นเข้ามาในฟอร์มสำหรับเป็นข้อมูลแจ้งเหตุหรือแจ้งร้านอาหารปลอดภัย</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>To always provide you, we need to know your current location.</string>
+	<string>คุณต้องระบุตำแหน่งของเหตุการณ์หรือร้านอาหารที่จะแจ้งข้อมูล แอปจะแสดงตำแหน่งเริ่มต้นในแผนที่เป็นตำแหน่งปัจจุบันของคุณ</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>To always provide you, we need to know your current location.</string>
+	<string>คุณต้องระบุตำแหน่งของเหตุการณ์หรือร้านอาหารที่จะแจ้งข้อมูล แอปจะแสดงตำแหน่งเริ่มต้นในแผนที่เป็นตำแหน่งปัจจุบันของคุณ</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>We need to know your current location</string>
+	<string>คุณต้องระบุตำแหน่งของเหตุการณ์หรือร้านอาหารที่จะแจ้งข้อมูล แอปจะแสดงตำแหน่งเริ่มต้นในแผนที่เป็นตำแหน่งปัจจุบันของคุณ</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>We would like to save photos to your photo gallery</string>
+	<string>เมื่อคุณถ่ายรูปเพื่อแจ้งเหตุหรือแจ้งร้านอาหารปลอดภัย แอปจะบันทึกรูปเก็บไว้ในคลังรูปภาพ</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>We would like access to your photo gallery, so that you can choose photos and insert them in the form</string>
+	<string>แอปต้องการเข้าถึงคลังรูปภาพ เพื่อให้คุณสามารถเลือกรูปที่มีอยู่แล้วมาใส่ในฟอร์มสำหรับเป็นข้อมูลแจ้งเหตุหรือแจ้งร้านอาหารปลอดภัย</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>DBHeavent-Bold.ttf</string>
@@ -78,6 +78,8 @@
 	<array>
 		<string>armv7</string>
 	</array>
+	<key>UIRequiresFullScreen</key>
+	<true/>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
