@@ -70,15 +70,6 @@
                 <view v-if="!isMeasureToolOn && !isMarkerToolOn"
                       v-for="(categoryType, categoryTypeIndex) in mapDataList">
                     <view v-for="(category, categoryIndex) in categoryType.list">
-                        <!--wms-->
-                        <w-m-s-tile
-                                v-for="(wms, wmsIndex) in category.wmsList"
-                                v-if="category.markerVisibility"
-                                :url-template="getWmsLink(wms)"
-                                :_z-index="100"
-                                :opacity="1"
-                                :tile-size="512"
-                        />
                         <!--จุด-->
                         <marker
                                 v-for="(marker, markerIndex) in category.markerList"
@@ -87,7 +78,6 @@
                                     latitude: marker.geometry.coordinates[1],
                                     longitude: marker.geometry.coordinates[0]
                                 }"
-                                :anchor="{x: 0.5, y: 0.77}"
                                 :title="marker.properties.NAME_T"
                                 :description="null"
                                 :image="category.image"
@@ -278,8 +268,7 @@
                         paddingBottom: 2,
                         paddingLeft: 12,
                         paddingRight: 12,
-                    }">{{distance}}
-                </text>
+                    }">{{distance}}</text>
             </view>
 
             <!--screen header-->
@@ -366,172 +355,40 @@
             </view>
         </view>
 
-        <bottom-sheet
+        <!--<bottom-sheet
                 ref="bottomSheet"
-                :snap-points="[screenHeight - statusBarHeight, '45%', '0%']"
-                :initial-snap="2"
-                :enabled-inner-scrolling="true"
-                :enabled-content-tap-interaction="false"
-                :enabled-content-gesture-interaction="false"
-                :on-open-start="handleOpenBottomSheet"
-                :on-close-end="handleCloseBottomSheet">
-            <view render-prop-fn="renderContent"
-                  :style="{
-                        height: '100%',
-                  }">
-                <scroll-view :style="{
-                    flexDirection: 'column',
-                    flex: 1,
+                :snap-points="[screenHeight - statusBarHeight, '47%', '0%']"
+                :initialSnap="2">
+            <view render-prop-fn="renderContent">
+                <view :style="{
+                    height: '100%',
                     paddingLeft: DIMENSION.horizontal_margin,
                     paddingRight: DIMENSION.horizontal_margin,
-                    paddingTop: DIMENSION.horizontal_margin,
-                    paddingBottom: DIMENSION.horizontal_margin,
+                    paddingTop: DIMENSION.horizontal_margin - 5,
+                    paddingBottom: DIMENSION.horizontal_margin - 5,
                     backgroundColor: 'rgba(255, 255, 255, 240)',
-                    borderWidth: 0,
-                    borderColor: 'red',
                 }">
-                    <!--<scroll-view
-                            v-if="activeMarker && activeMarker.properties.IMAGES.length > 0"
-                            :horizontal="true"
-                            :style="{
-                                height: 120,
-                                padding: 10,
-                                borderWidth: 5,
-                                borderColor: 'red',
-                            }">-->
-                    <view
-                            v-if="activeMarker && activeMarker.properties.IMAGES.length > 0"
-                            :style="{
-                                flexDirection: 'row',
-                                flexWrap: 'wrap',
-                                marginBottom: 10,
-                            }">
-                        <card-view
-                                v-for="(item, index) in activeMarker ? activeMarker.properties.IMAGES : []"
-                                :style="{
-                                    width: 150,
-                                    height: 100,
-                                    marginRight: 10,
-                                    marginBottom: 10,
-                                }"
-                                :card-elevation="5"
-                                :card-maxElevation="5"
-                                :corner-radius="10">
-                            <image :source="{uri: item}"
-                                   :style="{
-                                        width: 150,
-                                        height: 100,
-                                   }"
-                                   resize-mode="cover"/>
-                        </card-view>
-                    </view>
-
-                    <!--</scroll-view>-->
-
-                    <!--<flat-list
-                            :data="activeMarker ? activeMarker.properties.IMAGES : []"
-                            :key-extractor="(item, index) => index.toString()">
-                        <view render-prop-fn="renderItem">
-                            <card-view
-                                    :style="{
-                                        width: 200,
-                                        height: 112,
-                                        marginTop: 5,
-                                        marginRight: 15,
-                                    }"
-                                    :card-elevation="10"
-                                    :card-maxElevation="10"
-                                    :corner-radius="10"
-                                    :style="{}">
-                                <image :source="{uri: args.item}"
-                                       :style="{
-                                            flex: 1,
-                                       }"
-                                       resize-mode="cover"/>
-                            </card-view>
-                        </view>
-                    </flat-list>-->
-
-                    <view v-if="activeMarker && activeMarker.properties.DESCRIPTION_T && activeMarker.properties.DESCRIPTION_T.trim().length > 0"
-                          :style="{marginBottom: 15}">
-                        <text :style="{
-                            fontFamily: 'DBHeavent-Med',
-                            color: '#333333',
-                            fontSize: 22,
-                            marginBottom: 5,
-                        }">รายละเอียด
-                        </text>
-                        <text :style="{
-                            fontFamily: 'DBHeavent',
-                            color: '#333333',
-                            fontSize: 22,
-                        }">{{activeMarker ? activeMarker.properties.DESCRIPTION_T : ''}}
-                        </text>
-                    </view>
-
-                    <view v-if="activeMarker && activeMarker.properties.LOCATION_T && activeMarker.properties.LOCATION_T.trim().length > 0"
-                          :style="{marginBottom: 15}">
-                        <text :style="{
-                            fontFamily: 'DBHeavent-Med',
-                            color: '#333333',
-                            fontSize: 22,
-                            marginBottom: 5,
-                        }">ตำแหน่ง
-                        </text>
-                        <text :style="{
-                            fontFamily: 'DBHeavent',
-                            color: '#333333',
-                            fontSize: 22,
-                        }">{{activeMarker ? activeMarker.properties.LOCATION_T : ''}}
-                        </text>
-                    </view>
-
-                    <touchable-opacity
-                        :on-press="handleClickNavigate"
-                        :active-opacity="0.4">
-                        <view :style="{
-                            backgroundColor: '#F0F6FF',
-                            paddingTop: 14,
-                            paddingBottom: 14,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            borderRadius: 28,
-                        }">
-                            <text :style="{
-                                fontFamily: 'DBHeavent-Med',
-                                fontSize: 22,
-                                color: '#435582',
-                            }">นำทาง</text>
-                        </view>
-                    </touchable-opacity>
-
-                    <text v-for="item in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, ]"
-                          v-if="true"
-                          :style="{
-                                marginBottom: 10,
-                          }">{{'Hello: ' + item}}</text>
-                </scroll-view>
+                    <text></text>
+                </view>
             </view>
             <view render-prop-fn="renderHeader">
                 <view :style="{
                     flexDirection: 'row',
                     paddingLeft: DIMENSION.horizontal_margin,
                     paddingRight: DIMENSION.horizontal_margin,
-                    paddingTop: DIMENSION.horizontal_margin,
-                    paddingBottom: DIMENSION.horizontal_margin - 10,
+                    paddingTop: DIMENSION.horizontal_margin - 5,
+                    paddingBottom: DIMENSION.horizontal_margin - 5,
                     backgroundColor: 'rgba(255, 255, 255, 240)',
                     borderTopLeftRadius: 15,
                     borderTopRightRadius: 15,
                 }">
                     <view :style="{
                         flex: 1,
-                        marginRight: 5,
                     }">
                         <text :style="{
                             fontFamily: 'DBHeavent-Bold',
                             color: '#333333',
-                            fontSize: 26,
-                            marginBottom: 5,
+                            fontSize: 24,
                         }">
                             {{activeMarker ? activeMarker.properties.NAME_T : ''}}
                         </text>
@@ -548,60 +405,26 @@
                                 flex: 1,
                                 fontFamily: 'DBHeavent',
                                 color: '#aaaaaa',
-                                fontSize: 22,
+                                fontSize: 20,
                                 marginTop: 2,
                             }">
                                 {{activeMarker ? store.state.categoryData[activeMarker.properties.CATEGORY].name : ''}}
                             </text>
                         </view>
                     </view>
-                    <view>
-                        <touchable-opacity
-                                :on-press="handleClickCloseBottomSheet"
-                                :style="{
+                    <touchable-opacity
+                            :on-press="handleClickCloseBottomSheet"
+                            :style="{
                                 marginTop: 0,
                             }">
-                            <image :source="imageClose"
-                                   :style="{
+                        <image :source="imageClose"
+                               :style="{
                                    width: 48,
                                    height: 48,
                                    padding: 0,
                                }"/>
-                        </touchable-opacity>
-                        <touchable-opacity
-                                :on-press="handleClickNavigate"
-                                :style="{
-                                marginTop: 0,
-                            }">
-                            <image :source="imageNavigate"
-                                   :style="{
-                                   width: 48,
-                                   height: 48,
-                                   padding: 0,
-                               }"/>
-                        </touchable-opacity>
-                    </view>
+                    </touchable-opacity>
                 </view>
-
-                <!--<touchable-opacity
-                        :on-press="handleClickNavigate"
-                        :active-opacity="0.4">
-                    <view :style="{
-                            backgroundColor: '#F0F6FF',
-                            paddingTop: 14,
-                            paddingBottom: 14,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            borderRadius: 28,
-                        }">
-                        <text :style="{
-                                fontFamily: 'DBHeavent-Med',
-                                fontSize: 22,
-                                color: '#435582',
-                            }">นำทาง</text>
-                    </view>
-                </touchable-opacity>-->
-
                 <view :style="{
                     marginTop: 0,
                     marginBottom: 0,
@@ -611,19 +434,16 @@
                     borderBottomColor: '#cccccc'
                 }"/>
             </view>
-        </bottom-sheet>
+        </bottom-sheet>-->
     </drawer>
 </template>
 
 <script>
     import store from '../../store';
-    import {
-        DEBUG, MAP_HEADER, BOTTOM_NAV, PROVINCE_NAME_EN, DIMENSION,
-        PROVINCE_DIMENSION, COLOR_PRIMARY, COLOR_PRIMARY_DARK
-    } from '../../constants';
+    import {DEBUG, MAP_HEADER, BOTTOM_NAV, PROVINCE_NAME_EN, DIMENSION, PROVINCE_DIMENSION, COLOR_PRIMARY, COLOR_PRIMARY_DARK} from '../../constants';
     import {requestAndroidPermissions} from '../../constants/utils'
 
-    import {Dimensions, StyleSheet, Alert, PermissionsAndroid, Platform, Keyboard, BackHandler, Linking} from 'react-native';
+    import {Dimensions, StyleSheet, Alert, PermissionsAndroid, Platform, Keyboard} from 'react-native';
     import {Fragment} from 'react';
     import MapView from 'react-native-maps';
     import {PROVIDER_GOOGLE, Marker, Polyline, Polygon, WMSTile} from 'react-native-maps';
@@ -632,17 +452,15 @@
     import Drawer from 'react-native-drawer';
     import FilterPanel from './FilterPanel';
     import Slider from '@react-native-community/slider';
-    import BottomSheet from 'reanimated-bottom-sheet';
-    import {SliderBox} from 'react-native-image-slider-box';
+    import BottomSheet from 'reanimated-bottom-sheet'
     import {Menu, MenuProvider, MenuOptions, MenuOption, MenuTrigger, renderers} from 'react-native-popup-menu';
     import {getDistance, getAreaOfPolygon} from 'geolib';
     import Geolocation from 'react-native-geolocation-service';
-    import {getStatusBarHeight} from 'react-native-status-bar-height';
+    import { getStatusBarHeight } from 'react-native-status-bar-height';
 
     import imageMenu from '../../../assets/images/screen_map/ic_menu.png';
     import imageBack from '../../../assets/images/ic_back.png';
     import imageClose from '../../../assets/images/ic_close2.png';
-    import imageNavigate from '../../../assets/images/screen_map/ic_navigate_2.png';
 
     import imageLightOff from '../../../assets/images/sidebar/ic_light_off.png';
     import imageLightOn from '../../../assets/images/sidebar/ic_light_on.png';
@@ -665,7 +483,7 @@
     export default {
         components: {
             Fragment, MapView, Marker, Polyline, Polygon, WMSTile, LinearGradient,
-            CardView, Drawer, FilterPanel, Slider, BottomSheet, SliderBox,
+            CardView, Drawer, FilterPanel, Slider, BottomSheet
         },
         props: {
             navigation: { // bottom nav
@@ -726,7 +544,7 @@
                 store, PROVIDER_GOOGLE,
                 Dimensions, StyleSheet, DEBUG, MAP_HEADER, BOTTOM_NAV, DIMENSION,
                 PROVINCE_DIMENSION, COLOR_PRIMARY, COLOR_PRIMARY_DARK,
-                imageMenu, imageBack, imageClose, imageNavigate, imageLightOff, imageLightOn,
+                imageMenu, imageBack, imageClose, imageLightOff, imageLightOn,
                 imageMapToolCurrentLocation, imageMapToolMarkerOff, imageMapToolMarkerOn,
                 bgMeasureTools, imageMapToolMeasureOn, imageMapToolMeasureOff,
                 imageMapToolLineOn, imageMapToolLineOff,
@@ -743,8 +561,6 @@
                 isDragging: false,
                 draggedMarker: null,
                 searchTerm: '',
-                backHandler: null,
-                isBottomSheetOpen: false,
 
                 pointList: [
                     /*{longitude: 99.90637622773647, latitude: 13.739281519255695},
@@ -960,34 +776,6 @@
                     });
                 }
             },
-            handleOpenBottomSheet: function () {
-                this.isBottomSheetOpen = true;
-            },
-            handleCloseBottomSheet: function () {
-                this.isBottomSheetOpen = false;
-            },
-            handleClickNavigate: function () {
-                if (this.activeMarker) {
-                    const lat = this.activeMarker.geometry.coordinates[1];
-                    const lng = this.activeMarker.geometry.coordinates[0];
-
-                    const scheme = Platform.select({
-                        ios: 'maps:0,0?q=',
-                        android: 'geo:0,0?q='
-                    });
-                    const latLng = `${lat},${lng}`;
-                    const label = this.activeMarker.properties.NAME_T;
-                    const url = Platform.select({
-                        ios: `${scheme}${label}@${latLng}`,
-                        android: `${scheme}${latLng}(${label})`
-                    });
-
-                    Linking.openURL(url);
-                }
-            },
-            getWmsLink: function (wms) {
-                return `${wms.url.replace('GetCapabilities', 'GetMap')}&layers=${wms.layers[0]}&bbox={minX},{minY},{maxX},{maxY}&width={width}&height={height}&srs=EPSG:900913&format=image/png&transparent=true`;
-            },
             /*handleClickClearSearch: function () {
                 this.showSearchResult = false;
                 this.searchTerm = '';
@@ -1000,20 +788,6 @@
             /*store.dispatch('FETCH_MAP_DATA', {
                 province: 0
             });*/
-
-            const self = this;
-            this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
-                if (this.isBottomSheetOpen) {
-                    this.$refs['bottomSheet'].snapTo(2);
-                    return true;
-                }
-                return false;
-            });
-        },
-        beforeDestroy: function () {
-            if (this.backHandler) {
-                this.backHandler.remove();
-            }
         },
     }
 </script>
@@ -1171,4 +945,4 @@
         height: 38;
         margin-right: 6;
     }
-</style>
+</styl

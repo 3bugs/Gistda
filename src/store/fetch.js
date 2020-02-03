@@ -1,10 +1,47 @@
 import ApiResult from '../model/ApiResult';
+import {OPEN_WEATHER} from '../constants/index';
 
-const baseURL = 'https://fenrir.studio/d/gistda_dev';
+export const baseURL = 'https://fenrir.studio/d/gistda_dev';
+//const baseURL = 'https://safesafe.ngis.go.th/gapi';
 export const provinceCode = [
     73, // นครปฐม
     35, // ยโสธร
 ];
+
+export async function doGetWeather(province) {
+    const url = `https://api.openweathermap.org/data/2.5/weather?id=${OPEN_WEATHER.cityId[province]}&APPID=${OPEN_WEATHER.apiKey}&lang=th&units=metric`;
+
+    try {
+        const response = await fetch(url);
+        const responseJson = await response.json();
+
+        console.log('Response JSON:');
+        console.log(responseJson);
+        console.log(JSON.stringify(responseJson));
+
+        const provinceName = responseJson.name;
+        const temperature = responseJson.main.temp.toFixed(1);
+
+        let description = '';
+        if (responseJson.weather.length > 0) {
+            description = responseJson.weather[0].description;
+        }
+
+        console.log(`Temperature of ${provinceName}: ${temperature}`);
+
+        return new ApiResult(
+            true,
+            '',
+            {temperature, description}
+        );
+    } catch (error) {
+        return new ApiResult(
+            false,
+            `เกิดข้อผิดพลาดในการเชื่อมต่อเครือข่าย - ${error}`,
+            null
+        );
+    }
+}
 
 async function _fetch(method, path, bodyData, headerData) {
     const url = `${baseURL}/${path}`;
@@ -117,18 +154,23 @@ export async function fetchCoordinateCategories(province) {
     return await _fetch('GET', `coords/categories`, null);
 }
 
-export async function fetchCoordinates(province, idList) {
+export async function fetchCoordinates(province, idList, searchTerm) {
     let paramIdList = '';
+    let search = '';
 
     if (idList && idList.length > 0) {
-        paramIdList = 'cat_id=';
+        paramIdList = '&cat_id=';
         idList.forEach(id => {
             paramIdList += `${id},`;
         });
         paramIdList = paramIdList.slice(0, -1);
     }
 
-    const url = `${baseURL}/coords/?province_code=${provinceCode[province]}&${paramIdList}`;
+    if (searchTerm && searchTerm.trim().length > 0) {
+        search = `&search=${searchTerm}`;
+    }
+
+    const url = `${baseURL}/coords/?province_code=${provinceCode[province]}${paramIdList}${search}`;
     console.log(`Fetching ${url}`);
 
     try {
@@ -136,8 +178,7 @@ export async function fetchCoordinates(province, idList) {
             method: 'GET',
         });
         const responseJson = await response.json();
-
-        const data = responseJson.features;
+        const data = responseJson;
 
         return new ApiResult(
             true,
@@ -163,6 +204,10 @@ export async function doLogin(email, password) {
 
 export async function doRegister(formData) {
     return await _fetch('POST', 'users/register', formData);
+}
+
+export async function doLoginFacebook(formData) {
+    return await _fetch('POST', 'users/login/facebook', formData);
 }
 
 export async function doGetProfile(userToken) {

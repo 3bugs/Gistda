@@ -19,6 +19,7 @@
 
 <script>
     import store from '../../store';
+    import {baseURL} from '../../store/fetch'
     import {Dimensions} from 'react-native';
     import bg from '../../../assets/images/screen_splash/bg_splash.jpg';
     import logo from '../../../assets/images/screen_splash/ic_logo.png';
@@ -44,6 +45,10 @@
             };
         },
         created: function () {
+            if (baseURL.indexOf('dev') !== -1) {
+                alert(baseURL);
+            }
+
             // อ่าน user จาก local storage มาเก็บลง vuex store
             store.dispatch('GET_LOGGED_USER', {
                 callback: (success, message) => {

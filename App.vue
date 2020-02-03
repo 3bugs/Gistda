@@ -1,7 +1,9 @@
 <!--Coded by Promlert Lovichit (promlert@gmail.com)-->
 
 <template>
-    <app-container></app-container>
+    <menu-provider>
+        <app-container></app-container>
+    </menu-provider>
 </template>
 
 <script>
@@ -12,11 +14,13 @@
         createBottomTabNavigator,
         createMaterialTopTabNavigator,
     } from "vue-native-router";
+    import {MenuProvider} from 'react-native-popup-menu';
 
     import Splash from './src/screens/splash/Splash';
     import Province from './src/screens/province/Province';
     import Map from './src/screens/map/Map';
     import News from './src/screens/news/News';
+    import SearchResult from './src/screens/search-result/SearchResult';
     import NewsDetails from './src/screens/news/NewsDetails';
     import Login from './src/screens/login/Login';
     import Register from './src/screens/login/Register';
@@ -60,6 +64,9 @@
             },
             News: {
                 screen: News,
+            },
+            SearchResult: {
+                screen: SearchResult,
             },
             News2: {
                 screen: newsNavigator,
@@ -163,7 +170,7 @@
     const AppContainer = createAppContainer(switchNavigator);
 
     export default {
-        components: {AppContainer, TabBar},
+        components: {AppContainer, TabBar, MenuProvider},
         data: () => {
             return {};
         },
