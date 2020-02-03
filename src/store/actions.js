@@ -334,8 +334,8 @@ export function SET_INCIDENT_FORM_DATA({commit, state}, {formData}) {
     });
 }
 
-export function CLEAR_INCIDENT_FORM_DATA_AND_IMAGES({commit, state}, {}) {
-    commit('CLEAR_INCIDENT_FORM_DATA_AND_IMAGES', {});
+export function CLEAR_INCIDENT_FORM_DATA_AND_IMAGES({commit, state}, {formType}) {
+    commit('CLEAR_INCIDENT_FORM_DATA_AND_IMAGES', {formType});
 }
 
 export function ADD_INCIDENT_IMAGE({commit, state}, {imageData}) {

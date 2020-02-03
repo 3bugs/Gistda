@@ -390,43 +390,37 @@
                     borderWidth: 0,
                     borderColor: 'red',
                 }">
-                    <!--<scroll-view
+                    <scroll-view
                             v-if="activeMarker && activeMarker.properties.IMAGES.length > 0"
                             :horizontal="true"
                             :style="{
-                                height: 120,
-                                padding: 10,
-                                borderWidth: 5,
+                                padding: 0,
+                                marginBottom: 15,
+                                borderWidth: 0,
                                 borderColor: 'red',
-                            }">-->
-                    <view
-                            v-if="activeMarker && activeMarker.properties.IMAGES.length > 0"
-                            :style="{
-                                flexDirection: 'row',
-                                flexWrap: 'wrap',
-                                marginBottom: 10,
                             }">
-                        <card-view
+                        <touchable-opacity
                                 v-for="(item, index) in activeMarker ? activeMarker.properties.IMAGES : []"
-                                :style="{
-                                    width: 150,
-                                    height: 100,
-                                    marginRight: 10,
-                                    marginBottom: 10,
-                                }"
-                                :card-elevation="5"
-                                :card-maxElevation="5"
-                                :corner-radius="10">
-                            <image :source="{uri: item}"
-                                   :style="{
+                                :on-press="null"
+                                :active-opacity="0.6">
+                            <card-view
+                                    :style="{
                                         width: 150,
                                         height: 100,
-                                   }"
-                                   resize-mode="cover"/>
-                        </card-view>
-                    </view>
-
-                    <!--</scroll-view>-->
+                                        marginRight: 10,
+                                    }"
+                                    :card-elevation="5"
+                                    :card-maxElevation="5"
+                                    :corner-radius="10">
+                                <image :source="{uri: item}"
+                                       :style="{
+                                            width: 150,
+                                            height: 100,
+                                       }"
+                                       resize-mode="cover"/>
+                            </card-view>
+                        </touchable-opacity>
+                    </scroll-view>
 
                     <!--<flat-list
                             :data="activeMarker ? activeMarker.properties.IMAGES : []"
@@ -487,8 +481,8 @@
                     </view>
 
                     <touchable-opacity
-                        :on-press="handleClickNavigate"
-                        :active-opacity="0.4">
+                            :on-press="handleClickNavigate"
+                            :active-opacity="0.4">
                         <view :style="{
                             backgroundColor: '#F0F6FF',
                             paddingTop: 14,
@@ -501,15 +495,23 @@
                                 fontFamily: 'DBHeavent-Med',
                                 fontSize: 22,
                                 color: '#435582',
-                            }">นำทาง</text>
+                            }">
+                                {{'นำทาง'}}
+                            </text>
                         </view>
                     </touchable-opacity>
 
-                    <text v-for="item in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, ]"
-                          v-if="true"
+                    <text v-for="item in new Array(20)"
+                          v-if="false"
                           :style="{
                                 marginBottom: 10,
-                          }">{{'Hello: ' + item}}</text>
+                          }">{{'Hello: ' + item}}
+                    </text>
+
+                    <view :style="{
+                        height: BOTTOM_NAV.height,
+                        marginBottom: 30,
+                    }"/>
                 </scroll-view>
             </view>
             <view render-prop-fn="renderHeader">
@@ -517,7 +519,7 @@
                     flexDirection: 'row',
                     paddingLeft: DIMENSION.horizontal_margin,
                     paddingRight: DIMENSION.horizontal_margin,
-                    paddingTop: DIMENSION.horizontal_margin,
+                    paddingTop: 10,
                     paddingBottom: DIMENSION.horizontal_margin - 10,
                     backgroundColor: 'rgba(255, 255, 255, 240)',
                     borderTopLeftRadius: 15,
@@ -527,6 +529,18 @@
                         flex: 1,
                         marginRight: 5,
                     }">
+                        <touchable-opacity>
+                            <view :style="{
+                                alignSelf: 'center',
+                                backgroundColor: '#e0e0e0',
+                                width: 50,
+                                height: 4,
+                                marginLeft: 53,
+                                marginBottom: 8,
+                                borderRadius: 2,
+                            }"/>
+                        </touchable-opacity>
+
                         <text :style="{
                             fontFamily: 'DBHeavent-Bold',
                             color: '#333333',

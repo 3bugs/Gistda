@@ -29,6 +29,7 @@ const store = new Vuex.Store({
         userDisplayName: null,
         userPhone: null,
         userEmail: null,
+        userPicture: null,
         userToken: null,
 
         categoryData: [], // sparse array เก็บ link รูปภาพตาม category id ไว้ใช้ตอนปักหมูด search result

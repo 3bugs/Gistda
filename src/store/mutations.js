@@ -278,8 +278,10 @@ export function SET_INCIDENT_FORM_DATA(state, {formData}) {
     logObjectProperties('incidentFormData', state.incidentFormData);
 }
 
-export function CLEAR_INCIDENT_FORM_DATA_AND_IMAGES(state, {}) {
-    state.incidentFormData[INCIDENT_FORM_DATA.KEY_INCIDENT_CATEGORY] = 0;
+export function CLEAR_INCIDENT_FORM_DATA_AND_IMAGES(state, {formType}) {
+    if (formType === 0) {
+        state.incidentFormData[INCIDENT_FORM_DATA.KEY_INCIDENT_CATEGORY] = 0;
+    }
     state.incidentFormData[INCIDENT_FORM_DATA.KEY_DETAILS] = '';
     //state.incidentFormData[INCIDENT_FORM_DATA.KEY_PROVINCE] = '';
     //state.incidentFormData[INCIDENT_FORM_DATA.KEY_DISTRICT] = -1;

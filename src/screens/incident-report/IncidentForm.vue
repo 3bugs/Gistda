@@ -183,11 +183,11 @@
                             v-for="(data, index) in incidentImages"
                             :on-press="() => handleClickDeleteImage(index)">
                         <image :style="{
-                                        width: THUMB_IMAGE_SIZE,
-                                        height: THUMB_IMAGE_SIZE,
-                                        marginTop: 8, marginRight: 8,
-                                        borderRadius: 10,
-                                   }"
+                                    width: THUMB_IMAGE_SIZE,
+                                    height: THUMB_IMAGE_SIZE,
+                                    marginTop: 8, marginRight: 8,
+                                    borderRadius: 10,
+                               }"
                                :source="{ uri: `${data}`}"/>
                     </touchable-opacity>
                 </view>
@@ -372,7 +372,9 @@
                         {
                             text: 'ล้างข้อมูล',
                             onPress: () => {
-                                store.dispatch('CLEAR_INCIDENT_FORM_DATA_AND_IMAGES', {});
+                                store.dispatch('CLEAR_INCIDENT_FORM_DATA_AND_IMAGES', {
+                                    formType: this.formType,
+                                });
                             }
                         },
                         {
@@ -384,8 +386,6 @@
                     ],
                     {cancelable: true}
                 );
-
-
             },
             handleIncidentCategoryChange: function (value, index) {
                 store.dispatch('SET_INCIDENT_FORM_DATA', {
