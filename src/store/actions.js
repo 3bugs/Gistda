@@ -18,6 +18,7 @@ import {
     doChangePassword,
     doGetWeather,
     doGetReport,
+    doGetReportDownloadLink,
 } from './fetch';
 
 import {INCIDENT_FORM_DATA, PROVINCE_NAME_EN} from '../constants/index';
@@ -571,6 +572,23 @@ export async function GET_REPORT({commit, state}, {callback}) {
         callback(true, null);
     } else {
         commit('SET_REPORT', {
+            data: null
+        });
+        callback(false, apiResult.message);
+    }
+}
+
+export async function GET_REPORT_DOWNLOAD_LINK({commit, state}, {callback}) {
+    commit('GETTING_REPORT_DOWNLOAD_LINK');
+
+    const apiResult = await doGetReportDownloadLink(state.province);
+    if (apiResult.success) {
+        commit('SET_REPORT_DOWNLOAD_LINK', {
+            data: apiResult.data
+        });
+        callback(true, null);
+    } else {
+        commit('SET_REPORT_DOWNLOAD_LINK', {
             data: null
         });
         callback(false, apiResult.message);

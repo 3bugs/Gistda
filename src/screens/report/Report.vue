@@ -34,6 +34,7 @@
     import ReportPage from "./ReportPage";
 
     import React from 'react';
+    import {Dimensions, StyleSheet, Alert} from 'react-native';
 
     import imageMap from '../../../assets/images/screen_map/ic_map.png';
 
@@ -80,6 +81,9 @@
         created: function () {
             store.dispatch('GET_REPORT', {
                 callback: (success, message) => {
+                    if (!success) {
+                        Alert.alert("ผิดพลาด", message);
+                    }
                 }
             });
         },

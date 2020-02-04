@@ -78,6 +78,10 @@ const store = new Vuex.Store({
             [PROVINCE_NAME_EN[0]]: null,
             [PROVINCE_NAME_EN[1]]: null,
         },
+        reportDownloadUrl: {
+            [PROVINCE_NAME_EN[0]]: null,
+            [PROVINCE_NAME_EN[1]]: null,
+        },
 
         /*loadingMapDataList: false,
         mapDataList: [],*/

@@ -141,7 +141,7 @@
                 <marker
                         v-if="point"
                         :coordinate="point"
-                        :draggable="true"/>
+                        :draggable="false"/>
 
             </map-view>
 
@@ -333,6 +333,8 @@
                             }">
                         <text-input class="search-input"
                                     v-model="searchTerm"
+                                    return-key-type="search"
+                                    :on-submit-editing="handleClickSearch"
                                     :placeholder="mapCurrentRegion ? `${mapCurrentRegion.latitude.toFixed(6)}, ${mapCurrentRegion.longitude.toFixed(6)}` : ''"
                                     placeholder-text-color="#aaa"/>
 
@@ -544,14 +546,15 @@
                         <text :style="{
                             fontFamily: 'DBHeavent-Bold',
                             color: '#333333',
-                            fontSize: 26,
+                            fontSize: point ? 24 : 26,
                             marginBottom: 5,
                         }">
-                            {{activeMarker ? activeMarker.properties.NAME_T : ''}}
+                            {{(point && pointAddress) ? pointAddress : (activeMarker ? activeMarker.properties.NAME_T : '')}}
                         </text>
-                        <view :style="{
-                            flexDirection: 'row',
-                        }">
+                        <view v-if="!point"
+                              :style="{
+                                    flexDirection: 'row',
+                              }">
                             <image :source="{uri: (activeMarker ? store.state.categoryData[activeMarker.properties.CATEGORY].image : null)}"
                                    :style="{
                                         width: 35,
@@ -636,6 +639,7 @@
         PROVINCE_DIMENSION, COLOR_PRIMARY, COLOR_PRIMARY_DARK
     } from '../../constants';
     import {requestAndroidPermissions} from '../../constants/utils'
+    import {doGetAddressFromCoord} from '../../store/fetch';
 
     import {Dimensions, StyleSheet, Alert, PermissionsAndroid, Platform, Keyboard, BackHandler, Linking} from 'react-native';
     import {Fragment} from 'react';
@@ -765,6 +769,7 @@
                     {longitude: 99.93837732821703, latitude: 13.77968939358877}*/
                 ],
                 point: null,
+                pointAddress: '',
             };
         },
         methods: {
@@ -825,7 +830,7 @@
             handleMapReady: function () {
                 //alert('Map ready!');
             },
-            handleClickMap: function (coord) {
+            handleClickMap: async function (coord) {
                 //console.log(coord);
 
                 if (this.isMeasureToolOn) {
@@ -835,7 +840,23 @@
 
                     console.log(this.pointList);
                 } else if (this.isMarkerToolOn) {
+                    const latitudeDelta = this.mapCurrentRegion ? this.mapCurrentRegion.latitudeDelta : 0.005;
+                    const longitudeDelta = this.mapCurrentRegion ? this.mapCurrentRegion.longitudeDelta : 0.005;
+                    this.$refs['mapView'].animateToRegion({
+                        latitude: coord.latitude,
+                        longitude: coord.longitude,
+                        latitudeDelta,
+                        longitudeDelta,
+                    });
+                    const apiResult = await doGetAddressFromCoord(coord.latitude, coord.longitude);
+
+                    this.$refs['bottomSheet'].snapTo(1);
                     this.point = coord;
+                    if (apiResult.success) {
+                        this.pointAddress = apiResult.data.address;
+                    } else {
+                        this.pointAddress = `${coord.latitude}, ${coord.longitude}`;
+                    }
                 }
             },
             handleRegionChange: function (region) {
@@ -870,12 +891,15 @@
                 this.isMeasureToolOn = !this.isMeasureToolOn;
                 if (this.isMeasureToolOn) {
                     this.isMarkerToolOn = false;
+                    this.point = null;
                 }
             },
             handleClickMarkerTool: function () {
                 this.isMarkerToolOn = !this.isMarkerToolOn;
                 if (this.isMarkerToolOn) {
                     this.isMeasureToolOn = false;
+                } else {
+                    this.point = null;
                 }
             },
             handleClickCurrentLocationTool: function () {
@@ -981,22 +1005,33 @@
                 this.isBottomSheetOpen = false;
             },
             handleClickNavigate: function () {
-                if (this.activeMarker) {
-                    const lat = this.activeMarker.geometry.coordinates[1];
-                    const lng = this.activeMarker.geometry.coordinates[0];
+                let lat = null, lng = null;
+                let label = null;
 
+                if (this.point) {
+                    lat = this.point.latitude;
+                    lng = this.point.longitude;
+                    label = this.pointAddress;
+                } else if (this.activeMarker) {
+                    lat = this.activeMarker.geometry.coordinates[1];
+                    lng = this.activeMarker.geometry.coordinates[0];
+                    label = this.activeMarker.properties.NAME_T;
+                }
+
+                if (lat !== null && lng != null) {
                     const scheme = Platform.select({
                         ios: 'maps:0,0?q=',
                         android: 'geo:0,0?q='
                     });
                     const latLng = `${lat},${lng}`;
-                    const label = this.activeMarker.properties.NAME_T;
                     const url = Platform.select({
                         ios: `${scheme}${label}@${latLng}`,
                         android: `${scheme}${latLng}(${label})`
                     });
 
                     Linking.openURL(url);
+                } else {
+                    Alert.alert('ผิดพลาด', 'ไม่สามารถนำทางได้')
                 }
             },
             getWmsLink: function (wms) {

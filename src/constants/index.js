@@ -32,6 +32,10 @@ export const OPEN_WEATHER = {
     ]
 };
 
+export const GOOGLE_MAPS = {
+    geocodingApiKey: 'AIzaSyCrBhuovlx9Wk2v7mQNvCg4JIL_affg0ks',
+};
+
 export const INCIDENT_FORM_DATA = {
     KEY_INCIDENT_CATEGORY: 'incidentCategory',
     KEY_DETAILS: 'details',

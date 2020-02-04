@@ -73,6 +73,10 @@
                         y-axis-label=""
                         :chart-config="barChartConfig"
                         :verticalLabel-rotation="reportData.datasets[0].data.length > 4 ? 90 : 0"
+                        :from-zero="true"
+                        :show-bar-tops="true"
+                        _y-axis-suffix=" เหตุ"
+                        absolute
                         :style="{
                             marginTop: 25,
                         }"/>
@@ -143,10 +147,12 @@
     import store from '../../store';
     import {DEBUG, FORM, DIMENSION, PROVINCE_NAME_EN, BOTTOM_NAV} from '../../constants';
     import MyButton from '../../components/MyButton';
+    import {requestAndroidPermissions} from '../../constants/utils';
 
-    import {Dimensions, StyleSheet} from 'react-native';
+    import {Dimensions, StyleSheet, Alert, PermissionsAndroid, Platform} from 'react-native';
     //import {PieChart} from 'react-native-svg-charts'
     import {PieChart, BarChart} from "react-native-chart-kit";
+    import RNFetchBlob from 'rn-fetch-blob';
 
     import imageDownload from '../../../assets/images/screen_report/ic_download.png';
 
@@ -188,7 +194,7 @@
     ];
 
     export default {
-        components: { MyButton, PieChart, BarChart},
+        components: {MyButton, PieChart, BarChart},
         props: {
             graphType: {
                 type: Number
@@ -227,7 +233,6 @@
                             return totalAlarmsByCategories;
 
                         case 1: //กราฟแท่ง
-                            //todo: ***********
                             const data = {
                                 labels: [],
                                 datasets: [
@@ -293,12 +298,63 @@
         },
         methods: {
             onClickDownload: function () {
-                //todo: ****************
-                alert('Under construction!');
+                store.dispatch('GET_REPORT_DOWNLOAD_LINK', {
+                    callback: (success, message) => {
+                        if (success) {
+                            //Alert.alert("สำเร็จ", store.state.reportDownloadUrl[PROVINCE_NAME_EN[this.province]]);
+                            if (Platform.OS === 'android') { // android
+                                requestAndroidPermissions({
+                                    permission: PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+                                    title: this.APP_NAME,
+                                    requestMessage: 'แอปจำเป็นต้องบันทึกไฟล์รายงานลงในพื้นที่จัดเก็บ',
+                                    denyMessage: 'แอปไม่ได้รับอนุญาตจากผู้ใช้ จึงไม่สามารถดาวน์โหลดและบันทึกไฟล์รายงานได้',
+                                    callback: (success, message) => {
+                                        if (success) {
+                                            const url = store.state.reportDownloadUrl[PROVINCE_NAME_EN[this.province]];
+                                            this.doDownload(url);
+                                        } else {
+                                            Alert.alert('ผิดพลาด', message);
+                                        }
+                                    }
+                                });
+                            } else { // ios
+                                const url = store.state.reportDownloadUrl[PROVINCE_NAME_EN[this.province]];
+                                this.doDownload(url);
+                            }
+                        } else {
+                            Alert.alert("ผิดพลาด", message);
+                        }
+                    }
+                });
+            },
+            doDownload: function (url) {
+                const date = new Date();
+                let extension = this.getExtension(url);
+                extension = "." + extension[0];
+                const {config, fs} = RNFetchBlob;
+                let pictureDir = fs.dirs.PictureDir;
+                let options = {
+                    fileCache: true,
+                    addAndroidDownloads: {
+                        useDownloadManager: true,
+                        notification: true,
+                        path: pictureDir + "/report_" + Math.floor(date.getTime() + date.getSeconds() / 2) + extension,
+                        description: 'Image'
+                    }
+                };
+                config(options).fetch('GET', url)
+                    .then(res => {
+                        Alert.alert('สำเร็จ', 'ดาวน์โหลดสำเร็จ');
+                    })
+                    .catch(error => {
+                        Alert.alert('ผิดพลาด', error);
+                    });
+            },
+            getExtension: function(filename) {
+                return (/[.]/.exec(filename)) ? /[^.]+$/.exec(filename) : undefined;
             },
         },
         created: function () {
-
         },
     }
 </script>

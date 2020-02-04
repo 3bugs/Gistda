@@ -1,5 +1,6 @@
 import ApiResult from '../model/ApiResult';
-import {OPEN_WEATHER} from '../constants/index';
+import {GOOGLE_MAPS, OPEN_WEATHER} from '../constants/index';
+import {add} from "react-native-reanimated";
 
 export const baseURL = 'https://fenrir.studio/d/gistda_dev';
 //export const baseURL = 'https://safesafe.ngis.go.th/gapi';
@@ -7,6 +8,42 @@ export const provinceCode = [
     73, // นครปฐม
     35, // ยโสธร
 ];
+
+export async function doGetAddressFromCoord(latitude, longitude) {
+    const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${GOOGLE_MAPS.geocodingApiKey}&language=th`;
+
+    try {
+        const response = await fetch(url);
+        const responseJson = await response.json();
+
+        console.log('Response JSON:');
+        console.log(responseJson);
+        console.log(JSON.stringify(responseJson));
+
+        if (responseJson.results.length > 0) {
+            const address = responseJson.results[0].formatted_address;
+            console.log(`Address of ${latitude}, ${longitude}: ${address}`);
+
+            return new ApiResult(
+                true,
+                '',
+                {address}
+            );
+        } else {
+            return new ApiResult(
+                false,
+                `N/A`,
+                null
+            );
+        }
+    } catch (error) {
+        return new ApiResult(
+            false,
+            `เกิดข้อผิดพลาดในการเชื่อมต่อเครือข่าย - ${error}`,
+            null
+        );
+    }
+}
 
 export async function doGetWeather(province) {
     const url = `https://api.openweathermap.org/data/2.5/weather?id=${OPEN_WEATHER.cityId[province]}&APPID=${OPEN_WEATHER.apiKey}&lang=th&units=metric`;
@@ -230,6 +267,10 @@ export async function doChangePassword(userToken, formData) {
 
 export async function doGetReport(province) {
     return await _fetch('GET', `reports/?province_code=${provinceCode[province]}`, null);
+}
+
+export async function doGetReportDownloadLink(province) {
+    return await _fetch('GET', `reports/download/?province_code=${provinceCode[province]}`, null);
 }
 
 async function fakeLogin() {

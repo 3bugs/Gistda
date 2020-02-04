@@ -486,7 +486,7 @@
                             if (success) {
                                 this.doGetCurrentLocation();
                             } else {
-                                alert(message);
+                                Alert.alert('ผิดพลาด', message);
                             }
                         }
                     });
