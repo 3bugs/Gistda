@@ -25,6 +25,7 @@ const store = new Vuex.Store({
         submittingFormData: false,
         loggingIn: false,
         loadingTemperature: false,
+        loadingReport: false,
 
         userDisplayName: null,
         userPhone: null,
@@ -72,6 +73,11 @@ const store = new Vuex.Store({
             [PROVINCE_NAME_EN[1]]: [],
         },
         searching: false,
+
+        reportData: {
+            [PROVINCE_NAME_EN[0]]: null,
+            [PROVINCE_NAME_EN[1]]: null,
+        },
 
         /*loadingMapDataList: false,
         mapDataList: [],*/

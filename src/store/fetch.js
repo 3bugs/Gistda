@@ -2,7 +2,7 @@ import ApiResult from '../model/ApiResult';
 import {OPEN_WEATHER} from '../constants/index';
 
 export const baseURL = 'https://fenrir.studio/d/gistda_dev';
-//const baseURL = 'https://safesafe.ngis.go.th/gapi';
+//export const baseURL = 'https://safesafe.ngis.go.th/gapi';
 export const provinceCode = [
     73, // นครปฐม
     35, // ยโสธร
@@ -226,6 +226,10 @@ export async function doChangePassword(userToken, formData) {
     return await _fetch('POST', 'users/changepassword', formData, {
         Authorization: `Bearer ${userToken}`,
     });
+}
+
+export async function doGetReport(province) {
+    return await _fetch('GET', `reports/?province_code=${provinceCode[province]}`, null);
 }
 
 async function fakeLogin() {

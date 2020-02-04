@@ -181,6 +181,34 @@ export async function SET_SEARCH_RESULT(state, {coordinateList, wmsList, callbac
     callback();
 }
 
+export function GETTING_REPORT(state) {
+    state.loadingReport = true;
+    state.loadingMessage = getLoadingMessage('Loading...');
+}
+
+export async function SET_REPORT(state, {data}) {
+    state.loadingReport = false;
+    state.loadingMessage = null;
+
+    /*const colors = [
+        '#FFABAB', //แดง
+        '#AFCBFF', //ฟ้า
+        '#6EB5FF', //ฟ้าเข้ม
+        '#FBE4FF', //ชมพูอ่อน
+        '#FFF5BA', //เหลือง
+        '#E7FFAC', //เขียวเหลือง
+        '#F6A6FF', //ม่วง
+        '#AFF8DB', //เขียว
+    ];
+    const totalAlarms = data.totalAlarmsByCategories;
+    totalAlarms.map((item, index) => {
+        item.color = colors[index % colors.length];
+        item.legendFontColor = '#999999';
+        item.legendFontSize = 15;
+    });*/
+    state.reportData[PROVINCE_NAME_EN[state.province]] = data;
+}
+
 export function FETCHING_NEWS(state) {
     state.loadingNews[PROVINCE_NAME_EN[state.province]] = true;
 }

@@ -16,7 +16,7 @@
                         paddingRight: paddingHorizontal,
                   }">
             <tab-bar-item
-                    v-for="itemIndex in [0]"
+                    v-for="itemIndex in [0, 1]"
                     :itemIndex="itemIndex"
                     :state="currentRouteIndex === itemIndex"
                     :callback="handleClickItem"/>
@@ -49,7 +49,7 @@
             </Menu>
 
             <tab-bar-item
-                    v-for="itemIndex in [1]"
+                    v-for="itemIndex in [2, 3]"
                     :itemIndex="itemIndex"
                     :state="currentRouteIndex === itemIndex"
                     :callback="handleClickItem"/>
@@ -192,11 +192,11 @@
                         routeName = 'News';
                         break;
                     case 2:
-                        routeName = 'News2';
+                        //routeName = 'Report';
                         //routeName = 'CctvNavigator';
                         break;
                     case 3:
-                        //routeName = 'ReportNavigator';
+                        routeName = 'Report';
                         break;
                 }
                 if (routeName) {

@@ -8,26 +8,26 @@
                 }">
             <card-view :card-elevation="4"
                        :card-maxElevation="4"
-                       :corner-radius="28"
+                       :corner-radius="cornerRadius"
                        :style="{
                             flexDirection: 'row',
                             backgroundColor: bgColor,
-                            paddingTop: 14,
-                            paddingBottom: 14,
+                            paddingTop: padding,
+                            paddingBottom: padding,
                             justifyContent: 'center',
                             alignItems: 'center',
                         }">
                 <image v-if="icon"
                        :source="icon"
                        :style="{
-                            width: 26,
-                            height: 26,
+                            width: iconSize,
+                            height: iconSize,
                             marginRight: 10,
                        }"
                        resize-mode="contain"/>
                 <text :style="{
                     fontFamily: 'DBHeavent-Med',
-                    fontSize: 22,
+                    fontSize: fontSize,
                     color: 'white',
                 }">{{text}}</text>
             </card-view>
@@ -48,11 +48,27 @@
             text: {
                 type: String
             },
+            fontSize: {
+                type: Number,
+                default: 22
+            },
             icon: {
                 type: Number
             },
+            iconSize: {
+                type: Number,
+                default: 26
+            },
             bgColor: {
                 type: String
+            },
+            padding: {
+                type: Number,
+                default: 14
+            },
+            cornerRadius: {
+                type: Number,
+                default: 28
             },
             onClick: {
                 type: Function

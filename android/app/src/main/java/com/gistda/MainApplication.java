@@ -3,6 +3,7 @@ package com.gistda;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.horcrux.svg.SvgPackage;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.agontuk.RNFusedLocation.RNFusedLocationPackage;
 import fr.snapp.imagebase64.RNImgToBase64Package;
@@ -38,6 +39,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new SvgPackage(),
             new FBSDKPackage(),
             new RNFusedLocationPackage(),
             new RNImgToBase64Package(),
