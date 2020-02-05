@@ -2,8 +2,8 @@ import ApiResult from '../model/ApiResult';
 import {GOOGLE_MAPS, OPEN_WEATHER} from '../constants/index';
 import {add} from "react-native-reanimated";
 
-export const baseURL = 'https://fenrir.studio/d/gistda_dev';
-//export const baseURL = 'https://safesafe.ngis.go.th/gapi';
+//export const baseURL = 'https://fenrir.studio/d/gistda_dev';
+export const baseURL = 'https://safesafe.ngis.go.th/gapi';
 export const provinceCode = [
     73, // นครปฐม
     35, // ยโสธร
@@ -155,6 +155,8 @@ export async function submitFormData(userToken, formData) {
             body: JSON.stringify(formData)
         });
 
+        console.log('Response raw:');
+        console.log(response);
         const responseJson = await response.json();
 
         console.log('Response JSON:');

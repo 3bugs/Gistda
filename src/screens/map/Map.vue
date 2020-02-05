@@ -261,25 +261,16 @@
             </view>
 
             <!--แสดงระยะทาง, พื้นที่ที่วัดได้-->
-            <view v-if="distance !== 0"
+            <view v-if="measureValue >= 0"
                   :style="{
                         position: 'absolute',
                         marginTop: MAP_HEADER.height + 40,
                         width: '100%',
                         alignItems: 'center',
                   }">
-                <text :style="{
-                        backgroundColor: '#343434',
-                        borderRadius: 14,
-                        fontFamily: 'DBHeavent-Med',
-                        fontSize: 20,
-                        color: 'white',
-                        paddingTop: 2,
-                        paddingBottom: 2,
-                        paddingLeft: 12,
-                        paddingRight: 12,
-                    }">{{distance}}
-                </text>
+                <measure-label
+                        :measure-value="measureValue"
+                        :measure-type="isLineToolOn ? 0 : 1"/>
             </view>
 
             <!--screen header-->
@@ -640,8 +631,9 @@
     } from '../../constants';
     import {requestAndroidPermissions} from '../../constants/utils'
     import {doGetAddressFromCoord} from '../../store/fetch';
+    import MeasureLabel from './MeasureLabel';
 
-    import {Dimensions, StyleSheet, Alert, PermissionsAndroid, Platform, Keyboard, BackHandler, Linking} from 'react-native';
+    import {Dimensions, StyleSheet, Alert, PermissionsAndroid, Platform, Keyboard, BackHandler, Linking, TouchableOpacity} from 'react-native';
     import {Fragment} from 'react';
     import MapView from 'react-native-maps';
     import {PROVIDER_GOOGLE, Marker, Polyline, Polygon, WMSTile} from 'react-native-maps';
@@ -652,7 +644,6 @@
     import Slider from '@react-native-community/slider';
     import BottomSheet from 'reanimated-bottom-sheet';
     import {SliderBox} from 'react-native-image-slider-box';
-    import {Menu, MenuProvider, MenuOptions, MenuOption, MenuTrigger, renderers} from 'react-native-popup-menu';
     import {getDistance, getAreaOfPolygon} from 'geolib';
     import Geolocation from 'react-native-geolocation-service';
     import {getStatusBarHeight} from 'react-native-status-bar-height';
@@ -684,6 +675,7 @@
         components: {
             Fragment, MapView, Marker, Polyline, Polygon, WMSTile, LinearGradient,
             CardView, Drawer, FilterPanel, Slider, BottomSheet, SliderBox,
+            MeasureLabel,
         },
         props: {
             navigation: { // bottom nav
@@ -703,12 +695,13 @@
             isSearching() {
                 return store.state.searching;
             },
-            distance() {
+            measureValue() {
+                const MEASURE_OFF = -1;
                 const pointList = this.pointList;
 
                 if (this.isLineToolOn) {
                     if (pointList.length < 2) {
-                        return 0;
+                        return MEASURE_OFF;
                     }
 
                     let sum = 0;
@@ -717,11 +710,10 @@
                         sum += getDistance(pointList[i], pointList[i - 1]);
                     }
 
-                    const km = Math.round(((sum / 1000) + Number.EPSILON) * 100) / 100;
-                    return `${this.numberWithCommas(km)} กม.`;
+                    return sum;
                 } else {
                     if (pointList.length < 3) {
-                        return 0;
+                        return MEASURE_OFF;
                     }
 
                     const areaPoints = [];
@@ -734,15 +726,14 @@
                         areaPoints.push([point.latitude, point.longitude]);
                     });*/
 
-                    const sqKm = Math.round(((getAreaOfPolygon(areaPoints) / 1000000) + Number.EPSILON) * 100) / 100;
-                    return `${this.numberWithCommas(sqKm)} ตร.กม.`;
+                    return getAreaOfPolygon(areaPoints);
                 }
             }
         },
         data: () => {
             return {
                 store, PROVIDER_GOOGLE,
-                Dimensions, StyleSheet, DEBUG, MAP_HEADER, BOTTOM_NAV, DIMENSION,
+                Dimensions, StyleSheet, TouchableOpacity, DEBUG, MAP_HEADER, BOTTOM_NAV, DIMENSION,
                 PROVINCE_DIMENSION, COLOR_PRIMARY, COLOR_PRIMARY_DARK,
                 imageMenu, imageBack, imageClose, imageNavigate, imageLightOff, imageLightOn,
                 imageMapToolCurrentLocation, imageMapToolMarkerOff, imageMapToolMarkerOn,
@@ -773,9 +764,6 @@
             };
         },
         methods: {
-            numberWithCommas: function (num) {
-                return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-            },
             openFilterPanel: function () {
                 this.$refs['drawer'].open();
             },

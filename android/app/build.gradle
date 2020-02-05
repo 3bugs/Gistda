@@ -105,8 +105,8 @@ android {
         applicationId "com.gistda"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 6
-        versionName "1.0"
+        versionCode 8
+        versionName "0.9.0"
     }
     signingConfigs {
         release {

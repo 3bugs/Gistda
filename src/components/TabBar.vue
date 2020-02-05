@@ -116,7 +116,7 @@
     import {DEBUG, BOTTOM_NAV, DIMENSION} from '../constants';
     import {setUser, getUser} from '../store/db';
 
-    import {Dimensions, StyleSheet, TouchableOpacity} from 'react-native';
+    import {Dimensions, StyleSheet, TouchableOpacity, Alert} from 'react-native';
     import TabBarItem from './TabBarItem';
     import BottomSheet from 'reanimated-bottom-sheet';
     import {Menu, MenuProvider, MenuOptions, MenuOption, MenuTrigger, renderers} from 'react-native-popup-menu';
@@ -194,6 +194,8 @@
                     case 2:
                         //routeName = 'Report';
                         //routeName = 'CctvNavigator';
+                        Alert.alert('แจ้งเตือน', 'ยังไม่มีข้อมูล CCTV');
+                        return;
                         break;
                     case 3:
                         routeName = 'Report';

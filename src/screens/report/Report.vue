@@ -15,8 +15,40 @@
                 }"/>
 
         <my-tab-view
+                v-if="isReady"
                 :routes="routes"
                 :renderScene="renderScene"/>
+
+        <view
+                v-if="isError"
+                :style="{
+                    flex: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginBottom: BOTTOM_NAV.height,
+                    paddingLeft: DIMENSION.horizontal_margin,
+                    paddingRight: DIMENSION.horizontal_margin,
+                }">
+            <text
+                    :style="{
+                        fontFamily: 'DBHeavent',
+                        fontSize: 22,
+                        textAlign: 'center',
+                        marginBottom: 20,
+                    }">
+                {{errorMessage}}
+            </text>
+            <my-button
+                    :style="{
+                        width: 150,
+                    }"
+                    text="ลองใหม่"
+                    :font-size="22"
+                    :bg-color="FORM.buttonColor[province]"
+                    :padding="10"
+                    :corner-radius="24"
+                    :on-click="loadData"/>
+        </view>
 
         <activity-indicator
                 class="progress"
@@ -28,14 +60,15 @@
 
 <script>
     import store from '../../store';
-    import {DEBUG, COLOR_PRIMARY,} from '../../constants';
+    import {DEBUG, COLOR_PRIMARY, FORM, BOTTOM_NAV, DIMENSION,} from '../../constants';
     import Header from '../../components/Header';
     import MyTabView from '../../components/MyTabView';
     import ReportPage from "./ReportPage";
+    import MyButton from "../../components/MyButton";
 
     import React from 'react';
-    import {Dimensions, StyleSheet, Alert} from 'react-native';
 
+    import {Dimensions, StyleSheet, Alert} from 'react-native';
     import imageMap from '../../../assets/images/screen_map/ic_map.png';
 
     const routes = [
@@ -44,7 +77,7 @@
     ];
 
     export default {
-        components: {Header, MyTabView, ReportPage},
+        components: {MyButton, Header, MyTabView, ReportPage},
         props: {
             navigation: {
                 type: Object
@@ -60,9 +93,12 @@
         },
         data: () => {
             return {
-                COLOR_PRIMARY,
+                COLOR_PRIMARY, FORM, BOTTOM_NAV, DIMENSION,
                 imageMap,
                 routes,
+                isReady: false,
+                isError: false,
+                errorMessage: null,
             };
         },
         methods: {
@@ -77,15 +113,27 @@
                         return <ReportPage graphType={1} navigation={this.navigation}/>;
                 }
             },
+            loadData: function () {
+                this.isError = false;
+                this.isReady = false;
+
+                store.dispatch('GET_REPORT', {
+                    callback: (success, message) => {
+                        if (!success) {
+                            //Alert.alert("ผิดพลาด", message);
+                            this.isReady = false;
+                            this.isError = true;
+                            this.errorMessage = message;
+                        } else {
+                            this.isReady = true;
+                            this.isError = false;
+                        }
+                    }
+                });
+            },
         },
         created: function () {
-            store.dispatch('GET_REPORT', {
-                callback: (success, message) => {
-                    if (!success) {
-                        Alert.alert("ผิดพลาด", message);
-                    }
-                }
-            });
+            this.loadData();
         },
     }
 </script>

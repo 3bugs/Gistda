@@ -212,7 +212,7 @@
                                 height: 200,
                                 margin: 5,
                             }"
-                           :source="{uri: `data:image/jpeg;base64,${selectedImageData}`}"
+                           :source="{uri: `${selectedImageData}`}"
                            resize-mode="contain"/>
                 </view>
                 <dialog-button
