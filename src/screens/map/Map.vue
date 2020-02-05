@@ -25,6 +25,7 @@
                         longitudeDelta: PROVINCE_DIMENSION[province].maxLongitude - PROVINCE_DIMENSION[province].minLongitude,
                     }"
                     :style="{marginTop: MAP_HEADER.height}"
+                    :rotate-enabled="false"
                     :on-map-ready="handleMapReady"
                     :on-press="e => {handleClickMap(e.nativeEvent.coordinate)}"
                     :on-region-change-complete="handleRegionChange">
@@ -142,13 +143,12 @@
                         v-if="point"
                         :coordinate="point"
                         :draggable="false"/>
-
             </map-view>
 
             <view class="map-tools-container"
                   :style="{
                         right: DIMENSION.horizontal_margin,
-                        bottom: 30,
+                        bottom: TOOLS_MARGIN_BOTTOM,
                   }">
                 <touchable-opacity
                         v-if="pointList && pointList.length > 0"
@@ -258,6 +258,27 @@
                            class="map-tools-icon"
                            resize-mode="contain"/>
                 </touchable-opacity>
+            </view>
+
+            <view class="map-scale-container"
+                  :style="{
+                        left: DIMENSION.horizontal_margin,
+                        bottom: TOOLS_MARGIN_BOTTOM,
+                  }">
+                <view :style="{
+                    width: SCALE_WIDTH,
+                    borderBottomWidth: 1,
+                    borderLeftWidth: 1,
+                    borderRightWidth: 1,
+                    borderColor: 'black'
+                }">
+                    <text class="map-scale-text"
+                          :style="{
+                                alignSelf: 'center'
+                          }">
+                        {{scaleText}}
+                    </text>
+                </view>
             </view>
 
             <!--แสดงระยะทาง, พื้นที่ที่วัดได้-->
@@ -671,6 +692,9 @@
     import imageDragMarker from '../../../assets/images/screen_map/ic_drag_marker_new.png';
     import imageDragMarkerEnd from '../../../assets/images/screen_map/ic_drag_marker_end_new.png';
 
+    const SCALE_WIDTH = 80;
+    const TOOLS_MARGIN_BOTTOM = 40;
+
     export default {
         components: {
             Fragment, MapView, Marker, Polyline, Polygon, WMSTile, LinearGradient,
@@ -732,7 +756,7 @@
         },
         data: () => {
             return {
-                store, PROVIDER_GOOGLE,
+                store, PROVIDER_GOOGLE, SCALE_WIDTH, TOOLS_MARGIN_BOTTOM,
                 Dimensions, StyleSheet, TouchableOpacity, DEBUG, MAP_HEADER, BOTTOM_NAV, DIMENSION,
                 PROVINCE_DIMENSION, COLOR_PRIMARY, COLOR_PRIMARY_DARK,
                 imageMenu, imageBack, imageClose, imageNavigate, imageLightOff, imageLightOn,
@@ -754,6 +778,7 @@
                 searchTerm: '',
                 backHandler: null,
                 isBottomSheetOpen: false,
+                scaleText: null,
 
                 pointList: [
                     /*{longitude: 99.90637622773647, latitude: 13.739281519255695},
@@ -848,7 +873,31 @@
                 }
             },
             handleRegionChange: function (region) {
+                console.log(JSON.stringify(this.mapCurrentRegion));
                 this.mapCurrentRegion = region;
+                this.calculateScaleDistance(region);
+            },
+            calculateScaleDistance(region) { //todo: ******************************************************************************
+                const screenWidth = Dimensions.get('window').width;
+                const scaleLongitudeDelta = (this.SCALE_WIDTH * region.longitudeDelta) / screenWidth;
+                const scaleDistance = getDistance( // คำนวณที่มุมล่างซ้ายของ map
+                    {
+                        latitude: region.latitude - (region.latitudeDelta / 2),
+                        longitude: region.longitude - (region.longitudeDelta / 2)
+                    },
+                    {
+                        latitude: region.latitude - (region.latitudeDelta / 2),
+                        longitude: region.longitude - (region.longitudeDelta / 2) + scaleLongitudeDelta
+                    }
+                );
+                if (scaleDistance < 1000) {
+                    this.scaleText = scaleDistance + ' m';
+                } else {
+                    this.scaleText = this.numberWithCommas((scaleDistance / 1000).toFixed(2)) + ' km';
+                }
+            },
+            numberWithCommas: function (num) {
+                return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             },
 
             handleDragMarkerStart: function (coord) {
@@ -1091,6 +1140,21 @@
         font-size: 26;
         border-width: 0;
         border-color: yellow;
+    }
+
+    .map-scale-container {
+        position: absolute;
+        align-items: center;
+        border-width: 0;
+        border-color: red;
+    }
+
+    .map-scale-text {
+        font-family: DBHeaventt-Light;
+        padding-top: 0;
+        padding-bottom: 0;
+        color: #333333;
+        font-size: 18;
     }
 
     .map-tools-container {
