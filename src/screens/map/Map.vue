@@ -547,8 +547,8 @@
                             <view :style="{
                                 alignSelf: 'center',
                                 backgroundColor: '#e0e0e0',
-                                width: 50,
-                                height: 4,
+                                width: 30,
+                                height: 6,
                                 marginLeft: 53,
                                 marginBottom: 8,
                                 borderRadius: 2,

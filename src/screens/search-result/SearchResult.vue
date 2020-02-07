@@ -29,7 +29,7 @@
     import Header from '../../components/Header';
     import MyTabView from '../../components/MyTabView';
     import MapsPage from './MapsPage';
-    import ListPage from './ListPage';
+    import ListPage from './MapsPage_Test';
 
     import React from 'react';
 

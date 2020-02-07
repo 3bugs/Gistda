@@ -1,6 +1,6 @@
 <template>
     <view class="container"
-          :style="{marginBottom: BOTTOM_NAV.height}">
+          :style="{marginBottom: 0}">
         <map-view
                 :provider="PROVIDER_GOOGLE"
                 ref="mapView"
@@ -157,8 +157,8 @@
 
         <bottom-sheet
                 ref="markerDetails"
-                :snap-points="[screenHeight - 200, '35%', '0%']"
-                :initial-snap="Platform.OS === 'android' ? 0 : 2"
+                :snap-points="[screenHeight - 140, (screenHeight - 140) / 2, 0]"
+                :initial-snap="Platform.OS === 'android' ? 2 : 2"
                 :enabled-inner-scrolling="true"
                 :enabled-content-tap-interaction="false"
                 :enabled-content-gesture-interaction="false"
@@ -176,8 +176,11 @@
                     paddingTop: DIMENSION.horizontal_margin,
                     paddingBottom: DIMENSION.horizontal_margin,
                     backgroundColor: 'rgba(255, 255, 255, 240)',
-                    borderWidth: 0,
-                    borderColor: 'red',
+                    borderTopWidth: 0,
+                    borderLeftWidth: 2,
+                    borderRightWidth: 2,
+                    borderColor: '#666666',
+
                 }">
                     <scroll-view
                             v-if="activeMarker && activeMarker.properties.IMAGES.length > 0"
@@ -313,6 +316,10 @@
                     backgroundColor: 'rgba(255, 255, 255, 240)',
                     borderTopLeftRadius: 15,
                     borderTopRightRadius: 15,
+                    borderTopWidth: 2,
+                    borderLeftWidth: 2,
+                    borderRightWidth: 2,
+                    borderColor: '#666666',
                 }">
                     <view :style="{
                         flex: 1,
@@ -322,8 +329,8 @@
                             <view :style="{
                                 alignSelf: 'center',
                                 backgroundColor: '#e0e0e0',
-                                width: 50,
-                                height: 4,
+                                width: 30,
+                                height: 6,
                                 marginLeft: 53,
                                 marginBottom: 8,
                                 borderRadius: 2,
@@ -473,8 +480,6 @@
                 isMapReady: false,
                 isBottomSheetOpen: false,
                 isMarkerClicked: false,
-
-                test: '',
             };
         },
         methods: {
@@ -487,8 +492,6 @@
             },
             handleClickPoint: function (marker) {
                 console.log(JSON.stringify(marker));
-
-                this.test = 'Hello';
 
                 this.$refs['markerDetails'].snapTo(1);
                 //this.$refs['rbSheet'].open();
