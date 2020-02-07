@@ -1,77 +1,239 @@
 <template>
-    <view class="container">
-        <view class="container"
-              :style="{marginBottom: BOTTOM_NAV.height}">
-            <map-view
-                    :provider="PROVIDER_GOOGLE"
-                    ref="mapView"
-                    class="map-view"
-                    :initial-region="{
+    <view class="container"
+          :style="{marginBottom: BOTTOM_NAV.height}">
+        <map-view
+                :provider="PROVIDER_GOOGLE"
+                ref="mapView"
+                class="map-view"
+                :initial-region="{
                         latitude: (PROVINCE_DIMENSION[province].minLatitude + PROVINCE_DIMENSION[province].maxLatitude) / 2,
                         longitude: (PROVINCE_DIMENSION[province].minLongitude + PROVINCE_DIMENSION[province].maxLongitude) / 2,
                         latitudeDelta: PROVINCE_DIMENSION[province].maxLatitude - PROVINCE_DIMENSION[province].minLatitude,
                         longitudeDelta: PROVINCE_DIMENSION[province].maxLongitude - PROVINCE_DIMENSION[province].minLongitude,
                     }"
-                    :style="{
+                :style="{
                         marginTop: 0, borderWidth: 2, borderColor: 'red',
                     }"
-                    :on-map-ready="handleMapReady">
+                :on-map-ready="handleMapReady">
 
-                <marker v-for="(marker, index) in searchResultList"
-                        v-if="marker.geometry.type === 'Point'"
-                        :coordinate="{
+            <marker v-for="(marker, index) in searchResultList"
+                    v-if="marker.geometry.type === 'Point'"
+                    :coordinate="{
                             latitude: marker.geometry.coordinates[1],
                             longitude: marker.geometry.coordinates[0]
                         }"
-                        :title="marker.properties.NAME_T"
-                        :description="null"
-                        :image="categoryData[marker.properties.CATEGORY].image"
-                        :on-press="() => handleClickPoint(marker)"/>
-            </map-view>
-        </view>
+                    :title="marker.properties.NAME_T"
+                    :description="null"
+                    :image="categoryData[marker.properties.CATEGORY].image"
+                    :on-press="() => handleClickPoint(marker)"/>
+        </map-view>
 
-        <!--<bottom-sheet
-                ref="bottomSheet"
-                :snap-points="[screenHeight - statusBarHeight, '45%', '0%']"
-                :initial-snap="2"
+        <!--<marker-details
+                v-if="false"
+                ref="markerDetails"
+                :on-open="handleOpenBottomSheet"
+                :on-close="handleCloseBottomSheet"
+                :on-click-navigate="null"
+                :on-click-close-button="handleClickCloseBottomSheet"
+                :title-font-size="26"
+                :title="activeMarker ? activeMarker.properties.NAME_T : ''"
+                :show-category="true"
+                :category-image-url="activeMarker ? store.state.categoryData[activeMarker.properties.CATEGORY].image : null"
+                :category-name="activeMarker ? store.state.categoryData[activeMarker.properties.CATEGORY].name : ''"
+                :image-list="activeMarker ? activeMarker.properties.IMAGES : []"
+                :description="(activeMarker && activeMarker.properties.DESCRIPTION_T) ? activeMarker.properties.DESCRIPTION_T.trim() : ''"
+                :location="(activeMarker && activeMarker.properties.LOCATION_T) ? activeMarker.properties.LOCATION_T.trim() : ''"/>-->
+
+        <r-b-sheet
+                ref="rbSheet"
+                :height="300"
+                :duration="400"
+                :close-on-drag-down="true"
+                :custom-styles="{
+                    container: {
+                        flex: 1,
+                    },
+                    wrapper: {
+                        backgroundColor: 'transparent'
+                    },
+                    draggableIcon: {
+                        backgroundColor: '#e0e0e0'
+                    },
+                }">
+            <view>
+                <view :style="{
+                    flexDirection: 'row',
+                    paddingLeft: DIMENSION.horizontal_margin,
+                    paddingRight: DIMENSION.horizontal_margin,
+                    paddingTop: 10,
+                    paddingBottom: DIMENSION.horizontal_margin - 10,
+                    backgroundColor: 'rgba(255, 255, 255, 240)',
+                    borderTopLeftRadius: 15,
+                    borderTopRightRadius: 15,
+                }">
+                    <view :style="{
+                        flex: 1,
+                        marginRight: 5,
+                    }">
+                        <!--<touchable-opacity>
+                            <view :style="{
+                                alignSelf: 'center',
+                                backgroundColor: '#e0e0e0',
+                                width: 30,
+                                height: 6,
+                                marginLeft: 53,
+                                marginBottom: 8,
+                                borderRadius: 2,
+                            }"/>
+                        </touchable-opacity>-->
+
+                        <text :style="{
+                            fontFamily: 'DBHeavent-Bold',
+                            color: '#333333',
+                            fontSize: 26,
+                            marginBottom: 5,
+                        }">
+                            {{activeMarker ? activeMarker.properties.NAME_T : ''}}
+                        </text>
+                        <view
+                                :style="{
+                                    flexDirection: 'row',
+                              }">
+                            <image :source="{uri: (activeMarker ? store.state.categoryData[activeMarker.properties.CATEGORY].image : null)}"
+                                   :style="{
+                                        width: 35,
+                                        height: 38,
+                                   }"
+                                   resize-mode="contain"/>
+                            <text :style="{
+                                flex: 1,
+                                fontFamily: 'DBHeavent',
+                                color: '#aaaaaa',
+                                fontSize: 22,
+                                marginTop: 2,
+                            }">
+                                {{activeMarker ? store.state.categoryData[activeMarker.properties.CATEGORY].name : ''}}
+                            </text>
+                        </view>
+                    </view>
+                    <view>
+                        <touchable-opacity
+                                :on-press="handleClickCloseBottomSheet"
+                                :style="{
+                                marginTop: 0,
+                            }">
+                            <image :source="imageClose"
+                                   :style="{
+                                   width: 48,
+                                   height: 48,
+                                   padding: 0,
+                               }"/>
+                        </touchable-opacity>
+                        <touchable-opacity
+                                :on-press="handleClickNavigate"
+                                :style="{
+                                marginTop: 0,
+                            }">
+                            <image :source="imageNavigate"
+                                   :style="{
+                                   width: 48,
+                                   height: 48,
+                                   padding: 0,
+                               }"/>
+                        </touchable-opacity>
+                    </view>
+                </view>
+
+                <view :style="{
+                    marginTop: 0,
+                    marginBottom: 0,
+                    marginLeft: 0,
+                    marginRight: 0,
+                    borderBottomWidth: StyleSheet.hairlineWidth,
+                    borderBottomColor: '#cccccc'
+                }"/>
+            </view>
+        </r-b-sheet>
+
+        <bottom-sheet
+                ref="markerDetails"
+                :snap-points="[screenHeight - 200, '35%', '0%']"
+                :initial-snap="Platform.OS === 'android' ? 0 : 2"
+                :enabled-inner-scrolling="true"
+                :enabled-content-tap-interaction="false"
+                :enabled-content-gesture-interaction="false"
                 :on-open-start="handleOpenBottomSheet"
                 :on-close-end="handleCloseBottomSheet">
-            <view render-prop-fn="renderContent">
-                <view :style="{
+            <view render-prop-fn="renderContent"
+                  :style="{
+                        height: '100%',
+                  }">
+                <scroll-view :style="{
                     flexDirection: 'column',
-                    height: '100%',
+                    flex: 1,
                     paddingLeft: DIMENSION.horizontal_margin,
                     paddingRight: DIMENSION.horizontal_margin,
                     paddingTop: DIMENSION.horizontal_margin,
                     paddingBottom: DIMENSION.horizontal_margin,
                     backgroundColor: 'rgba(255, 255, 255, 240)',
+                    borderWidth: 0,
+                    borderColor: 'red',
                 }">
-                    <view
+                    <scroll-view
                             v-if="activeMarker && activeMarker.properties.IMAGES.length > 0"
+                            :horizontal="true"
                             :style="{
-                                flexDirection: 'row',
-                                flexWrap: 'wrap',
-                                marginBottom: 10,
+                                padding: 0,
+                                marginBottom: 15,
+                                borderWidth: 0,
+                                borderColor: 'red',
                             }">
-                        <card-view
+                        <touchable-opacity
                                 v-for="(item, index) in activeMarker ? activeMarker.properties.IMAGES : []"
-                                :style="{
-                                    width: 150,
-                                    height: 100,
-                                    marginRight: 10,
-                                    marginBottom: 10,
-                                }"
-                                :card-elevation="5"
-                                :card-maxElevation="5"
-                                :corner-radius="10">
-                            <image :source="{uri: item}"
-                                   :style="{
+                                :on-press="null"
+                                :active-opacity="0.6">
+                            <card-view
+                                    :style="{
                                         width: 150,
                                         height: 100,
-                                   }"
-                                   resize-mode="cover"/>
-                        </card-view>
-                    </view>
+                                        marginRight: 10,
+                                    }"
+                                    :card-elevation="5"
+                                    :card-maxElevation="5"
+                                    :corner-radius="10">
+                                <image :source="{uri: item}"
+                                       :style="{
+                                            width: 150,
+                                            height: 100,
+                                       }"
+                                       resize-mode="cover"/>
+                            </card-view>
+                        </touchable-opacity>
+                    </scroll-view>
+
+                    <!--<flat-list
+                            :data="activeMarker ? activeMarker.properties.IMAGES : []"
+                            :key-extractor="(item, index) => index.toString()">
+                        <view render-prop-fn="renderItem">
+                            <card-view
+                                    :style="{
+                                        width: 200,
+                                        height: 112,
+                                        marginTop: 5,
+                                        marginRight: 15,
+                                    }"
+                                    :card-elevation="10"
+                                    :card-maxElevation="10"
+                                    :corner-radius="10"
+                                    :style="{}">
+                                <image :source="{uri: args.item}"
+                                       :style="{
+                                            flex: 1,
+                                       }"
+                                       resize-mode="cover"/>
+                            </card-view>
+                        </view>
+                    </flat-list>-->
 
                     <view v-if="activeMarker && activeMarker.properties.DESCRIPTION_T && activeMarker.properties.DESCRIPTION_T.trim().length > 0"
                           :style="{marginBottom: 15}">
@@ -89,6 +251,7 @@
                         }">{{activeMarker ? activeMarker.properties.DESCRIPTION_T : ''}}
                         </text>
                     </view>
+
                     <view v-if="activeMarker && activeMarker.properties.LOCATION_T && activeMarker.properties.LOCATION_T.trim().length > 0"
                           :style="{marginBottom: 15}">
                         <text :style="{
@@ -105,14 +268,47 @@
                         }">{{activeMarker ? activeMarker.properties.LOCATION_T : ''}}
                         </text>
                     </view>
-                </view>
+
+                    <touchable-opacity
+                            :on-press="handleClickNavigate"
+                            :active-opacity="0.4">
+                        <view :style="{
+                            backgroundColor: '#F0F6FF',
+                            paddingTop: 14,
+                            paddingBottom: 14,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            borderRadius: 28,
+                        }">
+                            <text :style="{
+                                fontFamily: 'DBHeavent-Med',
+                                fontSize: 22,
+                                color: '#435582',
+                            }">
+                                {{'นำทาง'}}
+                            </text>
+                        </view>
+                    </touchable-opacity>
+
+                    <text v-for="item in new Array(20)"
+                          v-if="false"
+                          :style="{
+                                marginBottom: 10,
+                          }">{{'Hello: ' + item}}
+                    </text>
+
+                    <view :style="{
+                        height: BOTTOM_NAV.height,
+                        marginBottom: 30,
+                    }"/>
+                </scroll-view>
             </view>
             <view render-prop-fn="renderHeader">
                 <view :style="{
                     flexDirection: 'row',
                     paddingLeft: DIMENSION.horizontal_margin,
                     paddingRight: DIMENSION.horizontal_margin,
-                    paddingTop: DIMENSION.horizontal_margin - 5,
+                    paddingTop: 10,
                     paddingBottom: DIMENSION.horizontal_margin - 10,
                     backgroundColor: 'rgba(255, 255, 255, 240)',
                     borderTopLeftRadius: 15,
@@ -120,17 +316,32 @@
                 }">
                     <view :style="{
                         flex: 1,
+                        marginRight: 5,
                     }">
+                        <touchable-opacity>
+                            <view :style="{
+                                alignSelf: 'center',
+                                backgroundColor: '#e0e0e0',
+                                width: 50,
+                                height: 4,
+                                marginLeft: 53,
+                                marginBottom: 8,
+                                borderRadius: 2,
+                            }"/>
+                        </touchable-opacity>
+
                         <text :style="{
                             fontFamily: 'DBHeavent-Bold',
                             color: '#333333',
-                            fontSize: 24,
+                            fontSize: 26,
+                            marginBottom: 5,
                         }">
                             {{activeMarker ? activeMarker.properties.NAME_T : ''}}
                         </text>
-                        <view :style="{
-                            flexDirection: 'row',
-                        }">
+                        <view
+                                :style="{
+                                    flexDirection: 'row',
+                              }">
                             <image :source="{uri: (activeMarker ? store.state.categoryData[activeMarker.properties.CATEGORY].image : null)}"
                                    :style="{
                                         width: 35,
@@ -141,26 +352,60 @@
                                 flex: 1,
                                 fontFamily: 'DBHeavent',
                                 color: '#aaaaaa',
-                                fontSize: 20,
+                                fontSize: 22,
                                 marginTop: 2,
                             }">
                                 {{activeMarker ? store.state.categoryData[activeMarker.properties.CATEGORY].name : ''}}
                             </text>
                         </view>
                     </view>
-                    <touchable-opacity
-                            :on-press="handleClickCloseBottomSheet"
-                            :style="{
+                    <view>
+                        <touchable-opacity
+                                :on-press="handleClickCloseBottomSheet"
+                                :style="{
                                 marginTop: 0,
                             }">
-                        <image :source="imageClose"
-                               :style="{
+                            <image :source="imageClose"
+                                   :style="{
                                    width: 48,
                                    height: 48,
                                    padding: 0,
                                }"/>
-                    </touchable-opacity>
+                        </touchable-opacity>
+                        <touchable-opacity
+                                :on-press="handleClickNavigate"
+                                :style="{
+                                marginTop: 0,
+                            }">
+                            <image :source="imageNavigate"
+                                   :style="{
+                                   width: 48,
+                                   height: 48,
+                                   padding: 0,
+                               }"/>
+                        </touchable-opacity>
+                    </view>
                 </view>
+
+                <!--<touchable-opacity
+                        :on-press="handleClickNavigate"
+                        :active-opacity="0.4">
+                    <view :style="{
+                            backgroundColor: '#F0F6FF',
+                            paddingTop: 14,
+                            paddingBottom: 14,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            borderRadius: 28,
+                        }">
+                        <text :style="{
+                                fontFamily: 'DBHeavent-Med',
+                                fontSize: 22,
+                                color: '#435582',
+                            }">นำทาง</text>
+                    </view>
+                </touchable-opacity>-->
+
                 <view :style="{
                     marginTop: 0,
                     marginBottom: 0,
@@ -170,7 +415,7 @@
                     borderBottomColor: '#cccccc'
                 }"/>
             </view>
-        </bottom-sheet>-->
+        </bottom-sheet>
     </view>
 </template>
 
@@ -181,17 +426,20 @@
         BOTTOM_NAV, MAP_HEADER, COLOR_PRIMARY, COLOR_PRIMARY_DARK
     } from '../../constants';
 
-    import {Platform, StyleSheet, Dimensions, Linking, BackHandler} from 'react-native';
+    import {Platform, StyleSheet, Dimensions, Linking, BackHandler, Alert} from 'react-native';
     import MapView from 'react-native-maps';
     import {PROVIDER_GOOGLE, Marker, Polyline, Polygon, WMSTile} from 'react-native-maps';
     import BottomSheet from 'reanimated-bottom-sheet';
+    import CardView from 'react-native-cardview';
+    import RBSheet from "react-native-raw-bottom-sheet";
     import {getStatusBarHeight} from 'react-native-status-bar-height';
 
     import imageClose from '../../../assets/images/ic_close2.png';
+    import imageNavigate from '../../../assets/images/screen_map/ic_navigate_2.png';
 
     export default {
         components: {
-            MapView, Marker, Polyline, Polygon, WMSTile, BottomSheet,
+            MapView, Marker, Polyline, Polygon, WMSTile, BottomSheet, CardView, RBSheet,
         },
         props: {
             navigation: {
@@ -214,25 +462,63 @@
                 store, PROVIDER_GOOGLE,
                 DEBUG, APP_NAME, PROVINCE_DIMENSION, PROVINCE_NAME_EN, DIMENSION,
                 BOTTOM_NAV, MAP_HEADER, COLOR_PRIMARY, COLOR_PRIMARY_DARK,
-                StyleSheet,
+                Platform, StyleSheet, Linking, Alert,
 
-                imageClose,
+                imageClose, imageNavigate,
 
                 screenHeight: Dimensions.get('window').height,
                 statusBarHeight: getStatusBarHeight(),
                 activeMarker: null,
                 backHandler: null,
+                isMapReady: false,
                 isBottomSheetOpen: false,
+                isMarkerClicked: false,
+
+                test: '',
             };
         },
         methods: {
             handleMapReady: function () {
+                console.log('*** Map ready');
+                this.isMapReady = true;
+                this.setRegion();
+
+                this.handleClickCloseBottomSheet();
+            },
+            handleClickPoint: function (marker) {
+                console.log(JSON.stringify(marker));
+
+                this.test = 'Hello';
+
+                this.$refs['markerDetails'].snapTo(1);
+                //this.$refs['rbSheet'].open();
+
+                this.isMarkerClicked = true;
+                this.activeMarker = marker;
+                marker.active = true;
+            },
+            handleClickCloseBottomSheet: function () {
+                this.$refs['markerDetails'].snapTo(2);
+            },
+            handleOpenBottomSheet: function () {
+                this.isBottomSheetOpen = true;
+            },
+            handleCloseBottomSheet: function () {
+                this.isBottomSheetOpen = false;
+            },
+            setRegion: function () {
                 const resultList = this.searchResultList;
                 let minLat = null, maxLat = null, minLng = null, maxLng = null;
 
                 for (let i = 0; i < resultList.length; i++) {
+                    const name = resultList[i].properties.NAME_T;
+                    const type = resultList[i].geometry.type;
+                    const category = resultList[i].properties.CATEGORY;
+                    const province = resultList[i].properties.P_CODE;
                     const lat = resultList[i].geometry.coordinates[1];
                     const lng = resultList[i].geometry.coordinates[0];
+
+                    console.log(`[${type}][CATEGORY ${category}][P_CODE ${province}] ${name} - Lat: ${lat}, Lng: ${lng}`);
 
                     if (i === 0) {
                         minLat = lat;
@@ -256,32 +542,51 @@
                 }
 
                 try {
-                    this.$refs['mapView'].animateToRegion({
+                    const region = {
                         latitude: (minLat + maxLat) / 2,
                         longitude: (minLng + maxLng) / 2,
-                        latitudeDelta: maxLat - minLat + .001,
-                        longitudeDelta: maxLng - minLng + .001,
-                    });
+                        latitudeDelta: maxLat - minLat + (.3 * (maxLat - minLat)),
+                        longitudeDelta: maxLng - minLng + (.3 * (maxLng - minLng)),
+                    };
+                    console.log('Region for result markers', JSON.stringify(region));
+                    this.$refs['mapView'].animateToRegion(region);
                 } catch (e) {
                     console.log('Error animate to region: ' + e);
                 }
             },
-            handleClickPoint: function (marker) {
-                //this.$refs['bottomSheet'].snapTo(1);
-                this.activeMarker = marker;
-                marker.active = true;
-            },
-            handleClickCloseBottomSheet: function () {
-                //this.$refs['bottomSheet'].snapTo(2);
-            },
-            handleOpenBottomSheet: function () {
-                this.isBottomSheetOpen = true;
-            },
-            handleCloseBottomSheet: function () {
-                this.isBottomSheetOpen = false;
+            handleClickNavigate: function () {
+                let lat = null, lng = null;
+                let label = null;
+
+                if (this.activeMarker) {
+                    lat = this.activeMarker.geometry.coordinates[1];
+                    lng = this.activeMarker.geometry.coordinates[0];
+                    label = this.activeMarker.properties.NAME_T;
+                }
+
+                if (lat !== null && lng != null) {
+                    const scheme = Platform.select({
+                        ios: 'maps:0,0?q=',
+                        android: 'geo:0,0?q='
+                    });
+                    const latLng = `${lat},${lng}`;
+                    const url = Platform.select({
+                        ios: `${scheme}${label}@${latLng}`,
+                        android: `${scheme}${latLng}(${label})`
+                    });
+
+                    Linking.openURL(url);
+                } else {
+                    Alert.alert('ผิดพลาด', 'ไม่สามารถนำทางได้')
+                }
             },
         },
+        beforeCreate: function () {
+            console.log('*** Lifecycle beforeCreate');
+        },
         created: function () {
+            console.log('*** Lifecycle created');
+
             //this.navigation.state.params.header = null;
             //this.navigation.navigate('News');
 
@@ -292,16 +597,37 @@
             /*const self = this;
             this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
                 if (this.isBottomSheetOpen) {
-                    this.$refs['bottomSheet'].snapTo(2);
+                    this.$refs['markerDetails'].snapTo(2);
                     return true;
                 }
                 return false;
             });*/
         },
         beforeDestroy: function () {
+            console.log('*** Lifecycle beforeDestroy');
             /*if (this.backHandler) {
                 this.backHandler.remove();
             }*/
+        },
+        destroyed: function () {
+            console.log('*** Lifecycle destroyed');
+        },
+        beforeUpdate: function () {
+            console.log('*** Lifecycle beforeUpdate');
+        },
+        updated: function () {
+            console.log('*** Lifecycle updated');
+
+            if (this.isMapReady && !this.isMarkerClicked) {
+                this.setRegion();
+            }
+            this.isMarkerClicked = false;
+        },
+        beforeMount: function () {
+            console.log('*** Lifecycle beforeMount');
+        },
+        mounted: function () {
+            console.log('*** Lifecycle mounted');
         },
     }
 </script>

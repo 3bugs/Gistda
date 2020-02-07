@@ -692,7 +692,7 @@
     import imageDragMarker from '../../../assets/images/screen_map/ic_drag_marker_new.png';
     import imageDragMarkerEnd from '../../../assets/images/screen_map/ic_drag_marker_end_new.png';
 
-    const SCALE_WIDTH = 80;
+    const SCALE_WIDTH = 90;
     const TOOLS_MARGIN_BOTTOM = 40;
 
     export default {
@@ -891,9 +891,9 @@
                     }
                 );
                 if (scaleDistance < 1000) {
-                    this.scaleText = scaleDistance + ' m';
+                    this.scaleText = scaleDistance + ' ม.';
                 } else {
-                    this.scaleText = this.numberWithCommas((scaleDistance / 1000).toFixed(2)) + ' km';
+                    this.scaleText = this.numberWithCommas((scaleDistance / 1000).toFixed(2)) + ' กม.';
                 }
             },
             numberWithCommas: function (num) {

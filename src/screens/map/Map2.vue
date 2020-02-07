@@ -25,6 +25,7 @@
                         longitudeDelta: PROVINCE_DIMENSION[province].maxLongitude - PROVINCE_DIMENSION[province].minLongitude,
                     }"
                     :style="{marginTop: MAP_HEADER.height}"
+                    :rotate-enabled="false"
                     :on-map-ready="handleMapReady"
                     :on-press="e => {handleClickMap(e.nativeEvent.coordinate)}"
                     :on-region-change-complete="handleRegionChange">
@@ -70,6 +71,15 @@
                 <view v-if="!isMeasureToolOn && !isMarkerToolOn"
                       v-for="(categoryType, categoryTypeIndex) in mapDataList">
                     <view v-for="(category, categoryIndex) in categoryType.list">
+                        <!--wms-->
+                        <w-m-s-tile
+                                v-for="(wms, wmsIndex) in category.wmsList"
+                                v-if="category.markerVisibility"
+                                :url-template="getWmsLink(wms)"
+                                :_z-index="100"
+                                :opacity="1"
+                                :tile-size="512"
+                        />
                         <!--จุด-->
                         <marker
                                 v-for="(marker, markerIndex) in category.markerList"
@@ -78,6 +88,7 @@
                                     latitude: marker.geometry.coordinates[1],
                                     longitude: marker.geometry.coordinates[0]
                                 }"
+                                :anchor="{x: 0.5, y: 0.77}"
                                 :title="marker.properties.NAME_T"
                                 :description="null"
                                 :image="category.image"
@@ -131,14 +142,13 @@
                 <marker
                         v-if="point"
                         :coordinate="point"
-                        :draggable="true"/>
-
+                        :draggable="false"/>
             </map-view>
 
             <view class="map-tools-container"
                   :style="{
                         right: DIMENSION.horizontal_margin,
-                        bottom: 30,
+                        bottom: TOOLS_MARGIN_BOTTOM,
                   }">
                 <touchable-opacity
                         v-if="pointList && pointList.length > 0"
@@ -250,25 +260,38 @@
                 </touchable-opacity>
             </view>
 
+            <view class="map-scale-container"
+                  :style="{
+                        left: DIMENSION.horizontal_margin,
+                        bottom: TOOLS_MARGIN_BOTTOM,
+                  }">
+                <view :style="{
+                    width: SCALE_WIDTH,
+                    borderBottomWidth: 1,
+                    borderLeftWidth: 1,
+                    borderRightWidth: 1,
+                    borderColor: 'black'
+                }">
+                    <text class="map-scale-text"
+                          :style="{
+                                alignSelf: 'center'
+                          }">
+                        {{scaleText}}
+                    </text>
+                </view>
+            </view>
+
             <!--แสดงระยะทาง, พื้นที่ที่วัดได้-->
-            <view v-if="distance !== 0"
+            <view v-if="measureValue >= 0"
                   :style="{
                         position: 'absolute',
                         marginTop: MAP_HEADER.height + 40,
                         width: '100%',
                         alignItems: 'center',
                   }">
-                <text :style="{
-                        backgroundColor: '#343434',
-                        borderRadius: 14,
-                        fontFamily: 'DBHeavent-Med',
-                        fontSize: 20,
-                        color: 'white',
-                        paddingTop: 2,
-                        paddingBottom: 2,
-                        paddingLeft: 12,
-                        paddingRight: 12,
-                    }">{{distance}}</text>
+                <measure-label
+                        :measure-value="measureValue"
+                        :measure-type="isLineToolOn ? 0 : 1"/>
             </view>
 
             <!--screen header-->
@@ -322,6 +345,8 @@
                             }">
                         <text-input class="search-input"
                                     v-model="searchTerm"
+                                    return-key-type="search"
+                                    :on-submit-editing="handleClickSearch"
                                     :placeholder="mapCurrentRegion ? `${mapCurrentRegion.latitude.toFixed(6)}, ${mapCurrentRegion.longitude.toFixed(6)}` : ''"
                                     placeholder-text-color="#aaa"/>
 
@@ -355,95 +380,35 @@
             </view>
         </view>
 
-        <!--<bottom-sheet
-                ref="bottomSheet"
-                :snap-points="[screenHeight - statusBarHeight, '47%', '0%']"
-                :initialSnap="2">
-            <view render-prop-fn="renderContent">
-                <view :style="{
-                    height: '100%',
-                    paddingLeft: DIMENSION.horizontal_margin,
-                    paddingRight: DIMENSION.horizontal_margin,
-                    paddingTop: DIMENSION.horizontal_margin - 5,
-                    paddingBottom: DIMENSION.horizontal_margin - 5,
-                    backgroundColor: 'rgba(255, 255, 255, 240)',
-                }">
-                    <text></text>
-                </view>
-            </view>
-            <view render-prop-fn="renderHeader">
-                <view :style="{
-                    flexDirection: 'row',
-                    paddingLeft: DIMENSION.horizontal_margin,
-                    paddingRight: DIMENSION.horizontal_margin,
-                    paddingTop: DIMENSION.horizontal_margin - 5,
-                    paddingBottom: DIMENSION.horizontal_margin - 5,
-                    backgroundColor: 'rgba(255, 255, 255, 240)',
-                    borderTopLeftRadius: 15,
-                    borderTopRightRadius: 15,
-                }">
-                    <view :style="{
-                        flex: 1,
-                    }">
-                        <text :style="{
-                            fontFamily: 'DBHeavent-Bold',
-                            color: '#333333',
-                            fontSize: 24,
-                        }">
-                            {{activeMarker ? activeMarker.properties.NAME_T : ''}}
-                        </text>
-                        <view :style="{
-                            flexDirection: 'row',
-                        }">
-                            <image :source="{uri: (activeMarker ? store.state.categoryData[activeMarker.properties.CATEGORY].image : null)}"
-                                   :style="{
-                                        width: 35,
-                                        height: 38,
-                                   }"
-                                   resize-mode="contain"/>
-                            <text :style="{
-                                flex: 1,
-                                fontFamily: 'DBHeavent',
-                                color: '#aaaaaa',
-                                fontSize: 20,
-                                marginTop: 2,
-                            }">
-                                {{activeMarker ? store.state.categoryData[activeMarker.properties.CATEGORY].name : ''}}
-                            </text>
-                        </view>
-                    </view>
-                    <touchable-opacity
-                            :on-press="handleClickCloseBottomSheet"
-                            :style="{
-                                marginTop: 0,
-                            }">
-                        <image :source="imageClose"
-                               :style="{
-                                   width: 48,
-                                   height: 48,
-                                   padding: 0,
-                               }"/>
-                    </touchable-opacity>
-                </view>
-                <view :style="{
-                    marginTop: 0,
-                    marginBottom: 0,
-                    marginLeft: 0,
-                    marginRight: 0,
-                    borderBottomWidth: StyleSheet.hairlineWidth,
-                    borderBottomColor: '#cccccc'
-                }"/>
-            </view>
-        </bottom-sheet>-->
+        <marker-details
+                ref="markerDetails" 
+                :on-open="handleOpenMarkerDetails"
+                :on-close="handleCloseMarkerDetails"
+                :on-click-navigate="handleClickNavigate"
+                :on-click-close-button="handleClickCloseMarkerDetails"
+                :title-font-size="point ? 24 : 26"
+                :title="(point && pointAddress) ? pointAddress : (activeMarker ? activeMarker.properties.NAME_T : '')"
+                :show-category="!point"
+                :category-image-url="activeMarker ? store.state.categoryData[activeMarker.properties.CATEGORY].image : null"
+                :category-name="activeMarker ? store.state.categoryData[activeMarker.properties.CATEGORY].name : ''"
+                :image-list="activeMarker ? activeMarker.properties.IMAGES : []"
+                :description="(activeMarker && activeMarker.properties.DESCRIPTION_T) ? activeMarker.properties.DESCRIPTION_T.trim() : ''"
+                :location="(activeMarker && activeMarker.properties.LOCATION_T) ? activeMarker.properties.LOCATION_T.trim() : ''"/>
     </drawer>
 </template>
 
 <script>
     import store from '../../store';
-    import {DEBUG, MAP_HEADER, BOTTOM_NAV, PROVINCE_NAME_EN, DIMENSION, PROVINCE_DIMENSION, COLOR_PRIMARY, COLOR_PRIMARY_DARK} from '../../constants';
+    import {
+        DEBUG, MAP_HEADER, BOTTOM_NAV, PROVINCE_NAME_EN, DIMENSION,
+        PROVINCE_DIMENSION, COLOR_PRIMARY, COLOR_PRIMARY_DARK
+    } from '../../constants';
     import {requestAndroidPermissions} from '../../constants/utils'
+    import {doGetAddressFromCoord} from '../../store/fetch';
+    import MeasureLabel from './MeasureLabel';
+    import MarkerDetails from './MarkerDetails';
 
-    import {Dimensions, StyleSheet, Alert, PermissionsAndroid, Platform, Keyboard} from 'react-native';
+    import {Dimensions, StyleSheet, Alert, PermissionsAndroid, Platform, Keyboard, BackHandler, Linking, TouchableOpacity} from 'react-native';
     import {Fragment} from 'react';
     import MapView from 'react-native-maps';
     import {PROVIDER_GOOGLE, Marker, Polyline, Polygon, WMSTile} from 'react-native-maps';
@@ -452,15 +417,12 @@
     import Drawer from 'react-native-drawer';
     import FilterPanel from './FilterPanel';
     import Slider from '@react-native-community/slider';
-    import BottomSheet from 'reanimated-bottom-sheet'
-    import {Menu, MenuProvider, MenuOptions, MenuOption, MenuTrigger, renderers} from 'react-native-popup-menu';
+    import {SliderBox} from 'react-native-image-slider-box';
     import {getDistance, getAreaOfPolygon} from 'geolib';
     import Geolocation from 'react-native-geolocation-service';
-    import { getStatusBarHeight } from 'react-native-status-bar-height';
 
     import imageMenu from '../../../assets/images/screen_map/ic_menu.png';
     import imageBack from '../../../assets/images/ic_back.png';
-    import imageClose from '../../../assets/images/ic_close2.png';
 
     import imageLightOff from '../../../assets/images/sidebar/ic_light_off.png';
     import imageLightOn from '../../../assets/images/sidebar/ic_light_on.png';
@@ -480,10 +442,14 @@
     import imageDragMarker from '../../../assets/images/screen_map/ic_drag_marker_new.png';
     import imageDragMarkerEnd from '../../../assets/images/screen_map/ic_drag_marker_end_new.png';
 
+    const SCALE_WIDTH = 80;
+    const TOOLS_MARGIN_BOTTOM = 40;
+
     export default {
         components: {
             Fragment, MapView, Marker, Polyline, Polygon, WMSTile, LinearGradient,
-            CardView, Drawer, FilterPanel, Slider, BottomSheet
+            CardView, Drawer, FilterPanel, Slider, SliderBox,
+            MeasureLabel, MarkerDetails,
         },
         props: {
             navigation: { // bottom nav
@@ -503,12 +469,13 @@
             isSearching() {
                 return store.state.searching;
             },
-            distance() {
+            measureValue() {
+                const MEASURE_OFF = -1;
                 const pointList = this.pointList;
 
                 if (this.isLineToolOn) {
                     if (pointList.length < 2) {
-                        return 0;
+                        return MEASURE_OFF;
                     }
 
                     let sum = 0;
@@ -517,11 +484,10 @@
                         sum += getDistance(pointList[i], pointList[i - 1]);
                     }
 
-                    const km = Math.round(((sum / 1000) + Number.EPSILON) * 100) / 100;
-                    return `${this.numberWithCommas(km)} กม.`;
+                    return sum;
                 } else {
                     if (pointList.length < 3) {
-                        return 0;
+                        return MEASURE_OFF;
                     }
 
                     const areaPoints = [];
@@ -534,25 +500,22 @@
                         areaPoints.push([point.latitude, point.longitude]);
                     });*/
 
-                    const sqKm = Math.round(((getAreaOfPolygon(areaPoints) / 1000000) + Number.EPSILON) * 100) / 100;
-                    return `${this.numberWithCommas(sqKm)} ตร.กม.`;
+                    return getAreaOfPolygon(areaPoints);
                 }
             }
         },
         data: () => {
             return {
-                store, PROVIDER_GOOGLE,
-                Dimensions, StyleSheet, DEBUG, MAP_HEADER, BOTTOM_NAV, DIMENSION,
+                store, PROVIDER_GOOGLE, SCALE_WIDTH, TOOLS_MARGIN_BOTTOM,
+                Dimensions, StyleSheet, TouchableOpacity, DEBUG, MAP_HEADER, BOTTOM_NAV, DIMENSION,
                 PROVINCE_DIMENSION, COLOR_PRIMARY, COLOR_PRIMARY_DARK,
-                imageMenu, imageBack, imageClose, imageLightOff, imageLightOn,
+                imageMenu, imageBack, imageLightOff, imageLightOn,
                 imageMapToolCurrentLocation, imageMapToolMarkerOff, imageMapToolMarkerOn,
                 bgMeasureTools, imageMapToolMeasureOn, imageMapToolMeasureOff,
                 imageMapToolLineOn, imageMapToolLineOff,
                 imageMapToolPolygonOn, imageMapToolPolygonOff,
                 imageDragMarker, imageDragMarkerEnd, imageDeleteMeasure,
 
-                screenHeight: Dimensions.get('window').height,
-                statusBarHeight: getStatusBarHeight(),
                 activeMarker: null,
                 mapCurrentRegion: null,
                 isMeasureToolOn: false,
@@ -561,18 +524,19 @@
                 isDragging: false,
                 draggedMarker: null,
                 searchTerm: '',
+                backHandler: null,
+                isMarkerDetailsOpen: false,
+                scaleText: null,
 
                 pointList: [
                     /*{longitude: 99.90637622773647, latitude: 13.739281519255695},
                     {longitude: 99.93837732821703, latitude: 13.77968939358877}*/
                 ],
                 point: null,
+                pointAddress: '',
             };
         },
         methods: {
-            numberWithCommas: function (num) {
-                return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-            },
             openFilterPanel: function () {
                 this.$refs['drawer'].open();
             },
@@ -602,12 +566,12 @@
             handleClickPoint: function (marker) {
                 console.log(JSON.stringify(marker));
 
-                this.$refs['bottomSheet'].snapTo(1);
+                this.$refs['markerDetails'].snapTo(1);
                 this.activeMarker = marker;
                 marker.active = true;
             },
-            handleClickCloseBottomSheet: function () {
-                this.$refs['bottomSheet'].snapTo(2);
+            handleClickCloseMarkerDetails: function () {
+                this.$refs['markerDetails'].snapTo(2);
             },
             handlePressPolyline: function (marker) {
                 //alert(marker.properties.NAME_T);
@@ -627,7 +591,7 @@
             handleMapReady: function () {
                 //alert('Map ready!');
             },
-            handleClickMap: function (coord) {
+            handleClickMap: async function (coord) {
                 //console.log(coord);
 
                 if (this.isMeasureToolOn) {
@@ -637,11 +601,51 @@
 
                     console.log(this.pointList);
                 } else if (this.isMarkerToolOn) {
+                    const latitudeDelta = this.mapCurrentRegion ? this.mapCurrentRegion.latitudeDelta : 0.005;
+                    const longitudeDelta = this.mapCurrentRegion ? this.mapCurrentRegion.longitudeDelta : 0.005;
+                    this.$refs['mapView'].animateToRegion({
+                        latitude: coord.latitude,
+                        longitude: coord.longitude,
+                        latitudeDelta,
+                        longitudeDelta,
+                    });
+                    const apiResult = await doGetAddressFromCoord(coord.latitude, coord.longitude);
+
+                    this.$refs['markerDetails'].snapTo(1);
                     this.point = coord;
+                    if (apiResult.success) {
+                        this.pointAddress = apiResult.data.address;
+                    } else {
+                        this.pointAddress = `${coord.latitude}, ${coord.longitude}`;
+                    }
                 }
             },
             handleRegionChange: function (region) {
+                console.log(JSON.stringify(this.mapCurrentRegion));
                 this.mapCurrentRegion = region;
+                this.calculateScaleDistance(region);
+            },
+            calculateScaleDistance(region) { //todo: ******************************************************************************
+                const screenWidth = Dimensions.get('window').width;
+                const scaleLongitudeDelta = (this.SCALE_WIDTH * region.longitudeDelta) / screenWidth;
+                const scaleDistance = getDistance( // คำนวณที่มุมล่างซ้ายของ map
+                    {
+                        latitude: region.latitude - (region.latitudeDelta / 2),
+                        longitude: region.longitude - (region.longitudeDelta / 2)
+                    },
+                    {
+                        latitude: region.latitude - (region.latitudeDelta / 2),
+                        longitude: region.longitude - (region.longitudeDelta / 2) + scaleLongitudeDelta
+                    }
+                );
+                if (scaleDistance < 1000) {
+                    this.scaleText = scaleDistance + ' m';
+                } else {
+                    this.scaleText = this.numberWithCommas((scaleDistance / 1000).toFixed(2)) + ' km';
+                }
+            },
+            numberWithCommas: function (num) {
+                return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             },
 
             handleDragMarkerStart: function (coord) {
@@ -672,12 +676,15 @@
                 this.isMeasureToolOn = !this.isMeasureToolOn;
                 if (this.isMeasureToolOn) {
                     this.isMarkerToolOn = false;
+                    this.point = null;
                 }
             },
             handleClickMarkerTool: function () {
                 this.isMarkerToolOn = !this.isMarkerToolOn;
                 if (this.isMarkerToolOn) {
                     this.isMeasureToolOn = false;
+                } else {
+                    this.point = null;
                 }
             },
             handleClickCurrentLocationTool: function () {
@@ -776,6 +783,45 @@
                     });
                 }
             },
+            handleOpenMarkerDetails: function () {
+                this.isMarkerDetailsOpen = true;
+            },
+            handleCloseMarkerDetails: function () {
+                this.isMarkerDetailsOpen = false;
+            },
+            handleClickNavigate: function () {
+                let lat = null, lng = null;
+                let label = null;
+
+                if (this.point) {
+                    lat = this.point.latitude;
+                    lng = this.point.longitude;
+                    label = this.pointAddress;
+                } else if (this.activeMarker) {
+                    lat = this.activeMarker.geometry.coordinates[1];
+                    lng = this.activeMarker.geometry.coordinates[0];
+                    label = this.activeMarker.properties.NAME_T;
+                }
+
+                if (lat !== null && lng != null) {
+                    const scheme = Platform.select({
+                        ios: 'maps:0,0?q=',
+                        android: 'geo:0,0?q='
+                    });
+                    const latLng = `${lat},${lng}`;
+                    const url = Platform.select({
+                        ios: `${scheme}${label}@${latLng}`,
+                        android: `${scheme}${latLng}(${label})`
+                    });
+
+                    Linking.openURL(url);
+                } else {
+                    Alert.alert('ผิดพลาด', 'ไม่สามารถนำทางได้')
+                }
+            },
+            getWmsLink: function (wms) {
+                return `${wms.url.replace('GetCapabilities', 'GetMap')}&layers=${wms.layers[0]}&bbox={minX},{minY},{maxX},{maxY}&width={width}&height={height}&srs=EPSG:900913&format=image/png&transparent=true`;
+            },
             /*handleClickClearSearch: function () {
                 this.showSearchResult = false;
                 this.searchTerm = '';
@@ -788,6 +834,23 @@
             /*store.dispatch('FETCH_MAP_DATA', {
                 province: 0
             });*/
+
+            const self = this;
+            this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+                if (this.isMarkerDetailsOpen) {
+                    this.$refs['markerDetails'].snapTo(2);
+                    return true;
+                }
+                return false;
+            });
+        },
+        mounted: function () {
+            //this.$refs['markerDetails'].snapTo(2);
+        },
+        beforeDestroy: function () {
+            if (this.backHandler) {
+                this.backHandler.remove();
+            }
         },
     }
 </script>
@@ -828,6 +891,21 @@
         font-size: 26;
         border-width: 0;
         border-color: yellow;
+    }
+
+    .map-scale-container {
+        position: absolute;
+        align-items: center;
+        border-width: 0;
+        border-color: red;
+    }
+
+    .map-scale-text {
+        font-family: DBHeaventt-Light;
+        padding-top: 0;
+        padding-bottom: 0;
+        color: #333333;
+        font-size: 18;
     }
 
     .map-tools-container {
@@ -945,4 +1023,4 @@
         height: 38;
         margin-right: 6;
     }
-</styl
+</style>

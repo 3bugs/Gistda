@@ -8,10 +8,13 @@
                 :keyExtractor="(item, index) => index.toString()"
                 :contentContainerStyle="{margin: 0}">
             <view render-prop-fn="renderItem">
-                <news-item
+                <list-item
                         v-if="page === 0 || page === 2"
                         :item="args.item"
                         :index="args.index"
+                        :image="args.item.image"
+                        :title="args.item.title"
+                        :details="args.item.caption"
                         :show-date="false"
                         :on-click="handleClickNewsItem"/>
                 <er-item
@@ -84,7 +87,7 @@
     import Dialog from "react-native-dialog";
 
     import NoData from '../../components/NoData';
-    import NewsItem from './NewsItem';
+    import ListItem from '../../components/ListItem';
     import ErItem from './ErItem';
 
     import imagePhoneCall from '../../../assets/images/screen_news/ic_phone_call.png';
@@ -95,7 +98,7 @@
             DialogTitle: Dialog.Title,
             DialogButton: Dialog.Button,
             DialogDescription: Dialog.Description,
-            NewsItem, ErItem, NoData
+            ListItem, ErItem, NoData
         },
         props: {
             navigation: {

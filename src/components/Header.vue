@@ -4,7 +4,10 @@
                          transparent ? 'rgba(0, 0, 0, 0)' : MAP_HEADER.background[province].startColor,
                          transparent ? 'rgba(0, 0, 0, 0)' : MAP_HEADER.background[province].endColor
                      ]"
-                     :style="{paddingTop: STATUS_BAR_HEIGHT}">
+                     :style="{
+                         paddingTop: STATUS_BAR_HEIGHT,
+                         height: HEADER.height,
+                     }">
         <touchable-opacity class="left-icon-touchable"
                            :on-press="leftIcon.callback">
             <image :source="leftIcon.icon"
@@ -27,7 +30,7 @@
 
 <script>
     import store from '../store';
-    import {DEBUG, MAP_HEADER} from '../constants';
+    import {DEBUG, MAP_HEADER, HEADER} from '../constants';
 
     import {getStatusBarHeight} from 'react-native-status-bar-height';
     import LinearGradient from 'react-native-linear-gradient';
@@ -55,7 +58,7 @@
         },
         data: () => {
             return {
-                DEBUG, MAP_HEADER,
+                DEBUG, MAP_HEADER, HEADER,
                 STATUS_BAR_HEIGHT: getStatusBarHeight(),
             };
         },
@@ -65,7 +68,6 @@
 
 <style>
     .container {
-        height: 93;
         flex-direction: row;
         align-items: center;
         padding-left: 20;

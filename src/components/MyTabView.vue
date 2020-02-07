@@ -5,7 +5,7 @@
                   :_initial-layout="{width: Dimensions.get('window').width}"
                   :on-index-change="handlePageChange"
                   :on-swipe-start="() => {swipeStart = true}"
-                  :swipeEnabled="true"
+                  :swipe-enabled="swipeEnabled"
                   :lazy="false"/>
     </view>
 </template>
@@ -27,6 +27,10 @@
             renderScene: {
                 type: Function
             },
+            swipeEnabled: {
+                type: Boolean,
+                default: true
+            }
         },
         computed: {
             province() {

@@ -92,6 +92,9 @@ export const MAP_HEADER = {
         imageListYasothon
     ],
 };
+export const HEADER = {
+    height: 93,
+};
 export const SIDEBAR = {
     headerBackground: [
         {

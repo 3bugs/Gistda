@@ -12,23 +12,24 @@
                     paddingRight: DIMENSION.horizontal_margin
                 }">
             <card-view
+                    v-if="image"
                     class="cover-image-container"
                     :card-elevation="10"
                     :card-maxElevation="10"
                     :corner-radius="10"
                     :style="{}">
-                <image :source="{uri: item.image}"
+                <image :source="{uri: image}"
                        class="cover-image"
                        resize-mode="cover"/>
             </card-view>
             <view class="content">
                 <text class="title"
                       :numberOfLines="1">
-                    {{item[titlePropName]}}
+                    {{title.trim()}}
                 </text>
                 <text class="caption"
                       :numberOfLines="showDate ? 2 : 3">
-                    {{item[detailsPropName]}}
+                    {{details.trim().length === 0 ? '(ไม่มีรายละเอียด)' : details.trim()}}
                 </text>
                 <text class="date"
                       v-if="showDate">
@@ -48,8 +49,8 @@
 </template>
 
 <script>
-    import store from '../../store';
-    import {DEBUG, COLOR_PRIMARY, DIMENSION} from '../../constants';
+    import store from '../store';
+    import {DEBUG, COLOR_PRIMARY, DIMENSION} from '../constants';
 
     import {StyleSheet} from 'react-native';
     import CardView from 'react-native-cardview';
@@ -64,13 +65,17 @@
             index: {
                 type: Number
             },
-            titlePropName: {
+            image: {
                 type: String,
-                default: 'title'
+                default: '',
             },
-            detailsPropName: {
+            title: {
                 type: String,
-                default: 'caption'
+                default: '',
+            },
+            details: {
+                type: String,
+                default: '',
             },
             showDate: {
                 type: Boolean,
@@ -133,12 +138,13 @@
         font-family: DBHeavent;
         font-size: 20;
         color: #626b80;
-        margin-bottom: 2;
+        margin-bottom: 0;
     }
 
     .date {
         font-family: DBHeavent;
         font-size: 18;
         color: #aaaaaa;
+        margin-top: 2;
     }
 </style>

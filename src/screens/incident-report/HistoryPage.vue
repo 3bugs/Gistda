@@ -8,11 +8,12 @@
                 :keyExtractor="(item, index) => index.toString()"
                 :contentContainerStyle="{margin: 0}">
             <view render-prop-fn="renderItem">
-                <news-item
+                <list-item
                         :item="args.item"
                         :index="args.index"
-                        titlePropName="detail"
-                        detailsPropName="detail"
+                        :image="args.item.image"
+                        :title="args.item.detail"
+                        :details="args.item.detail"
                         :show-date="false"
                         :on-click="handleClickItem"/>
             </view>
@@ -36,13 +37,13 @@
     import store from '../../store';
     import {DEBUG, APP_NAME, PROVINCE_NAME_EN, BOTTOM_NAV, COLOR_PRIMARY, COLOR_PRIMARY_DARK} from '../../constants';
     import NoData from '../../components/NoData';
-    import NewsItem from '../news/NewsItem';
+    import ListItem from '../../components/ListItem';
 
     import {Platform, PermissionsAndroid, Linking} from 'react-native';
 
     export default {
         components: {
-            NewsItem, NoData
+            ListItem, NoData
         },
         props: {
             navigation: {

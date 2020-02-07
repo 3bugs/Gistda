@@ -21,6 +21,7 @@
     import Map from './src/screens/map/Map';
     import News from './src/screens/news/News';
     import SearchResult from './src/screens/search-result/SearchResult';
+    //import MapsPage from './src/screens/search-result/MapsPage'; //todo: ****************
     import Report from './src/screens/report/Report';
     import NewsDetails from './src/screens/news/NewsDetails';
     import Login from './src/screens/login/Login';
@@ -66,8 +67,8 @@
             News: {
                 screen: News,
             },
-            SearchResult: {
-                screen: SearchResult,
+            Cctv: {
+                screen: SettingsScreen,
             },
             Report: {
                 screen: Report,
@@ -146,6 +147,12 @@
             },
             History: {
                 screen: History,
+                navigationOptions: {
+                    header: null,
+                }
+            },
+            SearchResult: {
+                screen: SearchResult,
                 navigationOptions: {
                     header: null,
                 }

@@ -29,18 +29,18 @@ export async function SET_COORDINATE_CATEGORIES(state, {coordinateCategoryList, 
     // เอา link รูปภาพเก็บเป็น sparse array ไว้ใช้ตอนปักหมูด search result
     state.categoryData = [];
     coordinateCategoryList.forEach(categoryType => {
-       categoryType.list.forEach(category => {
-           /*{
-               "id": 1,
-               "name": "ตำแหน่งอุบัติเหตุ",
-               "description": "",
-               "image": "https://fenrir.studio/d/gistda_dev/uploads/1rk1576090326.png",
-               "default": false,
-               "last_update_35": "2020-01-17 11:29:48",
-               "last_update_73": "2020-01-24 15:14:38"
-           }*/
-           state.categoryData[category.id] = category;
-       });
+        categoryType.list.forEach(category => {
+            /*{
+                "id": 1,
+                "name": "ตำแหน่งอุบัติเหตุ",
+                "description": "",
+                "image": "https://fenrir.studio/d/gistda_dev/uploads/1rk1576090326.png",
+                "default": false,
+                "last_update_35": "2020-01-17 11:29:48",
+                "last_update_73": "2020-01-24 15:14:38"
+            }*/
+            state.categoryData[category.id] = category;
+        });
     });
 
     callback();
@@ -176,7 +176,16 @@ export function SEARCHING(state) {
 export async function SET_SEARCH_RESULT(state, {coordinateList, wmsList, callback}) {
     state.searching = false;
     state.loadingMessage = null;
-    state.searchResultList[PROVINCE_NAME_EN[state.province]] = coordinateList;
+
+    const filteredCoordList = coordinateList.filter(coord => {
+        const type = coord.geometry.type;
+        const lat = coord.geometry.coordinates[1];
+        const lng = coord.geometry.coordinates[0];
+        return (type.toLowerCase() === 'point')
+            && (lat > 5) && (lat < 21)
+            && (lng > 97) && (lng < 106);
+    });
+    state.searchResultList[PROVINCE_NAME_EN[state.province]] = filteredCoordList;
 
     callback();
 }
@@ -406,6 +415,7 @@ function logObjectProperties(objectName, object) {
 function getLoadingMessage(message) {
     return /*'รอสักครู่\n' +*/ message;
 }
+
 /*
 export function SET_LOADING_MESSAGE(state, {message}) {
     state.loadingMessage = message;

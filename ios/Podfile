@@ -39,6 +39,8 @@ target 'gistda' do
   pod 'Google-Maps-iOS-Utils' # Uncomment this line if you want to support GoogleMaps on iOS
   pod 'RNSVG', :path => '../node_modules/react-native-svg'
 
+  pod 'react-native-fbsdk', :path => '../node_modules/react-native-fbsdk'
+
 end
 
 post_install do |installer|
