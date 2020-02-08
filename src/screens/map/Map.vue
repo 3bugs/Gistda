@@ -378,9 +378,34 @@
                     </card-view>
                 </view>
             </view>
+
+            <marker-details
+                    ref="markerDetails"
+                    :snap-points="[
+                        screenHeight - statusBarHeight - BOTTOM_NAV.height,
+                        (screenHeight - 140 - BOTTOM_NAV.height) / 2,
+                        0
+                    ]"
+                    :android-initial-snap="2"
+                    :coord="activeMarker ? {
+                        latitude: activeMarker.geometry.coordinates[1],
+                        longitude: activeMarker.geometry.coordinates[0],
+                    } : null"
+                    :on-open="handleOpenBottomSheet"
+                    :on-close="handleCloseBottomSheet"
+                    :on-click-navigate="null"
+                    :on-click-close-button="handleClickCloseBottomSheet"
+                    :title-font-size="26"
+                    :title="activeMarker ? activeMarker.properties.NAME_T : ''"
+                    :show-category="true"
+                    :category-image-url="activeMarker ? store.state.categoryData[activeMarker.properties.CATEGORY].image : null"
+                    :category-name="activeMarker ? store.state.categoryData[activeMarker.properties.CATEGORY].name : ''"
+                    :image-list="activeMarker ? activeMarker.properties.IMAGES : []"
+                    :description="(activeMarker && activeMarker.properties.DESCRIPTION_T) ? activeMarker.properties.DESCRIPTION_T.trim() : ''"
+                    :location="(activeMarker && activeMarker.properties.LOCATION_T) ? activeMarker.properties.LOCATION_T.trim() : ''"/>
         </view>
 
-        <bottom-sheet
+        <!--<bottom-sheet
                 ref="bottomSheet"
                 :snap-points="[screenHeight - statusBarHeight, '45%', '0%']"
                 :initial-snap="2"
@@ -436,7 +461,7 @@
                         </touchable-opacity>
                     </scroll-view>
 
-                    <!--<flat-list
+                    &lt;!&ndash;<flat-list
                             :data="activeMarker ? activeMarker.properties.IMAGES : []"
                             :key-extractor="(item, index) => index.toString()">
                         <view render-prop-fn="renderItem">
@@ -458,7 +483,7 @@
                                        resize-mode="cover"/>
                             </card-view>
                         </view>
-                    </flat-list>-->
+                    </flat-list>&ndash;&gt;
 
                     <view v-if="activeMarker && activeMarker.properties.DESCRIPTION_T && activeMarker.properties.DESCRIPTION_T.trim().length > 0"
                           :style="{marginBottom: 15}">
@@ -612,7 +637,7 @@
                     </view>
                 </view>
 
-                <!--<touchable-opacity
+                &lt;!&ndash;<touchable-opacity
                         :on-press="handleClickNavigate"
                         :active-opacity="0.4">
                     <view :style="{
@@ -629,7 +654,7 @@
                                 color: '#435582',
                             }">นำทาง</text>
                     </view>
-                </touchable-opacity>-->
+                </touchable-opacity>&ndash;&gt;
 
                 <view :style="{
                     marginTop: 0,
@@ -640,7 +665,7 @@
                     borderBottomColor: '#cccccc'
                 }"/>
             </view>
-        </bottom-sheet>
+        </bottom-sheet>-->
     </drawer>
 </template>
 
@@ -653,6 +678,7 @@
     import {requestAndroidPermissions} from '../../constants/utils'
     import {doGetAddressFromCoord} from '../../store/fetch';
     import MeasureLabel from './MeasureLabel';
+    import MarkerDetails from '../map/MarkerDetails';
 
     import {Dimensions, StyleSheet, Alert, PermissionsAndroid, Platform, Keyboard, BackHandler, Linking, TouchableOpacity} from 'react-native';
     import {Fragment} from 'react';
@@ -699,7 +725,7 @@
         components: {
             Fragment, MapView, Marker, Polyline, Polygon, WMSTile, LinearGradient,
             CardView, Drawer, FilterPanel, Slider, BottomSheet, SliderBox,
-            MeasureLabel,
+            MeasureLabel, MarkerDetails,
         },
         props: {
             navigation: { // bottom nav
@@ -818,12 +844,12 @@
             handleClickPoint: function (marker) {
                 console.log(JSON.stringify(marker));
 
-                this.$refs['bottomSheet'].snapTo(1);
+                this.$refs['markerDetails'].snapTo(1);
                 this.activeMarker = marker;
                 marker.active = true;
             },
             handleClickCloseBottomSheet: function () {
-                this.$refs['bottomSheet'].snapTo(2);
+                this.$refs['markerDetails'].snapTo(2);
             },
             handlePressPolyline: function (marker) {
                 //alert(marker.properties.NAME_T);
@@ -863,7 +889,7 @@
                     });
                     const apiResult = await doGetAddressFromCoord(coord.latitude, coord.longitude);
 
-                    this.$refs['bottomSheet'].snapTo(1);
+                    this.$refs['markerDetails'].snapTo(1);
                     this.point = coord;
                     if (apiResult.success) {
                         this.pointAddress = apiResult.data.address;
@@ -1090,7 +1116,7 @@
             const self = this;
             this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
                 if (this.isBottomSheetOpen) {
-                    this.$refs['bottomSheet'].snapTo(2);
+                    this.$refs['markerDetails'].snapTo(2);
                     return true;
                 }
                 return false;

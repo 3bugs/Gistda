@@ -2,6 +2,7 @@
     <view class="container"
           :style="{marginBottom: 0}">
         <map-view
+                v-if="resultType === 0"
                 :provider="PROVIDER_GOOGLE"
                 ref="mapView"
                 class="map-view"
@@ -28,9 +29,40 @@
                     :on-press="() => handleClickPoint(marker)"/>
         </map-view>
 
-        <!--<marker-details
-                v-if="false"
+        <flat-list
+                v-if="resultType === 1"
+                class="list"
+                :data="searchResultList"
+                :keyExtractor="(item, index) => index.toString()"
+                :contentContainerStyle="{margin: 0}">
+            <view render-prop-fn="renderItem">
+                <list-item
+                        :item="args.item"
+                        :index="args.index"
+                        :image="args.item.properties.IMAGES.length > 0 ? args.item.properties.IMAGES[0] : ''"
+                        :title="args.item.properties.NAME_T"
+                        :details="args.item.properties.DESCRIPTION_T"
+                        :show-date="false"
+                        :on-click="() => handleClickPoint(args.item)"/>
+            </view>
+            <view render-prop="ListHeaderComponent"
+                  v-if="false">
+                <view :style="{height: 15}"/>
+            </view>
+            <view render-prop="ListFooterComponent"
+                  v-if="true">
+                <view :style="{height: 50}"/>
+            </view>
+        </flat-list>
+
+        <marker-details
                 ref="markerDetails"
+                :snap-points="[screenHeight - 140, (screenHeight - 140) / 2, 0]"
+                :android-initial-snap="2"
+                :coord="activeMarker ? {
+                    latitude: activeMarker.geometry.coordinates[1],
+                    longitude: activeMarker.geometry.coordinates[0],
+                } : null"
                 :on-open="handleOpenBottomSheet"
                 :on-close="handleCloseBottomSheet"
                 :on-click-navigate="null"
@@ -42,121 +74,19 @@
                 :category-name="activeMarker ? store.state.categoryData[activeMarker.properties.CATEGORY].name : ''"
                 :image-list="activeMarker ? activeMarker.properties.IMAGES : []"
                 :description="(activeMarker && activeMarker.properties.DESCRIPTION_T) ? activeMarker.properties.DESCRIPTION_T.trim() : ''"
-                :location="(activeMarker && activeMarker.properties.LOCATION_T) ? activeMarker.properties.LOCATION_T.trim() : ''"/>-->
+                :location="(activeMarker && activeMarker.properties.LOCATION_T) ? activeMarker.properties.LOCATION_T.trim() : ''"/>
 
-        <r-b-sheet
-                ref="rbSheet"
-                :height="300"
-                :duration="400"
-                :close-on-drag-down="true"
-                :custom-styles="{
-                    container: {
-                        flex: 1,
-                    },
-                    wrapper: {
-                        backgroundColor: 'transparent'
-                    },
-                    draggableIcon: {
-                        backgroundColor: '#e0e0e0'
-                    },
-                }">
-            <view>
-                <view :style="{
-                    flexDirection: 'row',
-                    paddingLeft: DIMENSION.horizontal_margin,
-                    paddingRight: DIMENSION.horizontal_margin,
-                    paddingTop: 10,
-                    paddingBottom: DIMENSION.horizontal_margin - 10,
-                    backgroundColor: 'rgba(255, 255, 255, 240)',
-                    borderTopLeftRadius: 15,
-                    borderTopRightRadius: 15,
-                }">
-                    <view :style="{
-                        flex: 1,
-                        marginRight: 5,
-                    }">
-                        <!--<touchable-opacity>
-                            <view :style="{
-                                alignSelf: 'center',
-                                backgroundColor: '#e0e0e0',
-                                width: 30,
-                                height: 6,
-                                marginLeft: 53,
-                                marginBottom: 8,
-                                borderRadius: 2,
-                            }"/>
-                        </touchable-opacity>-->
+        <!--dummy view มีไว้เพื่อให้ data binding ของ bottom sheet ทำงาน
+            (น่าจะเป็น bug ของ bottom sheet หรือปัญหาจาก vue native)-->
+        <view :style="{
+            position: 'absolute',
+            width: 0, height: 0,
+        }">
+            <text>{{activeMarker ? activeMarker.properties.NAME_T : ''}}</text>
+        </view>
 
-                        <text :style="{
-                            fontFamily: 'DBHeavent-Bold',
-                            color: '#333333',
-                            fontSize: 26,
-                            marginBottom: 5,
-                        }">
-                            {{activeMarker ? activeMarker.properties.NAME_T : ''}}
-                        </text>
-                        <view
-                                :style="{
-                                    flexDirection: 'row',
-                              }">
-                            <image :source="{uri: (activeMarker ? store.state.categoryData[activeMarker.properties.CATEGORY].image : null)}"
-                                   :style="{
-                                        width: 35,
-                                        height: 38,
-                                   }"
-                                   resize-mode="contain"/>
-                            <text :style="{
-                                flex: 1,
-                                fontFamily: 'DBHeavent',
-                                color: '#aaaaaa',
-                                fontSize: 22,
-                                marginTop: 2,
-                            }">
-                                {{activeMarker ? store.state.categoryData[activeMarker.properties.CATEGORY].name : ''}}
-                            </text>
-                        </view>
-                    </view>
-                    <view>
-                        <touchable-opacity
-                                :on-press="handleClickCloseBottomSheet"
-                                :style="{
-                                marginTop: 0,
-                            }">
-                            <image :source="imageClose"
-                                   :style="{
-                                   width: 48,
-                                   height: 48,
-                                   padding: 0,
-                               }"/>
-                        </touchable-opacity>
-                        <touchable-opacity
-                                :on-press="handleClickNavigate"
-                                :style="{
-                                marginTop: 0,
-                            }">
-                            <image :source="imageNavigate"
-                                   :style="{
-                                   width: 48,
-                                   height: 48,
-                                   padding: 0,
-                               }"/>
-                        </touchable-opacity>
-                    </view>
-                </view>
-
-                <view :style="{
-                    marginTop: 0,
-                    marginBottom: 0,
-                    marginLeft: 0,
-                    marginRight: 0,
-                    borderBottomWidth: StyleSheet.hairlineWidth,
-                    borderBottomColor: '#cccccc'
-                }"/>
-            </view>
-        </r-b-sheet>
-
-        <bottom-sheet
-                ref="markerDetails"
+        <!--<bottom-sheet
+                ref="markerDetails2"
                 :snap-points="[screenHeight - 140, (screenHeight - 140) / 2, 0]"
                 :initial-snap="Platform.OS === 'android' ? 2 : 2"
                 :enabled-inner-scrolling="true"
@@ -177,10 +107,9 @@
                     paddingBottom: DIMENSION.horizontal_margin,
                     backgroundColor: 'rgba(255, 255, 255, 240)',
                     borderTopWidth: 0,
-                    borderLeftWidth: 2,
-                    borderRightWidth: 2,
-                    borderColor: '#666666',
-
+                    borderLeftWidth: 1,
+                    borderRightWidth: 1,
+                    borderColor: '#333333',
                 }">
                     <scroll-view
                             v-if="activeMarker && activeMarker.properties.IMAGES.length > 0"
@@ -214,7 +143,7 @@
                         </touchable-opacity>
                     </scroll-view>
 
-                    <!--<flat-list
+                    &lt;!&ndash;<flat-list
                             :data="activeMarker ? activeMarker.properties.IMAGES : []"
                             :key-extractor="(item, index) => index.toString()">
                         <view render-prop-fn="renderItem">
@@ -236,7 +165,7 @@
                                        resize-mode="cover"/>
                             </card-view>
                         </view>
-                    </flat-list>-->
+                    </flat-list>&ndash;&gt;
 
                     <view v-if="activeMarker && activeMarker.properties.DESCRIPTION_T && activeMarker.properties.DESCRIPTION_T.trim().length > 0"
                           :style="{marginBottom: 15}">
@@ -316,10 +245,10 @@
                     backgroundColor: 'rgba(255, 255, 255, 240)',
                     borderTopLeftRadius: 15,
                     borderTopRightRadius: 15,
-                    borderTopWidth: 2,
-                    borderLeftWidth: 2,
-                    borderRightWidth: 2,
-                    borderColor: '#666666',
+                    borderTopWidth: 1,
+                    borderLeftWidth: 1,
+                    borderRightWidth: 1,
+                    borderColor: '#333333',
                 }">
                     <view :style="{
                         flex: 1,
@@ -394,7 +323,7 @@
                     </view>
                 </view>
 
-                <!--<touchable-opacity
+                &lt;!&ndash;<touchable-opacity
                         :on-press="handleClickNavigate"
                         :active-opacity="0.4">
                     <view :style="{
@@ -411,7 +340,7 @@
                                 color: '#435582',
                             }">นำทาง</text>
                     </view>
-                </touchable-opacity>-->
+                </touchable-opacity>&ndash;&gt;
 
                 <view :style="{
                     marginTop: 0,
@@ -422,7 +351,7 @@
                     borderBottomColor: '#cccccc'
                 }"/>
             </view>
-        </bottom-sheet>
+        </bottom-sheet>-->
     </view>
 </template>
 
@@ -432,13 +361,14 @@
         DEBUG, APP_NAME, PROVINCE_DIMENSION, PROVINCE_NAME_EN, DIMENSION,
         BOTTOM_NAV, MAP_HEADER, COLOR_PRIMARY, COLOR_PRIMARY_DARK
     } from '../../constants';
+    import ListItem from '../../components/ListItem';
+    import MarkerDetails from '../map/MarkerDetails';
 
     import {Platform, StyleSheet, Dimensions, Linking, BackHandler, Alert} from 'react-native';
     import MapView from 'react-native-maps';
     import {PROVIDER_GOOGLE, Marker, Polyline, Polygon, WMSTile} from 'react-native-maps';
-    import BottomSheet from 'reanimated-bottom-sheet';
+    //import BottomSheet from 'reanimated-bottom-sheet';
     import CardView from 'react-native-cardview';
-    import RBSheet from "react-native-raw-bottom-sheet";
     import {getStatusBarHeight} from 'react-native-status-bar-height';
 
     import imageClose from '../../../assets/images/ic_close2.png';
@@ -446,12 +376,15 @@
 
     export default {
         components: {
-            MapView, Marker, Polyline, Polygon, WMSTile, BottomSheet, CardView, RBSheet,
+            MapView, Marker, Polyline, Polygon, WMSTile, CardView, ListItem, MarkerDetails,
         },
         props: {
             navigation: {
                 type: Object
             },
+            resultType: {
+                type: Number
+            }
         },
         computed: {
             province() {
@@ -597,20 +530,20 @@
                 province: 0
             });*/
 
-            /*const self = this;
+            const self = this;
             this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
                 if (this.isBottomSheetOpen) {
                     this.$refs['markerDetails'].snapTo(2);
                     return true;
                 }
                 return false;
-            });*/
+            });
         },
         beforeDestroy: function () {
             console.log('*** Lifecycle beforeDestroy');
-            /*if (this.backHandler) {
+            if (this.backHandler) {
                 this.backHandler.remove();
-            }*/
+            }
         },
         destroyed: function () {
             console.log('*** Lifecycle destroyed');

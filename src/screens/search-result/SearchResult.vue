@@ -28,8 +28,8 @@
     } from '../../constants';
     import Header from '../../components/Header';
     import MyTabView from '../../components/MyTabView';
-    import MapsPage from './MapsPage';
-    import ListPage from './MapsPage_Test';
+    import SearchResultPage from './SearchResultPage';
+    //import ListPage from './MapsPage_Test';
 
     import React from 'react';
 
@@ -42,7 +42,7 @@
     ];
 
     export default {
-        components: {ListPage, MapsPage, Header, MyTabView,},
+        components: {SearchResultPage, Header, MyTabView,},
         props: {
             navigation: {
                 type: Object
@@ -69,9 +69,9 @@
             renderScene: function ({route}) {
                 switch (route.key) {
                     case 'maps':
-                        return <MapsPage navigation={this.navigation}/>;
+                        return <SearchResultPage navigation={this.navigation} resultType={0}/>;
                     case 'list':
-                        return <ListPage navigation={this.navigation}/>;
+                        return <SearchResultPage navigation={this.navigation} resultType={1}/>;
                 }
             },
         },
