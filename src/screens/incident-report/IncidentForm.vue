@@ -249,7 +249,7 @@
     import FormHeader from '../../components/FormHeader';
     import IncidentFormTextInput from '../../components/IncidentFormTextInput';
     import MyButton from '../../components/MyButton';
-    import {requestAndroidPermissions} from '../../constants/utils';
+    import {requestAndroidPermissions, getCurrentLocation} from '../../constants/utils';
 
     import {Alert, Platform, PermissionsAndroid, Dimensions, Picker} from 'react-native';
     import CardView from 'react-native-cardview';
@@ -475,51 +475,6 @@
                 });
                 this.showImageDialog = false;
             },
-            getCurrentLocation: function () {
-                if (Platform.OS === 'android') { // android
-                    requestAndroidPermissions({
-                        permission: PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-                        title: this.APP_NAME,
-                        requestMessage: 'แอปจำเป็นต้องขอข้อมูลตำแหน่งปัจจุบันของคุณ',
-                        denyMessage: 'แอปไม่ได้รับอนุญาตจากผู้ใช้ จึงไม่สามารถตรวจสอบตำแหน่งปัจจุบันได้',
-                        callback: (success, message) => {
-                            if (success) {
-                                this.doGetCurrentLocation();
-                            } else {
-                                Alert.alert('ผิดพลาด', message);
-                            }
-                        }
-                    });
-                } else { // ios
-                    this.doGetCurrentLocation();
-                }
-            },
-            doGetCurrentLocation: function () {
-                try {
-                    Geolocation.getCurrentPosition(
-                        (position) => {
-                            console.log(position.coords);
-
-                            try {
-                                this.$refs['mapView'].animateToRegion({
-                                    latitude: position.coords.latitude,
-                                    longitude: position.coords.longitude,
-                                    latitudeDelta: 0.005,
-                                    longitudeDelta: 0.005,
-                                });
-                            } catch (e) {
-                                console.log('Error animate to region: ' + e);
-                            }
-                        },
-                        (error) => {
-                            console.log(`Error getting location: ${error.message}`);
-                        },
-                        {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000}
-                    );
-                } catch (e) {
-                    console.log('Error get current position: ' + e);
-                }
-            },
             handleRegionChange: function (region) {
                 store.dispatch('SET_INCIDENT_FORM_DATA', {
                     formData: {
@@ -630,7 +585,20 @@
             }
             this.formType = formType;
 
-            this.getCurrentLocation();
+            getCurrentLocation({
+                callback: coord => {
+                    try {
+                        this.$refs['mapView'].animateToRegion({
+                            latitude: coord.latitude,
+                            longitude: coord.longitude,
+                            latitudeDelta: 0.005,
+                            longitudeDelta: 0.005,
+                        });
+                    } catch (e) {
+                        console.log('Error animate to region: ' + e);
+                    }
+                }
+            });
         }
     }
 </script>

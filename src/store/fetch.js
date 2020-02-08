@@ -1,5 +1,5 @@
 import ApiResult from '../model/ApiResult';
-import {GOOGLE_MAPS, OPEN_WEATHER} from '../constants/index';
+import {GOOGLE_MAPS, OPEN_WEATHER, STATIC_MAP_DIMENSION} from '../constants/index';
 import {add} from "react-native-reanimated";
 
 //export const baseURL = 'https://fenrir.studio/d/gistda_dev';
@@ -28,6 +28,53 @@ export async function doGetAddressFromCoord(latitude, longitude) {
                 true,
                 '',
                 {address}
+            );
+        } else {
+            return new ApiResult(
+                false,
+                `N/A`,
+                null
+            );
+        }
+    } catch (error) {
+        return new ApiResult(
+            false,
+            `เกิดข้อผิดพลาดในการเชื่อมต่อเครือข่าย - ${error}`,
+            null
+        );
+    }
+}
+
+export async function doGetStaticMapsWithDirections(origin, destination) {
+    const WIDTH = STATIC_MAP_DIMENSION.width;
+    const HEIGHT = STATIC_MAP_DIMENSION.height;
+    const directionsUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}&key=${GOOGLE_MAPS.geocodingApiKey}&language=th`;
+
+    try {
+        const response = await fetch(directionsUrl);
+        const responseJson = await response.json();
+
+        console.log('Response JSON:');
+        console.log(responseJson);
+        console.log(JSON.stringify(responseJson));
+
+        if (responseJson.routes.length > 0) {
+            const distanceText = responseJson.routes[0].legs[0].distance.text;
+            const durationText = responseJson.routes[0].legs[0].duration.text;
+            const encodedPolyline = responseJson.routes[0].overview_polyline.points;
+            console.log(`Encoded polyline: ${encodedPolyline}`);
+
+            const staticMapsUrl = `https://maps.googleapis.com/maps/api/staticmap?size=${WIDTH}x${HEIGHT}&path=enc%3A${encodedPolyline}&key=${GOOGLE_MAPS.geocodingApiKey}&language=th`;
+            console.log(`Static maps: ${staticMapsUrl}`);
+
+            return new ApiResult(
+                true,
+                '',
+                {
+                    distanceText,
+                    durationText,
+                    staticMapsUrl
+                }
             );
         } else {
             return new ApiResult(

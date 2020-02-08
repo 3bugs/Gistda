@@ -42,16 +42,33 @@
                         <view :style="{
                             flex: 1,
                         }">
-                            <text class="header-text">{{headerText}}</text>
-                            <text :style="{
-                                fontFamily: 'DBHeaventt-Light',
-                                fontSize: 22,
-                                color: '#626B80',
-                                borderWidth: 0,
-                                borderColor: 'blue',
-                            }">
-                                {{subHeaderText}}
-                            </text>
+                            <text class="header-text"
+                                  :style="{fontSize: headerFontSize}">{{headerText}}</text>
+                            <view
+                                    :style="{
+                                        flexDirection: 'row'
+                                    }">
+                                <image
+                                        v-if="categoryImage !== ''"
+                                        :source="{uri: categoryImage}"
+                                        :style="{
+                                            width: 35,
+                                            height: 38,
+                                        }"
+                                        resize-mode="contain"/>
+                                <text
+                                        :style="{
+                                            flex: 1,
+                                            fontFamily: 'DBHeaventt-Light',
+                                            fontSize: 22,
+                                            color: '#626B80',
+                                            marginTop: 2,
+                                            borderWidth: 0,
+                                            borderColor: 'blue',
+                                        }">
+                                    {{subHeaderText}}
+                                </text>
+                            </view>
                         </view>
                         <touchable-opacity
                                 v-if="!noCloseButton"
@@ -59,7 +76,7 @@
                                 :style="{
                                     marginTop: 0,
                                 }">
-                            <image :source="imageClose"
+                            <image :source="closeButtonImage"
                                    :style="{
                                         width: 48,
                                         height: 48,
@@ -145,14 +162,26 @@
             headerText: {
                 type: String
             },
+            headerFontSize: {
+                type: Number,
+                default: 32
+            },
             subHeaderText: {
                 type: String
+            },
+            categoryImage: {
+                type: String,
+                default: ''
             },
             buttonText: {
                 type: String
             },
             noCloseButton: {
                 type: Boolean
+            },
+            closeButtonImage: {
+                type: Number,
+                default: imageClose
             },
             overrideScrollView: {
                 type: Boolean
@@ -201,7 +230,6 @@
 
     .header-text {
         font-family: DBHeavent-Med;
-        font-size: 32;
         color: #212529;
         margin-bottom: 0;
         border-width: 0;

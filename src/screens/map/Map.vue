@@ -379,7 +379,7 @@
                 </view>
             </view>
 
-            <marker-details
+            <!--<marker-details
                     ref="markerDetails"
                     :snap-points="[
                         screenHeight - statusBarHeight - BOTTOM_NAV.height,
@@ -402,7 +402,7 @@
                     :category-name="activeMarker ? store.state.categoryData[activeMarker.properties.CATEGORY].name : ''"
                     :image-list="activeMarker ? activeMarker.properties.IMAGES : []"
                     :description="(activeMarker && activeMarker.properties.DESCRIPTION_T) ? activeMarker.properties.DESCRIPTION_T.trim() : ''"
-                    :location="(activeMarker && activeMarker.properties.LOCATION_T) ? activeMarker.properties.LOCATION_T.trim() : ''"/>
+                    :location="(activeMarker && activeMarker.properties.LOCATION_T) ? activeMarker.properties.LOCATION_T.trim() : ''"/>-->
         </view>
 
         <!--<bottom-sheet
@@ -675,7 +675,7 @@
         DEBUG, MAP_HEADER, BOTTOM_NAV, PROVINCE_NAME_EN, DIMENSION,
         PROVINCE_DIMENSION, COLOR_PRIMARY, COLOR_PRIMARY_DARK
     } from '../../constants';
-    import {requestAndroidPermissions} from '../../constants/utils'
+    import {requestAndroidPermissions, getCurrentLocation} from '../../constants/utils'
     import {doGetAddressFromCoord} from '../../store/fetch';
     import MeasureLabel from './MeasureLabel';
     import MarkerDetails from '../map/MarkerDetails';
@@ -844,9 +844,11 @@
             handleClickPoint: function (marker) {
                 console.log(JSON.stringify(marker));
 
-                this.$refs['markerDetails'].snapTo(1);
+                //this.$refs['markerDetails'].snapTo(1);
                 this.activeMarker = marker;
                 marker.active = true;
+
+                this.navigation.navigate('MarkerDetails', {marker});
             },
             handleClickCloseBottomSheet: function () {
                 this.$refs['markerDetails'].snapTo(2);
@@ -889,13 +891,35 @@
                     });
                     const apiResult = await doGetAddressFromCoord(coord.latitude, coord.longitude);
 
-                    this.$refs['markerDetails'].snapTo(1);
+                    //this.$refs['markerDetails'].snapTo(1);
                     this.point = coord;
                     if (apiResult.success) {
                         this.pointAddress = apiResult.data.address;
                     } else {
                         this.pointAddress = `${coord.latitude}, ${coord.longitude}`;
                     }
+
+                    const title = apiResult.success ? apiResult.data.address : `${coord.latitude.toFixed(6)}, ${coord.longitude.toFixed(6)}`;
+                    const marker = {
+                        type: 'Feature',
+                        id: 17678,
+                        geometry: {
+                            type: 'Point',
+                            coordinates: [
+                                coord.longitude,
+                                coord.latitude
+                            ]
+                        },
+                        properties: {
+                            NAME_T: title,
+                            DESCRIPTION_T: `ละติจูด ${coord.latitude.toFixed(6)}, ลองจิจูด ${coord.longitude.toFixed(6)}`,
+                            LOCATION_T: '',
+                            CATEGORY: 0,
+                            P_CODE: 0,
+                            IMAGES: []
+                        }
+                    };
+                    this.navigation.navigate('MarkerDetails', {marker});
                 }
             },
             handleRegionChange: function (region) {
@@ -966,6 +990,22 @@
                 }
             },
             handleClickCurrentLocationTool: function () {
+                getCurrentLocation({
+                    callback: coord => {
+                        try {
+                            this.$refs['mapView'].animateToRegion({
+                                latitude: coord.latitude,
+                                longitude: coord.longitude,
+                                latitudeDelta: 0.005,
+                                longitudeDelta: 0.005,
+                            });
+                        } catch (e) {
+                            console.log('Error animate to region: ' + e);
+                        }
+                    }
+                });
+            },
+            _handleClickCurrentLocationTool: function () {
                 if (Platform.OS === 'android') { // android
                     requestAndroidPermissions({
                         permission: PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
@@ -1113,19 +1153,19 @@
                 province: 0
             });*/
 
-            const self = this;
+            /*const self = this;
             this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
                 if (this.isBottomSheetOpen) {
                     this.$refs['markerDetails'].snapTo(2);
                     return true;
                 }
                 return false;
-            });
+            });*/
         },
         beforeDestroy: function () {
-            if (this.backHandler) {
+            /*if (this.backHandler) {
                 this.backHandler.remove();
-            }
+            }*/
         },
     }
 </script>

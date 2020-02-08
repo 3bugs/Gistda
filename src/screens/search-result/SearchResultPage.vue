@@ -55,7 +55,7 @@
             </view>
         </flat-list>
 
-        <marker-details
+        <!--<marker-details
                 ref="markerDetails"
                 :snap-points="[screenHeight - 140, (screenHeight - 140) / 2, 0]"
                 :android-initial-snap="2"
@@ -74,7 +74,7 @@
                 :category-name="activeMarker ? store.state.categoryData[activeMarker.properties.CATEGORY].name : ''"
                 :image-list="activeMarker ? activeMarker.properties.IMAGES : []"
                 :description="(activeMarker && activeMarker.properties.DESCRIPTION_T) ? activeMarker.properties.DESCRIPTION_T.trim() : ''"
-                :location="(activeMarker && activeMarker.properties.LOCATION_T) ? activeMarker.properties.LOCATION_T.trim() : ''"/>
+                :location="(activeMarker && activeMarker.properties.LOCATION_T) ? activeMarker.properties.LOCATION_T.trim() : ''"/>-->
 
         <!--dummy view มีไว้เพื่อให้ data binding ของ bottom sheet ทำงาน
             (น่าจะเป็น bug ของ bottom sheet หรือปัญหาจาก vue native)-->
@@ -426,15 +426,17 @@
             handleClickPoint: function (marker) {
                 console.log(JSON.stringify(marker));
 
-                this.$refs['markerDetails'].snapTo(1);
+                //this.$refs['markerDetails'].snapTo(1);
                 //this.$refs['rbSheet'].open();
 
                 this.isMarkerClicked = true;
                 this.activeMarker = marker;
                 marker.active = true;
+
+                this.navigation.navigate('MarkerDetails', {marker});
             },
             handleClickCloseBottomSheet: function () {
-                this.$refs['markerDetails'].snapTo(2);
+                //this.$refs['markerDetails'].snapTo(2);
             },
             handleOpenBottomSheet: function () {
                 this.isBottomSheetOpen = true;
@@ -530,20 +532,20 @@
                 province: 0
             });*/
 
-            const self = this;
+            /*const self = this;
             this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
                 if (this.isBottomSheetOpen) {
                     this.$refs['markerDetails'].snapTo(2);
                     return true;
                 }
                 return false;
-            });
+            });*/
         },
         beforeDestroy: function () {
             console.log('*** Lifecycle beforeDestroy');
-            if (this.backHandler) {
+            /*if (this.backHandler) {
                 this.backHandler.remove();
-            }
+            }*/
         },
         destroyed: function () {
             console.log('*** Lifecycle destroyed');
