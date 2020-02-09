@@ -329,53 +329,7 @@
                 </linear-gradient>
 
                 <view class="search-input-container">
-                    <card-view
-                            :card-elevation="4"
-                            :card-maxElevation="4"
-                            :corner-radius="25"
-                            :style="{
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                paddingTop: 6,
-                                paddingBottom: 6,
-                                paddingLeft: 15,
-                                paddingRight: 15,
-                                height: 50,
-                                backgroundColor: '#fff'
-                            }">
-                        <text-input class="search-input"
-                                    v-model="searchTerm"
-                                    return-key-type="search"
-                                    :on-submit-editing="handleClickSearch"
-                                    :placeholder="mapCurrentRegion ? `${mapCurrentRegion.latitude.toFixed(6)}, ${mapCurrentRegion.longitude.toFixed(6)}` : ''"
-                                    placeholder-text-color="#aaa"/>
-
-                        <view class="divider"/>
-
-                        <touchable-opacity
-                                v-if="!isSearching"
-                                class="list-icon-touchable"
-                                :on-press="handleClickSearch">
-                            <image :source="MAP_HEADER.listIcon[province]"
-                                   class="list-icon"
-                                   resize-mode="contain"/>
-                        </touchable-opacity>
-
-                        <!--<touchable-opacity
-                                v-if="!isSearching && showSearchResult"
-                                class="list-icon-touchable"
-                                :on-press="handleClickClearSearch">
-                            <image :source="imageClose"
-                                   class="list-icon"
-                                   resize-mode="contain"/>
-                        </touchable-opacity>-->
-
-                        <activity-indicator
-                                v-if="isSearching"
-                                :style="{alignSelf: 'center'}"
-                                size="small"
-                                :color="COLOR_PRIMARY[province]"/>
-                    </card-view>
+                    <search-box :navigation="navigation"/>
                 </view>
             </view>
 
@@ -678,9 +632,10 @@
     import {requestAndroidPermissions, getCurrentLocation} from '../../constants/utils'
     import {doGetAddressFromCoord} from '../../store/fetch';
     import MeasureLabel from './MeasureLabel';
-    import MarkerDetails from '../map/MarkerDetails';
+    import SearchBox from './SearchBox';
+    //import MarkerDetails from '../map/MarkerDetails';
 
-    import {Dimensions, StyleSheet, Alert, PermissionsAndroid, Platform, Keyboard, BackHandler, Linking, TouchableOpacity} from 'react-native';
+    import {Dimensions, StyleSheet, Alert, PermissionsAndroid, Platform, BackHandler, Linking, TouchableOpacity} from 'react-native';
     import {Fragment} from 'react';
     import MapView from 'react-native-maps';
     import {PROVIDER_GOOGLE, Marker, Polyline, Polygon, WMSTile} from 'react-native-maps';
@@ -720,15 +675,16 @@
 
     const SCALE_WIDTH = 90;
     const TOOLS_MARGIN_BOTTOM = 40;
+    const CLICK_CURRENT_LOCATION_TIMEOUT = 10;
 
     export default {
         components: {
             Fragment, MapView, Marker, Polyline, Polygon, WMSTile, LinearGradient,
             CardView, Drawer, FilterPanel, Slider, BottomSheet, SliderBox,
-            MeasureLabel, MarkerDetails,
+            MeasureLabel, SearchBox,
         },
         props: {
-            navigation: { // bottom nav
+            navigation: {
                 type: Object
             }
         },
@@ -742,9 +698,9 @@
             drawerOpen() {
                 return store.state.drawerOpen;
             },
-            isSearching() {
+            /*isSearching() {
                 return store.state.searching;
-            },
+            },*/
             measureValue() {
                 const MEASURE_OFF = -1;
                 const pointList = this.pointList;
@@ -812,6 +768,7 @@
                 ],
                 point: null,
                 pointAddress: '',
+                justClickCurrentLocation: false,
             };
         },
         methods: {
@@ -912,8 +869,8 @@
                         },
                         properties: {
                             NAME_T: title,
-                            DESCRIPTION_T: `ละติจูด ${coord.latitude.toFixed(6)}, ลองจิจูด ${coord.longitude.toFixed(6)}`,
-                            LOCATION_T: '',
+                            DESCRIPTION_T: ``,
+                            LOCATION_T: `ละติจูด ${coord.latitude.toFixed(6)}, ลองจิจูด ${coord.longitude.toFixed(6)}`,
                             CATEGORY: 0,
                             P_CODE: 0,
                             IMAGES: []
@@ -927,7 +884,7 @@
                 this.mapCurrentRegion = region;
                 this.calculateScaleDistance(region);
             },
-            calculateScaleDistance(region) { //todo: ******************************************************************************
+            calculateScaleDistance(region) {
                 const screenWidth = Dimensions.get('window').width;
                 const scaleLongitudeDelta = (this.SCALE_WIDTH * region.longitudeDelta) / screenWidth;
                 const scaleDistance = getDistance( // คำนวณที่มุมล่างซ้ายของ map
@@ -990,20 +947,32 @@
                 }
             },
             handleClickCurrentLocationTool: function () {
-                getCurrentLocation({
-                    callback: coord => {
-                        try {
-                            this.$refs['mapView'].animateToRegion({
-                                latitude: coord.latitude,
-                                longitude: coord.longitude,
-                                latitudeDelta: 0.005,
-                                longitudeDelta: 0.005,
-                            });
-                        } catch (e) {
-                            console.log('Error animate to region: ' + e);
+                if (this.justClickCurrentLocation) {
+                    this.point = null;
+                } else {
+                    this.justClickCurrentLocation = true;
+                    setTimeout(() => {
+                        this.justClickCurrentLocation = false;
+                    }, CLICK_CURRENT_LOCATION_TIMEOUT * 1000);
+
+                    getCurrentLocation({
+                        callback: coord => {
+                            // แสดง marker
+                            this.point = coord;
+
+                            try {
+                                this.$refs['mapView'].animateToRegion({
+                                    latitude: coord.latitude,
+                                    longitude: coord.longitude,
+                                    latitudeDelta: 0.005,
+                                    longitudeDelta: 0.005,
+                                });
+                            } catch (e) {
+                                console.log('Error animate to region: ' + e);
+                            }
                         }
-                    }
-                });
+                    });
+                }
             },
             _handleClickCurrentLocationTool: function () {
                 if (Platform.OS === 'android') { // android
@@ -1014,21 +983,24 @@
                         denyMessage: 'แอปไม่ได้รับอนุญาตจากผู้ใช้ จึงไม่สามารถตรวจสอบตำแหน่งปัจจุบันได้',
                         callback: (success, message) => {
                             if (success) {
-                                this.doGetCurrentLocation();
+                                this._doGetCurrentLocation();
                             } else {
                                 Alert.alert('ผิดพลาด', message);
                             }
                         }
                     });
                 } else { // ios
-                    this.doGetCurrentLocation();
+                    this._doGetCurrentLocation();
                 }
             },
-            doGetCurrentLocation: function () {
+            _doGetCurrentLocation: function () {
                 try {
                     Geolocation.getCurrentPosition(
                         (position) => {
                             console.log(position.coords);
+
+                            // แสดง marker
+                            this.point = position.coords;
 
                             try {
                                 this.$refs['mapView'].animateToRegion({
@@ -1079,27 +1051,6 @@
                     ],
                     {cancelable: true}
                 );
-            },
-            handleClickSearch: function () {
-                if (this.searchTerm && this.searchTerm.trim().length > 0) {
-                    Keyboard.dismiss();
-
-                    store.dispatch('SEARCH', {
-                        province: this.province,
-                        searchTerm: this.searchTerm,
-                        callback: (success, message) => {
-                            if (success) {
-                                if (store.state.searchResultList[PROVINCE_NAME_EN[this.province]].length === 0) {
-                                    Alert.alert('ผลการค้นหา', 'ไม่พบข้อมูล');
-                                } else {
-                                    this.navigation.navigate('SearchResult');
-                                }
-                            } else {
-                                Alert.alert('ผิดพลาด', message);
-                            }
-                        },
-                    });
-                }
             },
             handleOpenBottomSheet: function () {
                 this.isBottomSheetOpen = true;
@@ -1259,30 +1210,6 @@
         padding-right: 20;
     }
 
-    .search-input {
-        flex: 1;
-        align-self: center;
-        font-family: DBHeaventt-Light;
-        padding-top: 0;
-        padding-bottom: 0;
-        color: black;
-        font-size: 22;
-        border-width: 0;
-        border-color: orangered;
-    }
-
-    .divider {
-        width: 1;
-        background-color: #d0d0d0;
-        margin-left: 10;
-        margin-right: 10;
-    }
-
-    .list-icon-touchable {
-        align-self: center;
-        padding: 5;
-    }
-
     .menu-icon-touchable {
         align-self: center;
         padding-left: 0;
@@ -1294,11 +1221,6 @@
     .alert-icon-touchable {
         align-self: center;
         padding: 0;
-    }
-
-    .list-icon {
-        width: 20;
-        height: 20;
     }
 
     .menu-icon {

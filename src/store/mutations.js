@@ -1,6 +1,6 @@
 import {PROVINCE_NAME_EN, INCIDENT_FORM_DATA} from '../constants/index';
 import {getLocalCategoryData, setLocalCategoryData} from './db';
-import {call} from "react-native-reanimated";
+import {getDistance} from 'geolib';
 
 export function SET_PROVINCE(state, {province}) {
     state.province = province;
@@ -173,18 +173,30 @@ export function SEARCHING(state) {
     state.loadingMessage = getLoadingMessage('Searching...');
 }
 
-export async function SET_SEARCH_RESULT(state, {coordinateList, wmsList, callback}) {
+export async function SET_SEARCH_RESULT(state, {coordinateList, wmsList, currentLocation, radius, callback}) {
     state.searching = false;
     state.loadingMessage = null;
 
-    const filteredCoordList = coordinateList.filter(coord => {
+    // filter lat, lng ที่ไม่ได้อยู่ในประเทศไทยออกไป (เผื่อ lat, lng ผิด)
+    let filteredCoordList = coordinateList.filter(coord => {
         const type = coord.geometry.type;
+        if (type.toLowerCase() !== 'point') return false;
+
         const lat = coord.geometry.coordinates[1];
         const lng = coord.geometry.coordinates[0];
-        return (type.toLowerCase() === 'point')
-            && (lat > 5) && (lat < 21)
+        return (lat > 5) && (lat < 21)
             && (lng > 97) && (lng < 106);
     });
+
+    // เอาเฉพาะภายในรัศมีที่กำหนด
+    if (currentLocation && radius) {
+        filteredCoordList = filteredCoordList.filter(coord => {
+            const lat = coord.geometry.coordinates[1];
+            const lng = coord.geometry.coordinates[0];
+            return getDistance({lat, lng}, currentLocation) <= radius * 1000;
+        });
+    }
+
     state.searchResultList[PROVINCE_NAME_EN[state.province]] = filteredCoordList;
 
     callback();

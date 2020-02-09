@@ -1,8 +1,8 @@
 <template>
     <view class="container">
-        <Menu :renderer="Popover"
+        <menu :renderer="Popover"
               :rendererProps="{preferredPlacement: 'bottom'}">
-            <MenuTrigger :custom-styles="{TriggerTouchableComponent: TouchableOpacity}">
+            <menu-trigger :custom-styles="{TriggerTouchableComponent: TouchableOpacity}">
                 <text :style="{
                                 backgroundColor: '#343434',
                                 borderRadius: 14,
@@ -15,18 +15,18 @@
                                 paddingRight: 12,
                             }">{{measureTextList[0]}}
                 </text>
-            </MenuTrigger>
-            <MenuOptions :style="{padding: 8}">
-                <MenuOption
+            </menu-trigger>
+            <menu-options :style="{padding: 8}">
+                <menu-option
                         v-for="(item, index) in measureTextList"
                         class="menu-option"
                         :on-select="null">
-                    <Text class="menu-option-text">
+                    <text class="menu-option-text">
                         {{item}}
-                    </Text>
-                </MenuOption>
-            </MenuOptions>
-        </Menu>
+                    </text>
+                </menu-option>
+            </menu-options>
+        </menu>
     </view>
 </template>
 

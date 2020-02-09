@@ -19,6 +19,7 @@ import {
     doGetWeather,
     doGetReport,
     doGetReportDownloadLink,
+    doSearchLocal,
 } from './fetch';
 
 import {INCIDENT_FORM_DATA, PROVINCE_NAME_EN} from '../constants/index';
@@ -140,7 +141,7 @@ export async function FETCH_COORDINATES({commit, state}, {province, idList, call
     }
 }
 
-export async function SEARCH({commit, state}, {province, searchTerm, callback}) {
+export async function SEARCH({commit, state}, {province, searchTerm, currentLocation, radius, callback}) {
     commit('SEARCHING');
 
     const apiResult = await fetchCoordinates(province, null, searchTerm);
@@ -148,6 +149,8 @@ export async function SEARCH({commit, state}, {province, searchTerm, callback}) 
         commit('SET_SEARCH_RESULT', {
             coordinateList: apiResult.data.features,
             wmsList: apiResult.data.wms,
+            currentLocation,
+            radius,
             callback: () => {
                 callback(true, null);
             }
@@ -161,6 +164,19 @@ export async function SEARCH({commit, state}, {province, searchTerm, callback}) 
             }
         });
     }
+}
+
+export function SEARCH_LOCAL({commit, state}, {province, searchTerm, callback}) {
+    commit('SEARCHING');
+
+    const resultList = doSearchLocal(province, searchTerm);
+    commit('SET_SEARCH_RESULT', {
+        coordinateList: resultList,
+        wmsList: [],
+        callback: () => {
+            callback(true, null);
+        }
+    });
 }
 
 export async function SUBMIT_INCIDENT_FORM_DATA({commit, state}, {callback}) {

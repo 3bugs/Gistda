@@ -1,6 +1,8 @@
 import ApiResult from '../model/ApiResult';
 import {GOOGLE_MAPS, OPEN_WEATHER, STATIC_MAP_DIMENSION} from '../constants/index';
 import {add} from "react-native-reanimated";
+import {getDistrictDataList} from '../data/district.geo';
+import {getSubDistrictDataList} from '../data/sub_district.geo';
 
 //export const baseURL = 'https://fenrir.studio/d/gistda_dev';
 export const baseURL = 'https://safesafe.ngis.go.th/gapi';
@@ -8,6 +10,16 @@ export const provinceCode = [
     73, // นครปฐม
     35, // ยโสธร
 ];
+
+export function doSearchLocal(province, searchTerm) {
+    const districtList = getDistrictDataList(province).filter(
+        district => district.properties.NAME_T.indexOf(searchTerm) !== -1
+    );
+    const subDistrictList = getSubDistrictDataList(province).filter(
+        subDistrict => subDistrict.properties.NAME_T.indexOf(searchTerm) !== -1
+    );
+    return districtList.concat(subDistrictList);
+}
 
 export async function doGetAddressFromCoord(latitude, longitude) {
     const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${GOOGLE_MAPS.geocodingApiKey}&language=th`;
@@ -48,6 +60,7 @@ export async function doGetAddressFromCoord(latitude, longitude) {
 export async function doGetStaticMapsWithDirections(origin, destination) {
     const WIDTH = STATIC_MAP_DIMENSION.width;
     const HEIGHT = STATIC_MAP_DIMENSION.height;
+
     const directionsUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}&key=${GOOGLE_MAPS.geocodingApiKey}&language=th`;
 
     try {
@@ -64,7 +77,8 @@ export async function doGetStaticMapsWithDirections(origin, destination) {
             const encodedPolyline = responseJson.routes[0].overview_polyline.points;
             console.log(`Encoded polyline: ${encodedPolyline}`);
 
-            const staticMapsUrl = `https://maps.googleapis.com/maps/api/staticmap?size=${WIDTH}x${HEIGHT}&path=enc%3A${encodedPolyline}&key=${GOOGLE_MAPS.geocodingApiKey}&language=th`;
+            const marker = `&markers=color:red%7C${destination.latitude},${destination.longitude}`;
+            const staticMapsUrl = `https://maps.googleapis.com/maps/api/staticmap?size=${WIDTH}x${HEIGHT}${marker}&path=enc%3A${encodedPolyline}&key=${GOOGLE_MAPS.geocodingApiKey}&language=th`;
             console.log(`Static maps: ${staticMapsUrl}`);
 
             return new ApiResult(

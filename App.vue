@@ -1,7 +1,7 @@
 <!--Coded by Promlert Lovichit (promlert@gmail.com)-->
 
 <template>
-    <menu-provider>
+    <menu-provider :back-handler="true">
         <app-container></app-container>
     </menu-provider>
 </template>

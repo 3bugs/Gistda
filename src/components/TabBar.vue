@@ -37,12 +37,14 @@
                 <MenuOptions :style="{padding: 10}">
                     <MenuOption
                             class="menu-option"
-                            :on-select="() => addIncidentReport(0)">
+                            :on-select="() => addIncidentReport(0)"
+                            :custom-styles="{OptionTouchableComponent: TouchableOpacity}">
                         <Text class="menu-option-text">แจ้งเหตุ</Text>
                     </MenuOption>
                     <MenuOption
                             class="menu-option"
-                            :on-select="() => addIncidentReport(1)">
+                            :on-select="() => addIncidentReport(1)"
+                            :custom-styles="{OptionTouchableComponent: TouchableOpacity}">
                         <Text class="menu-option-text">แจ้งร้านอาหารปลอดภัย</Text>
                     </MenuOption>
                 </MenuOptions>

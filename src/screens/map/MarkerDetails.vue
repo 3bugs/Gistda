@@ -2,9 +2,9 @@
     <view class="container">
         <form-header
                 title="รายละเอียดสถานที่"
-                :header-text="marker.properties.NAME_T"
+                :header-text="getHeader(marker)"
                 :header-font-size="28"
-                :sub-header-text="marker.properties.CATEGORY === 0 ? marker.properties.DESCRIPTION_T : store.state.categoryData[marker.properties.CATEGORY].name"
+                :sub-header-text="getSubHeader(marker)"
                 :category-image="marker.properties.CATEGORY === 0 ? '' : store.state.categoryData[marker.properties.CATEGORY].image"
                 :button-text="null"
                 :override-scroll-view="true"
@@ -79,7 +79,7 @@
                         </view>
                     </flat-list>-->
 
-                    <view v-if="marker.properties.DESCRIPTION_T.length > 0"
+                    <view v-if="marker.properties.DESCRIPTION_T && marker.properties.DESCRIPTION_T.length > 0"
                           :style="{marginBottom: 15}">
                         <text :style="{
                             fontFamily: 'DBHeavent-Med',
@@ -98,7 +98,7 @@
                         </text>
                     </view>
 
-                    <view v-if="marker.properties.LOCATION_T.length > 0"
+                    <view v-if="marker.properties.LOCATION_T && marker.properties.LOCATION_T.length > 0"
                           :style="{marginBottom: 15}">
                         <text :style="{
                             fontFamily: 'DBHeavent-Med',
@@ -295,6 +295,26 @@
             };
         },
         methods: {
+            getHeader: function (marker) {
+                if (marker.properties.CATEGORY) {
+                    return marker.properties.NAME_T;
+                } else if (marker.properties.LM_type === '500002') { // อำเภอ
+                    return `อ.${marker.properties.NAME_T}`;
+                } else if (marker.properties.LM_type === '500003') { // ตำบล
+                    return `ต.${marker.properties.NAME_T}`;
+                } else {
+                    return marker.properties.NAME_T;
+                }
+            },
+            getSubHeader: function (marker) {
+                if (marker.properties.CATEGORY !== 0) {
+                    return store.state.categoryData[marker.properties.CATEGORY].name;
+                } else if (marker.properties.DESCRIPTION_T) {
+                    return marker.properties.DESCRIPTION_T;
+                } else {
+                    return marker.properties.LOCATION_T;
+                }
+            },
             handleClickBack: function () {
                 this.navigation.goBack();
             },
