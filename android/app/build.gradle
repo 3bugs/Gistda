@@ -107,6 +107,7 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 8
         versionName "0.9.0"
+        multiDexEnabled true
     }
     signingConfigs {
         release {
@@ -155,6 +156,9 @@ repositories {
 }
 
 dependencies {
+    //implementation 'androidx.multidex:multidex:2.0.1'
+    implementation 'com.android.support:multidex:1.0.3'
+    implementation project(':@mauron85_react-native-background-geolocation')
     implementation project(':react-native-svg')
     implementation project(':react-native-fbsdk')
     implementation project(':react-native-geolocation-service')

@@ -2,6 +2,7 @@ package com.gistda;
 
 import android.app.Application;
 
+import com.marianhello.bgloc.react.BackgroundGeolocationPackage;
 import com.facebook.react.ReactApplication;
 import com.horcrux.svg.SvgPackage;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
@@ -39,6 +40,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new BackgroundGeolocationPackage(),
             new SvgPackage(),
             new FBSDKPackage(),
             new RNFusedLocationPackage(),
