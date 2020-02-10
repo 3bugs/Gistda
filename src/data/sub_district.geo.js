@@ -3,10 +3,10 @@ export function getSubDistrictDataList(province) {
         const lat = subDistrict.geometry.coordinates[1];
         const lng = subDistrict.geometry.coordinates[0];
 
-        subDistrict.properties.DESCRIPTION_T = `${subDistrict.properties.NAME_T} อ.${subDistrict.properties.AMPHOE_T} จ.${subDistrict.properties.CHANGWAT_T}`;
+        subDistrict.properties.DESCRIPTION_T = `ต.${subDistrict.properties.TAMBON_T} อ.${subDistrict.properties.AMPHOE_T} จ.${subDistrict.properties.CHANGWAT_T}`;
         subDistrict.properties.LOCATION_T = `ละติจูด ${lat.toFixed(6)}, ลองจิจูด ${lng.toFixed(6)}`;
 
-        subDistrict.properties.NAME_T = subDistrict.properties.NAME_T.replace('องค์การบริหารส่วนตำบล', '');
+        subDistrict.properties.NAME_T = subDistrict.properties.TAMBON_T;
         subDistrict.properties.CATEGORY = 0;
 
         return subDistrict;

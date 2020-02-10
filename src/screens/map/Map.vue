@@ -104,7 +104,16 @@
                                 :strokeWidth="marker.active ? 4 : 2"
                                 :tappable="true"
                                 :on-press="() => handlePressPolyline(marker)"/>
+
+                        <!--heatmap-->
+                        <heatmap
+                                v-if="category.id === HEATMAP_CATEGORY_ID && category.markerVisibility"
+                                :points="heatMapPointList"/>
                     </view>
+                </view>
+
+                <view v-if="!isMeasureToolOn && !isMarkerToolOn"
+                      v-for="(categoryType, categoryTypeIndex) in mapDataList">
                 </view>
 
                 <!--เส้นวัดระยะทาง-->
@@ -627,7 +636,7 @@
     import store from '../../store';
     import {
         DEBUG, MAP_HEADER, BOTTOM_NAV, PROVINCE_NAME_EN, DIMENSION,
-        PROVINCE_DIMENSION, COLOR_PRIMARY, COLOR_PRIMARY_DARK
+        PROVINCE_DIMENSION, COLOR_PRIMARY, COLOR_PRIMARY_DARK, HEATMAP_CATEGORY_ID,
     } from '../../constants';
     import {requestAndroidPermissions, getCurrentLocation} from '../../constants/utils'
     import {doGetAddressFromCoord} from '../../store/fetch';
@@ -637,8 +646,7 @@
 
     import {Dimensions, StyleSheet, Alert, PermissionsAndroid, Platform, BackHandler, Linking, TouchableOpacity} from 'react-native';
     import {Fragment} from 'react';
-    import MapView from 'react-native-maps';
-    import {PROVIDER_GOOGLE, Marker, Polyline, Polygon, WMSTile} from 'react-native-maps';
+    import MapView, {PROVIDER_GOOGLE, Marker, Polyline, Polygon, WMSTile, Heatmap} from 'react-native-maps';
     import LinearGradient from 'react-native-linear-gradient';
     import CardView from 'react-native-cardview';
     import Drawer from 'react-native-drawer';
@@ -679,9 +687,9 @@
 
     export default {
         components: {
-            Fragment, MapView, Marker, Polyline, Polygon, WMSTile, LinearGradient,
-            CardView, Drawer, FilterPanel, Slider, BottomSheet, SliderBox,
-            MeasureLabel, SearchBox,
+            Fragment, MapView, Marker, Polyline, Polygon, WMSTile, Heatmap,
+            LinearGradient, CardView, Drawer, FilterPanel, Slider, BottomSheet,
+            SliderBox, MeasureLabel, SearchBox,
         },
         props: {
             navigation: {
@@ -694,6 +702,9 @@
             },
             mapDataList() {
                 return store.state.coordinateCategoryList[PROVINCE_NAME_EN[this.province]];
+            },
+            heatMapPointList() {
+                return store.state.heatMapPointList[PROVINCE_NAME_EN[this.province]];
             },
             drawerOpen() {
                 return store.state.drawerOpen;
@@ -740,7 +751,7 @@
             return {
                 store, PROVIDER_GOOGLE, SCALE_WIDTH, TOOLS_MARGIN_BOTTOM,
                 Dimensions, StyleSheet, TouchableOpacity, DEBUG, MAP_HEADER, BOTTOM_NAV, DIMENSION,
-                PROVINCE_DIMENSION, COLOR_PRIMARY, COLOR_PRIMARY_DARK,
+                PROVINCE_DIMENSION, COLOR_PRIMARY, COLOR_PRIMARY_DARK, HEATMAP_CATEGORY_ID,
                 imageMenu, imageBack, imageClose, imageNavigate, imageLightOff, imageLightOn,
                 imageMapToolCurrentLocation, imageMapToolMarkerOff, imageMapToolMarkerOn,
                 bgMeasureTools, imageMapToolMeasureOn, imageMapToolMeasureOff,

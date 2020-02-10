@@ -68,6 +68,11 @@ const store = new Vuex.Store({
         },
         loadingCoordinates: false,
 
+        heatMapPointList: {
+            [PROVINCE_NAME_EN[0]]: [],
+            [PROVINCE_NAME_EN[1]]: [],
+        },
+
         searchResultList: {
             [PROVINCE_NAME_EN[0]]: [],
             [PROVINCE_NAME_EN[1]]: [],

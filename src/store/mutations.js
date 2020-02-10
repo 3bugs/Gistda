@@ -1,5 +1,6 @@
-import {PROVINCE_NAME_EN, INCIDENT_FORM_DATA} from '../constants/index';
+import {PROVINCE_NAME_EN, INCIDENT_FORM_DATA, HEATMAP_CATEGORY_ID} from '../constants/index';
 import {getLocalCategoryData, setLocalCategoryData} from './db';
+import {getSubDistrictDataList} from '../data/sub_district.geo';
 import {getDistance} from 'geolib';
 
 export function SET_PROVINCE(state, {province}) {
@@ -120,8 +121,22 @@ export async function SET_COORDINATES(state, {coordinateList, wmsList, callback}
         if (!coordinateSparseArray[category]) {
             coordinateSparseArray[category] = [];
         }
-        coordinateSparseArray[category].push(coordinate);
+
+        if (coordinate.geometry.coordinates === null) {
+            //console.log(`BEFORE: ${JSON.stringify(coordinate)}`);
+            findLatLng(state.province, coordinate);
+            //console.log(`AFTER: ${JSON.stringify(coordinate)}`);
+        }
+        addHeatMapPoint(state, coordinate);
+
+        /*ถ้าเป็น category โรคระบาด และ level = 0 ไม่ต้องเก็บ (จะได้ไม่แสดงในหน้า list)*/
+        if (coordinate.properties.CATEGORY !== HEATMAP_CATEGORY_ID || coordinate.properties.LEVEL !== 0) {
+            coordinateSparseArray[category].push(coordinate);
+        }
     });
+
+    //console.log('Heatmap Point List:');
+    //console.log(JSON.stringify(state.heatMapPointList[PROVINCE_NAME_EN[state.province]]));
 
     //todo: ข้อมูล wms
     const wmsSparseArray = [];
@@ -166,6 +181,51 @@ export async function SET_COORDINATES(state, {coordinateList, wmsList, callback}
     state.loadingMessage = null;
 
     callback();
+}
+
+function findLatLng(provinceIndex, coordinate) {
+    const location = coordinate.properties.LOCATION_T;
+    if (location) {
+        const part = location.trim().split(/\s+/);
+        if (part.length === 3) {
+            const subDistrict = part[0];
+            const district = part[1];
+            const province = part[2];
+
+            const subDistrictList = getSubDistrictDataList(provinceIndex);
+            for (let i = 0; i < subDistrictList.length; i++) {
+                if (subDistrictList[i].properties.TAMBON_T.trim() === subDistrict
+                    && subDistrictList[i].properties.AMPHOE_T.trim() === district
+                    && subDistrictList[i].properties.CHANGWAT_T.trim() === province) {
+                    coordinate.geometry.coordinates = subDistrictList[i].geometry.coordinates;
+
+                    console.log(`${coordinate.properties.NAME_T} - Lat: ${coordinate.geometry.coordinates[1]}, Lng: ${coordinate.geometry.coordinates[0]}`);
+                    return;
+                }
+            }
+            console.log(`${coordinate.properties.NAME_T} - NOT FOUND !!!!!!!!!!!!!!!!!!!!!!!!!`);
+        }
+    }
+}
+
+function addHeatMapPoint(state, coordinate) {
+    if (coordinate.properties.CATEGORY === HEATMAP_CATEGORY_ID) { // ตำแหน่งระบาดของโรค
+        const part = coordinate.properties.NAME_T.trim().split(/\s+/);
+        const subDistrict = part[0];
+        const district = part[1];
+        const province = part[2];
+        coordinate.properties.NAME_T = `ต.${subDistrict} อ.${district} (มีโรคระบาด)`;
+
+        const latitude = coordinate.geometry.coordinates[1];
+        const longitude = coordinate.geometry.coordinates[0];
+        const weight = coordinate.properties.LEVEL;
+
+        if (true /*weight > 0*/) {
+            state.heatMapPointList[PROVINCE_NAME_EN[state.province]].push({
+                latitude, longitude, weight
+            });
+        }
+    }
 }
 
 export function SEARCHING(state) {
