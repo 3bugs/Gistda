@@ -29,7 +29,17 @@
                     borderTopLeftRadius: DIMENSION.horizontal_margin * 1.5,
                     borderTopRightRadius: DIMENSION.horizontal_margin * 1.5,
                 }">
-                    <view :style="{
+                    <view v-if="!showHeader"
+                          :style="{
+                                height: '100%',
+                                borderWidth: 0,
+                                borderColor: 'red'
+                          }">
+                        <slot/>
+                    </view>
+
+                    <view v-if="showHeader"
+                          :style="{
                                 flexDirection: 'row',
                                 alignItems: 'flex-start',
                                 marginTop: DIMENSION.horizontal_margin,
@@ -84,17 +94,18 @@
                                     }"/>
                         </touchable-opacity>
                     </view>
-                    <view :style="{
-                        marginTop: 0,
-                        marginBottom: 0,
-                        marginLeft: 0,
-                        marginRight: 0,
-                        borderBottomWidth: StyleSheet.hairlineWidth,
-                        borderBottomColor: '#cccccc'
-                    }"/>
+                    <view v-if="showHeader"
+                          :style="{
+                                marginTop: 0,
+                                marginBottom: 0,
+                                marginLeft: 0,
+                                marginRight: 0,
+                                borderBottomWidth: StyleSheet.hairlineWidth,
+                                borderBottomColor: '#cccccc'
+                          }"/>
                 </view>
                 <scroll-view
-                        v-if="!overrideScrollView"
+                        v-if="!overrideScrollView && showHeader"
                         keyboard-should-persist-taps="handled"
                         :style="{
                             flex: 1,
@@ -102,13 +113,11 @@
                             paddingLeft: DIMENSION.horizontal_margin,
                             paddingRight: DIMENSION.horizontal_margin,
                         }">
-
                     <slot/>
-
                 </scroll-view>
 
                 <view
-                        v-if="overrideScrollView"
+                        v-if="overrideScrollView && showHeader"
                         :style="{
                             flex: 1,
                         }">
@@ -159,6 +168,10 @@
             title: {
                 type: String
             },
+            showHeader: {
+                type: Boolean,
+                default: true
+            },
             headerText: {
                 type: String
             },
@@ -174,7 +187,8 @@
                 default: ''
             },
             buttonText: {
-                type: String
+                type: String,
+                default: null
             },
             noCloseButton: {
                 type: Boolean

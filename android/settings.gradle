@@ -1,4 +1,7 @@
 rootProject.name = 'gistda'
+
+//include ':reactnativenotifications'
+//project(':reactnativenotifications').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-notifications/android/app')
 include ':@mauron85_react-native-background-geolocation-common'
 project(':@mauron85_react-native-background-geolocation-common').projectDir = new File(rootProject.projectDir, '../node_modules/@mauron85/react-native-background-geolocation/android/common')
 include ':@mauron85_react-native-background-geolocation'

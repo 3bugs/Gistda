@@ -8,6 +8,7 @@
                 :_active-opacity="0.5"
                 :on-press="() => {onClick(item)}"
                 :style="{
+                    paddingTop: paddingTop,
                     paddingLeft: DIMENSION.horizontal_margin,
                     paddingRight: DIMENSION.horizontal_margin
                 }">
@@ -81,6 +82,10 @@
                 type: Boolean,
                 default: true,
             },
+            paddingTop: {
+                type: Number,
+                default: 15,
+            },
             onClick: {
                 type: Function
             },
@@ -103,7 +108,6 @@
     .container {
         flex: 1;
         flex-direction: row;
-        padding-top: 15;
         padding-bottom: 20;
         border-width: 0;
         border-color: red;

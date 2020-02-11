@@ -41,6 +41,8 @@ target 'gistda' do
 
   pod 'react-native-fbsdk', :path => '../node_modules/react-native-fbsdk'
 
+  pod 'react-native-simple-toast', :path => '../node_modules/react-native-simple-toast'
+
 end
 
 post_install do |installer|

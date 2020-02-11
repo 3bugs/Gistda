@@ -15,7 +15,7 @@
                         :title="args.item.detail"
                         :details="args.item.detail"
                         :show-date="false"
-                        :on-click="handleClickItem"/>
+                        :on-click="() => handleClickItem(args.item)"/>
             </view>
             <!--<view render-prop="ListEmptyComponent"
                   :style="{width: '100%', height: '100%', borderWidth: 1, borderColor: 'blue'}">

@@ -320,6 +320,15 @@ export function SET_HISTORY(state, {dataList}) {
     state.loadingHistory[PROVINCE_NAME_EN[state.province]] = false;
 }
 
+export function FETCHING_ALARM(state) {
+    state.loadingAlarm[PROVINCE_NAME_EN[state.province]] = true;
+}
+
+export function SET_ALARM(state, {dataList}) {
+    state.alarmList[PROVINCE_NAME_EN[state.province]] = dataList;
+    state.loadingAlarm[PROVINCE_NAME_EN[state.province]] = false;
+}
+
 export function FETCHING_NEWS_DETAILS(state) {
     state.loadingNewsDetails[PROVINCE_NAME_EN[state.province]] = true;
 }

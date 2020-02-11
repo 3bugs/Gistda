@@ -117,6 +117,7 @@
                     'ค้นหาภายในรัศมี 10 กม.',
                     'ค้นหาภายในรัศมี 50 กม.',
                     `ค้นหาตำบล อำเภอ ใน จ.${PROVINCE_NAME_TH[store.state.province]}`,
+                    `ค้นหาจากพิกัด (ละติจูด, ลองจิจูด)`,
                 ],
                 searchTerm: '',
             };
@@ -129,7 +130,7 @@
                     let radius = null;
                     switch (index) {
                         case 0:
-                            this.doSearchApi();
+                            this.doSearchApi({});
                             break;
                         case 1:
                             if (!radius) radius = 1;
@@ -146,23 +147,41 @@
                                         latitude: coord.latitude,
                                         longitude: coord.longitude
                                     };
-                                    this.doSearchApi(currentLocation, radius);
+                                    this.doSearchApi({currentLocation, radius});
                                 }
                             });
                             break;
                         case 5:
                             this.doSearchLocal();
                             break;
+                        case 6:
+                            const COMMA = ',';
+                            const searchTerm = this.searchTerm.trim();
+                            const part = searchTerm.split(COMMA);
+
+                            if (searchTerm.indexOf(COMMA) === -1
+                                || part.length !== 2
+                                || isNaN(parseFloat(part[0]))
+                                || isNaN(parseFloat(part[1]))) {
+                                Alert.alert('ผิดพลาด', 'รูปแบบไม่ถูกต้อง ให้กรอกค่าในรูปแบบ "ละติจูด , ลองจิจูด" เช่น\n\n15.7810 , 104.1192');
+                            } else {
+                                const latLng = {
+                                    latitude: Math.floor(parseFloat(part[0]) * 1000) / 1000,
+                                    longitude: Math.floor(parseFloat(part[1]) * 1000) / 1000
+                                };
+                                this.doSearchApi({latLng});
+                            }
+                            break;
                     }
                 } else {
                     Alert.alert('ผิดพลาด', 'กรอกคำที่ต้องการค้นหา');
                 }
             },
-            doSearchApi: function (currentLocation = null, radius = null) {
+            doSearchApi: function ({currentLocation = null, radius = null, latLng = null}) {
                 store.dispatch('SEARCH', {
                     province: this.province,
-                    searchTerm: this.searchTerm,
-                    currentLocation, radius,
+                    searchTerm: this.searchTerm.trim(),
+                    currentLocation, radius, latLng,
                     callback: (success, message) => {
                         if (success) {
                             if (store.state.searchResultList[PROVINCE_NAME_EN[this.province]].length === 0) {

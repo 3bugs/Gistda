@@ -35,6 +35,7 @@
     import HistoryPage from './HistoryPage';
 
     import React from 'react';
+    import {Alert} from 'react-native';
 
     import imageBack from '../../../assets/images/ic_back.png';
 
@@ -85,7 +86,8 @@
                     if (!success) {
                         //todo: เปลี่ยนเป็นการแสดง error ใน layout และมีปุ่ม retry
                         //todo: กรณี error พอออกไปแล้วกลับมาใหม่ ก็ไม่ยอม fetch ข้อมูล
-                        alert(data); // data คือ error message
+                        Alert('ผิดพลาด', data); // data คือ error message
+                        this.navigation.goBack();
                     }
                 }
             });

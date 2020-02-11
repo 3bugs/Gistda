@@ -20,6 +20,7 @@ import {
     doGetReport,
     doGetReportDownloadLink,
     doSearchLocal,
+    doGetAlarm,
 } from './fetch';
 
 import {INCIDENT_FORM_DATA, PROVINCE_NAME_EN} from '../constants/index';
@@ -141,10 +142,10 @@ export async function FETCH_COORDINATES({commit, state}, {province, idList, call
     }
 }
 
-export async function SEARCH({commit, state}, {province, searchTerm, currentLocation, radius, callback}) {
+export async function SEARCH({commit, state}, {province, searchTerm, currentLocation, radius, latLng, callback}) {
     commit('SEARCHING');
 
-    const apiResult = await fetchCoordinates(province, null, searchTerm);
+    const apiResult = await fetchCoordinates(province, null, searchTerm, latLng);
     if (apiResult.success) {
         commit('SET_SEARCH_RESULT', {
             coordinateList: apiResult.data.features,
@@ -316,6 +317,27 @@ export async function FETCH_HISTORY({commit, state}, {province, callback}) {
         console.log(`Error get history list`);
 
         commit('SET_HISTORY', {
+            dataList: null
+        });
+        callback(false, apiResult.message);
+    }
+}
+
+export async function FETCH_ALARM({commit, state}, {province, callback}) {
+    commit('FETCHING_ALARM');
+
+    const apiResult = await doGetAlarm(province);
+    if (apiResult.success) {
+        console.log(`Alarm list count: ${apiResult.data.list.length}`);
+
+        commit('SET_ALARM', {
+            dataList: apiResult.data.list
+        });
+        callback(true, null);
+    } else {
+        console.log(`Error get alarm list`);
+
+        commit('SET_ALARM', {
             dataList: null
         });
         callback(false, apiResult.message);

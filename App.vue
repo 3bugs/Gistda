@@ -28,6 +28,7 @@
     import Login from './src/screens/login/Login';
     import Register from './src/screens/login/Register';
     import Profile from './src/screens/profile/Profile';
+    import Alarm from './src/screens/profile/Alarm';
     import EditProfile from './src/screens/profile/EditProfile';
     import ChangePassword from './src/screens/profile/ChangePassword';
     import ForgotPassword from './src/screens/profile/ForgotPassword';
@@ -124,6 +125,12 @@
             },
             Profile: {
                 screen: Profile,
+                navigationOptions: {
+                    header: null,
+                }
+            },
+            Alarm: {
+                screen: Alarm,
                 navigationOptions: {
                     header: null,
                 }

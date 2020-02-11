@@ -112,10 +112,6 @@
                     </view>
                 </view>
 
-                <view v-if="!isMeasureToolOn && !isMarkerToolOn"
-                      v-for="(categoryType, categoryTypeIndex) in mapDataList">
-                </view>
-
                 <!--เส้นวัดระยะทาง-->
                 <polyline
                         v-if="isLineToolOn"
@@ -288,6 +284,20 @@
                         {{scaleText}}
                     </text>
                 </view>
+                <text class="map-scale-text"
+                      v-if="mapCurrentRegion"
+                      :style="{
+                            marginTop: 4
+                      }">
+                    {{`GCS : ${mapCurrentRegion.latitude.toFixed(6)}, ${mapCurrentRegion.longitude.toFixed(6)}`}}
+                </text>
+                <text class="map-scale-text"
+                      v-if="mapCurrentRegion"
+                      :style="{
+                            marginTop: 0
+                      }">
+                    {{`UTM : ${utmText}`}}
+                </text>
             </view>
 
             <!--แสดงระยะทาง, พื้นที่ที่วัดได้-->
@@ -302,6 +312,27 @@
                         :measure-value="measureValue"
                         :measure-type="isLineToolOn ? 0 : 1"/>
             </view>
+
+            <view
+                    pointer-events='none'
+                    :style="{
+                        position: 'absolute',
+                        alignSelf: 'center',
+                        width: 0, height: 20,
+                        bottom: ((screenHeight - MAP_HEADER.height) / 2) - 10,
+                        borderRightWidth: 1,
+                        borderRightColor: '#333333',
+                    }"/>
+            <view
+                    pointer-events='none'
+                    :style="{
+                        position: 'absolute',
+                        alignSelf: 'center',
+                        width: 20, height: 0,
+                        bottom: ((screenHeight - MAP_HEADER.height) / 2),
+                        borderBottomWidth: 1,
+                        borderBottomColor: '#333333',
+                    }"/>
 
             <!--screen header-->
             <view class="header-container">
@@ -657,6 +688,8 @@
     import {getDistance, getAreaOfPolygon} from 'geolib';
     import Geolocation from 'react-native-geolocation-service';
     import {getStatusBarHeight} from 'react-native-status-bar-height';
+    import UTMLatLng from 'utm-latlng';
+    const utm = new UTMLatLng();
 
     import imageMenu from '../../../assets/images/screen_map/ic_menu.png';
     import imageBack from '../../../assets/images/ic_back.png';
@@ -682,7 +715,7 @@
     import imageDragMarkerEnd from '../../../assets/images/screen_map/ic_drag_marker_end_new.png';
 
     const SCALE_WIDTH = 90;
-    const TOOLS_MARGIN_BOTTOM = 40;
+    const TOOLS_MARGIN_BOTTOM = 35;
     const CLICK_CURRENT_LOCATION_TIMEOUT = 10;
 
     export default {
@@ -745,13 +778,22 @@
 
                     return getAreaOfPolygon(areaPoints);
                 }
+            },
+            utmText() {
+                const utmObj = this.utm.convertLatLngToUtm(
+                    this.mapCurrentRegion.latitude,
+                    this.mapCurrentRegion.longitude,
+                    2
+                );
+                return `${utmObj.ZoneNumber}${utmObj.ZoneLetter}, ${utmObj.Easting}, ${utmObj.Northing}`;
             }
         },
         data: () => {
             return {
-                store, PROVIDER_GOOGLE, SCALE_WIDTH, TOOLS_MARGIN_BOTTOM,
+                store, PROVIDER_GOOGLE, SCALE_WIDTH, TOOLS_MARGIN_BOTTOM, PROVINCE_NAME_EN,
                 Dimensions, StyleSheet, TouchableOpacity, DEBUG, MAP_HEADER, BOTTOM_NAV, DIMENSION,
                 PROVINCE_DIMENSION, COLOR_PRIMARY, COLOR_PRIMARY_DARK, HEATMAP_CATEGORY_ID,
+                utm,
                 imageMenu, imageBack, imageClose, imageNavigate, imageLightOff, imageLightOn,
                 imageMapToolCurrentLocation, imageMapToolMarkerOff, imageMapToolMarkerOn,
                 bgMeasureTools, imageMapToolMeasureOn, imageMapToolMeasureOff,
@@ -1172,13 +1214,13 @@
 
     .map-scale-container {
         position: absolute;
-        align-items: center;
+        align-items: flex-start;
         border-width: 0;
         border-color: red;
     }
 
     .map-scale-text {
-        font-family: DBHeaventt-Light;
+        font-family: DBHeavent;
         padding-top: 0;
         padding-bottom: 0;
         color: #333333;

@@ -25,15 +25,15 @@
                 </view>
             </touchable-opacity>
 
-            <!--<touchable-opacity class="bell-icon-touchable"
-                               :on-press="null">
+            <touchable-opacity class="bell-icon-touchable"
+                               :on-press="handleClickBell">
                 <image :source="imageBell"
                        class="bell-icon"
                        resize-mode="contain"/>
                 <text class="badge">
                     {{8}}
                 </text>
-            </touchable-opacity>-->
+            </touchable-opacity>
         </linear-gradient>
     </view>
 </template>
@@ -87,6 +87,9 @@
                 } else {
                     this.navigation.navigate('Login');
                 }
+            },
+            handleClickBell: function () {
+                this.navigation.navigate('Alarm');
             },
         },
     }

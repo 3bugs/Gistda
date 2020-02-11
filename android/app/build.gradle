@@ -108,6 +108,7 @@ android {
         versionCode 8
         versionName "0.9.0"
         multiDexEnabled true
+        //missingDimensionStrategy "RNNotifications.reactNativeVersion", "reactNative60"
     }
     signingConfigs {
         release {
@@ -156,6 +157,7 @@ repositories {
 }
 
 dependencies {
+    //implementation project(':reactnativenotifications')
     //implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'com.android.support:multidex:1.0.3'
     implementation project(':@mauron85_react-native-background-geolocation')

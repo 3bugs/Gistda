@@ -141,7 +141,7 @@ export async function doGetWeather(province) {
     }
 }
 
-async function _fetch(method, path, bodyData, headerData) {
+async function _fetch(method, path, bodyData, headerData = null) {
     const url = `${baseURL}/${path}`;
 
     console.log(`_fetch(\n\t${method}\n\t${url}\n\t${JSON.stringify(bodyData)}\n)`);
@@ -254,7 +254,7 @@ export async function fetchCoordinateCategories(province) {
     return await _fetch('GET', `coords/categories`, null);
 }
 
-export async function fetchCoordinates(province, idList, searchTerm) {
+export async function fetchCoordinates(province, idList, searchTerm, latLng) {
     let paramIdList = '';
     let search = '';
 
@@ -266,7 +266,9 @@ export async function fetchCoordinates(province, idList, searchTerm) {
         paramIdList = paramIdList.slice(0, -1);
     }
 
-    if (searchTerm && searchTerm.trim().length > 0) {
+    if (latLng) {
+        search = `&lat=${latLng.latitude}&lng=${latLng.longitude}`;
+    } else if (searchTerm && searchTerm.trim().length > 0) {
         search = `&search=${searchTerm}`;
     }
 
@@ -520,5 +522,17 @@ export async function doGetHistory(province, userToken) {
         {
             Authorization: `Bearer ${userToken}`,
         }
+    );
+}
+
+export async function doGetAlarm(province) {
+    //news/alarms?province_code=35&limit=20&offset=0
+    const LIMIT = 100;
+    const OFFSET = 0;
+    return await _fetch(
+        'GET',
+        `alarms?province_code=${provinceCode[province]}&limit=${LIMIT}&offset=${OFFSET}`,
+        null,
+        null
     );
 }
