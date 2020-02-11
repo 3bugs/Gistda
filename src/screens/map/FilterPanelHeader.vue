@@ -30,8 +30,9 @@
                 <image :source="imageBell"
                        class="bell-icon"
                        resize-mode="contain"/>
-                <text class="badge">
-                    {{8}}
+                <text class="badge"
+                      v-if="unseenAlarmCount > 0">
+                    {{unseenAlarmCount}}
                 </text>
             </touchable-opacity>
         </linear-gradient>
@@ -40,7 +41,7 @@
 
 <script>
     import store from '../../store';
-    import {DEBUG, SIDEBAR} from '../../constants';
+    import {DEBUG, SIDEBAR, PROVINCE_NAME_EN} from '../../constants';
 
     import LinearGradient from 'react-native-linear-gradient';
 
@@ -72,6 +73,10 @@
             },
             isLoggedIn() {
                 return store.state.userToken !== null
+            },
+            unseenAlarmCount() {
+                const alarmList = store.state.alarmList[PROVINCE_NAME_EN[this.province]];
+                return alarmList.reduce((count, item) => !item.seen ? count + 1 : count, 0);
             },
         },
         data: () => {

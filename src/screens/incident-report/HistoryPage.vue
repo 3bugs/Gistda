@@ -30,6 +30,12 @@
         </flat-list>
 
         <no-data v-if="dataList && dataList.length === 0"/>
+
+        <activity-indicator
+                class="progress"
+                size="large"
+                :color="COLOR_PRIMARY[province]"
+                v-if="isLoading"/>
     </view>
 </template>
 
@@ -39,7 +45,7 @@
     import NoData from '../../components/NoData';
     import ListItem from '../../components/ListItem';
 
-    import {Platform, PermissionsAndroid, Linking} from 'react-native';
+    import {Platform, PermissionsAndroid, Linking, Alert} from 'react-native';
 
     export default {
         components: {
@@ -56,6 +62,10 @@
         computed: {
             province() {
                 return store.state.province;
+            },
+            isLoading() {
+                return store.state.loadingAlarmDetails[PROVINCE_NAME_EN[this.province]]
+                    || store.state.loadingSingleCoordinate;
             },
             dataList() {
                 const historyList = store.state.historyList[PROVINCE_NAME_EN[this.province]];
@@ -76,37 +86,33 @@
         },
         methods: {
             handleClickItem: function (item) {
-                /*let cachedItem = null;
-                this.newsDetailsList.forEach(newsDetails => {
-                    if (item.id === newsDetails.id) {
-                        cachedItem = newsDetails;
+                console.log('Alarm ID: ', item.id);
+
+                store.dispatch('FETCH_ALARM_DETAILS', {
+                    alarmId: item.id,
+                    callback: (success, alarmDetails) => {
+                        if (success) {
+                            console.log('Coord ID: ', alarmDetails.coords.id);
+
+                            store.dispatch('FETCH_SINGLE_COORDINATE', {
+                                coordId: alarmDetails.coords.id,
+                                callback: (success, marker) => {
+                                    if (success) {
+                                        if (marker == null) {
+                                            Alert.alert('แจังเตือน', 'เหตุการณ์นี้ได้สิ้นสุดแล้ว');
+                                        } else {
+                                            this.navigation.navigate('MarkerDetails', {marker});
+                                        }
+                                    } else {
+                                        Alert.alert('ผิดพลาด', marker); // marker คือ error message
+                                    }
+                                }
+                            });
+                        } else {
+                            Alert.alert('ผิดพลาด', alarmDetails); // alarmDetails คือ error message
+                        }
                     }
                 });
-
-                if (cachedItem) {
-                    this.navigation.navigate(
-                        'NewsDetails',
-                        {
-                            item: cachedItem
-                        }
-                    );
-                } else {
-                    store.dispatch('FETCH_NEWS_DETAILS', {
-                        newsId: item.id,
-                        callback: (success, data) => {
-                            if (success) {
-                                this.navigation.navigate(
-                                    'NewsDetails',
-                                    {
-                                        item: data
-                                    }
-                                );
-                            } else {
-                                alert(data); // data คือ error message
-                            }
-                        }
-                    });
-                }*/
             },
         },
         created: function () {
@@ -122,5 +128,13 @@
 
     .list {
         flex: 1;
+    }
+
+    .progress {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-width: 0;
+        border-color: yellow;
     }
 </style>

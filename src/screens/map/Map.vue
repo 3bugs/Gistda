@@ -266,6 +266,7 @@
             </view>
 
             <view class="map-scale-container"
+                  pointer-events="none"
                   :style="{
                         left: DIMENSION.horizontal_margin,
                         bottom: TOOLS_MARGIN_BOTTOM,
@@ -314,7 +315,7 @@
             </view>
 
             <view
-                    pointer-events='none'
+                    pointer-events="none"
                     :style="{
                         position: 'absolute',
                         alignSelf: 'center',
@@ -324,7 +325,7 @@
                         borderRightColor: '#333333',
                     }"/>
             <view
-                    pointer-events='none'
+                    pointer-events="none"
                     :style="{
                         position: 'absolute',
                         alignSelf: 'center',

@@ -22,6 +22,16 @@
                 <image :source="{uri: image}"
                        class="cover-image"
                        resize-mode="cover"/>
+                <view
+                        v-if="item.seen != null && item.seen === false"
+                        :style="{
+                            position: 'absolute', zIndex: 1,
+                            top: 0, left: 0,
+                            width: 16, height: 16,
+                            borderWidth: 2, borderColor: 'white',
+                            borderRadius: 8,
+                            backgroundColor: '#EB5757'
+                        }"/>
             </card-view>
             <view class="content">
                 <text class="title"

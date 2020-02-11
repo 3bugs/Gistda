@@ -254,7 +254,7 @@ export async function fetchCoordinateCategories(province) {
     return await _fetch('GET', `coords/categories`, null);
 }
 
-export async function fetchCoordinates(province, idList, searchTerm, latLng) {
+export async function fetchCoordinates({province, idList, coordId = null, searchTerm, latLng}) {
     let paramIdList = '';
     let search = '';
 
@@ -272,7 +272,12 @@ export async function fetchCoordinates(province, idList, searchTerm, latLng) {
         search = `&search=${searchTerm}`;
     }
 
-    const url = `${baseURL}/coords/?province_code=${provinceCode[province]}${paramIdList}${search}`;
+    let url;
+    if (coordId == null) {
+        url = `${baseURL}/coords/?province_code=${provinceCode[province]}${paramIdList}${search}`;
+    } else {
+        url = `${baseURL}/coords/${coordId}`;
+    }
     console.log(`Fetching ${url}`);
 
     try {
@@ -532,6 +537,15 @@ export async function doGetAlarm(province) {
     return await _fetch(
         'GET',
         `alarms?province_code=${provinceCode[province]}&limit=${LIMIT}&offset=${OFFSET}`,
+        null,
+        null
+    );
+}
+
+export async function doGetAlarmDetails(id) {
+    return await _fetch(
+        'GET',
+        `alarms/${id}`,
         null,
         null
     );

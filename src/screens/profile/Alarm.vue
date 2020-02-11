@@ -67,6 +67,7 @@
 <script>
     import store from '../../store';
     import {DEBUG, PROVINCE_NAME_EN, COLOR_PRIMARY, DIMENSION} from '../../constants';
+    import {addSeenAlarm} from '../../store/db';
     import FormHeader from '../../components/FormHeader';
     import NoData from '../../components/NoData';
     import ListItem from '../../components/ListItem';
@@ -87,7 +88,9 @@
                 return store.state.province;
             },
             isLoading() {
-                return store.state.loadingAlarm[PROVINCE_NAME_EN[this.province]];
+                return store.state.loadingAlarm[PROVINCE_NAME_EN[this.province]]
+                    || store.state.loadingAlarmDetails[PROVINCE_NAME_EN[this.province]]
+                    || store.state.loadingSingleCoordinate;
             },
             dataList() {
                 return store.state.alarmList[PROVINCE_NAME_EN[this.province]];
@@ -105,7 +108,36 @@
                 this.navigation.goBack();
             },
             handleClickItem: function (item) {
+                console.log('Alarm ID: ', item.id);
 
+                store.dispatch('FETCH_ALARM_DETAILS', {
+                    alarmId: item.id,
+                    callback: (success, alarmDetails) => {
+                        if (success) {
+                            console.log('Coord ID: ', alarmDetails.coords.id);
+
+                            store.dispatch('FETCH_SINGLE_COORDINATE', {
+                                coordId: alarmDetails.coords.id,
+                                callback: (success, marker) => {
+                                    if (success) {
+                                        item.seen = true;
+                                        addSeenAlarm(item.id);
+
+                                        if (marker == null) {
+                                            Alert.alert('แจังเตือน', 'เหตุการณ์นี้ได้สิ้นสุดแล้ว');
+                                        } else {
+                                            this.navigation.navigate('MarkerDetails', {marker});
+                                        }
+                                    } else {
+                                        Alert.alert('ผิดพลาด', marker); // marker คือ error message
+                                    }
+                                }
+                            });
+                        } else {
+                            Alert.alert('ผิดพลาด', alarmDetails); // alarmDetails คือ error message
+                        }
+                    }
+                });
             },
         },
         created: function () {
@@ -115,7 +147,7 @@
                     if (!success) {
                         //todo: เปลี่ยนเป็นการแสดง error ใน layout และมีปุ่ม retry
                         //todo: กรณี error พอออกไปแล้วกลับมาใหม่ ก็ไม่ยอม fetch ข้อมูล
-                        Alert('ผิดพลาด', data); // data คือ error message
+                        Alert.alert('ผิดพลาด', data); // data คือ error message
                         this.navigation.goBack();
                     }
                 }

@@ -21,6 +21,7 @@ import {
     doGetReportDownloadLink,
     doSearchLocal,
     doGetAlarm,
+    doGetAlarmDetails,
 } from './fetch';
 
 import {INCIDENT_FORM_DATA, PROVINCE_NAME_EN} from '../constants/index';
@@ -122,7 +123,7 @@ export async function SET_PROVINCE({commit, state}, {province, callback}) {
 export async function FETCH_COORDINATES({commit, state}, {province, idList, callback}) {
     commit('FETCHING_COORDINATES');
 
-    const apiResult = await fetchCoordinates(province, idList);
+    const apiResult = await fetchCoordinates({province, idList});
     if (apiResult.success) {
         commit('SET_COORDINATES', {
             coordinateList: apiResult.data.features,
@@ -142,10 +143,27 @@ export async function FETCH_COORDINATES({commit, state}, {province, idList, call
     }
 }
 
+export async function FETCH_SINGLE_COORDINATE({commit, state}, {coordId, callback}) {
+    commit('FETCHING_SINGLE_COORDINATE', {isFetching: true});
+
+    const apiResult = await fetchCoordinates({coordId});
+    commit('FETCHING_SINGLE_COORDINATE', {isFetching: false});
+
+    if (apiResult.success) {
+        if (apiResult.data.features.length > 0) {
+            callback(true, apiResult.data.features[0]);
+        } else {
+            callback(true, null);
+        }
+    } else {
+        callback(false, apiResult.message);
+    }
+}
+
 export async function SEARCH({commit, state}, {province, searchTerm, currentLocation, radius, latLng, callback}) {
     commit('SEARCHING');
 
-    const apiResult = await fetchCoordinates(province, null, searchTerm, latLng);
+    const apiResult = await fetchCoordinates({province, searchTerm, latLng});
     if (apiResult.success) {
         commit('SET_SEARCH_RESULT', {
             coordinateList: apiResult.data.features,
@@ -324,13 +342,14 @@ export async function FETCH_HISTORY({commit, state}, {province, callback}) {
 }
 
 export async function FETCH_ALARM({commit, state}, {province, callback}) {
-    commit('FETCHING_ALARM');
+    commit('FETCHING_ALARM', {province});
 
     const apiResult = await doGetAlarm(province);
     if (apiResult.success) {
         console.log(`Alarm list count: ${apiResult.data.list.length}`);
 
         commit('SET_ALARM', {
+            province,
             dataList: apiResult.data.list
         });
         callback(true, null);
@@ -338,8 +357,22 @@ export async function FETCH_ALARM({commit, state}, {province, callback}) {
         console.log(`Error get alarm list`);
 
         commit('SET_ALARM', {
+            province,
             dataList: null
         });
+        callback(false, apiResult.message);
+    }
+}
+
+export async function FETCH_ALARM_DETAILS({commit, state}, {alarmId, callback}) {
+    commit('FETCHING_ALARM_DETAILS', {isFetching: true});
+
+    const apiResult = await doGetAlarmDetails(alarmId);
+    commit('FETCHING_ALARM_DETAILS', {isFetching: false});
+
+    if (apiResult.success) {
+        callback(true, apiResult.data);
+    } else {
         callback(false, apiResult.message);
     }
 }

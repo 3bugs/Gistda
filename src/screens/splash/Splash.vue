@@ -30,7 +30,7 @@
     import bg from '../../../assets/images/screen_splash/bg_splash.jpg';
     import logo from '../../../assets/images/screen_splash/ic_logo.png';
 
-    const delayInMilliseconds = 1000;
+    const delayInMilliseconds = 0;
     const title = 'ระบบภูมิสารสนเทศ\nด้านความปลอดภัยจังหวัด';
     const poweredBy = 'POWERED BY GISTDA';
     const {height, width} = Dimensions.get('window');
@@ -77,7 +77,25 @@
                 }
             });
 
-            this.startHomeDelay();
+            store.dispatch('FETCH_ALARM', {
+                province: 0,
+                callback: (success, data) => {
+                    if (!success) {
+                        console.log('Fetch alarm province 0 failed!');
+                    }
+
+                    store.dispatch('FETCH_ALARM', {
+                        province: 1,
+                        callback: (success, data) => {
+                            if (!success) {
+                                console.log('Fetch alarm province 1 failed!');
+                            }
+
+                            this.startHomeDelay();
+                        }
+                    });
+                }
+            });
         },
         mounted: function () {
             BackgroundGeolocation.configure({
@@ -86,12 +104,12 @@
                 distanceFilter: 50,
                 notificationTitle: 'ตรวจจับความเร็ว และตรวจสอบการเข้าเขตโรคระบาด',
                 notificationText: 'ทำงาน',
-                debug: false,
-                startOnBoot: true,
-                stopOnTerminate: false,
+                debug: true,
+                startOnBoot: false,
+                stopOnTerminate: true,
                 locationProvider: BackgroundGeolocation.ACTIVITY_PROVIDER,
-                interval: 60000,
-                fastestInterval: 60000,
+                interval: 10000,
+                fastestInterval: 10000,
                 activitiesInterval: 10000,
                 stopOnStillActivity: false,
                 /*url: 'http://192.168.81.15:3000/location',
@@ -137,6 +155,8 @@
                                 global.lastAlertTimestamp = now;
                             }
                         }
+                    } else {
+                        Toast.show('เริ่มตรวจจับความเร็ว และการเข้าเขตโรคระบาด', Toast.LONG);
                     }
 
                     global.lastLocation = location;
@@ -201,7 +221,7 @@
                 console.log('[INFO] App needs to authorize the http requests');
             });
 
-            BackgroundGeolocation.checkStatus(status => {
+            /*BackgroundGeolocation.checkStatus(status => {
                 console.log('[INFO] BackgroundGeolocation service is running', status.isRunning);
                 console.log('[INFO] BackgroundGeolocation services enabled', status.locationServicesEnabled);
                 console.log('[INFO] BackgroundGeolocation auth status: ' + status.authorization);
@@ -210,10 +230,13 @@
                 if (!status.isRunning) {
                     BackgroundGeolocation.start(); //triggers start on start event
                 }
-            });
+            });*/
 
             // you can also just start without checking for status
-            //BackgroundGeolocation.start();
+            BackgroundGeolocation.start();
+        },
+        beforeDestroy: function () {
+            //BackgroundGeolocation.removeAllListeners();
         },
     }
 </script>

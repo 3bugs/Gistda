@@ -67,6 +67,7 @@ const store = new Vuex.Store({
             [PROVINCE_NAME_EN[1]]: [],
         },
         loadingCoordinates: false,
+        loadingSingleCoordinate: false,
 
         heatMapPointList: {
             [PROVINCE_NAME_EN[0]]: [],
@@ -144,6 +145,10 @@ const store = new Vuex.Store({
         },
 
         loadingAlarm: {
+            [PROVINCE_NAME_EN[0]]: false,
+            [PROVINCE_NAME_EN[1]]: false,
+        },
+        loadingAlarmDetails: {
             [PROVINCE_NAME_EN[0]]: false,
             [PROVINCE_NAME_EN[1]]: false,
         },

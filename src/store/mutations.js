@@ -1,5 +1,5 @@
 import {PROVINCE_NAME_EN, INCIDENT_FORM_DATA, HEATMAP_CATEGORY_ID} from '../constants/index';
-import {getLocalCategoryData, setLocalCategoryData} from './db';
+import {getLocalCategoryData, setLocalCategoryData, getSeenAlarmList, setSeenAlarmList} from './db';
 import {getSubDistrictDataList} from '../data/sub_district.geo';
 import {getDistance} from 'geolib';
 
@@ -9,6 +9,10 @@ export function SET_PROVINCE(state, {province}) {
 
 export function SUBMITTING_INCIDENT_FORM_DATA(state, {isSubmitting}) {
     state.submittingFormData = isSubmitting;
+}
+
+export function FETCHING_SINGLE_COORDINATE(state, {isFetching}) {
+    state.loadingSingleCoordinate = isFetching;
 }
 
 export function FETCHING_COORDINATE_CATEGORIES(state) {
@@ -320,13 +324,28 @@ export function SET_HISTORY(state, {dataList}) {
     state.loadingHistory[PROVINCE_NAME_EN[state.province]] = false;
 }
 
-export function FETCHING_ALARM(state) {
-    state.loadingAlarm[PROVINCE_NAME_EN[state.province]] = true;
+export function FETCHING_ALARM(state, {province}) {
+    state.loadingAlarm[PROVINCE_NAME_EN[province]] = true;
 }
 
-export function SET_ALARM(state, {dataList}) {
-    state.alarmList[PROVINCE_NAME_EN[state.province]] = dataList;
-    state.loadingAlarm[PROVINCE_NAME_EN[state.province]] = false;
+export function FETCHING_ALARM_DETAILS(state, {isFetching}) {
+    state.loadingAlarmDetails[PROVINCE_NAME_EN[state.province]] = isFetching;
+}
+
+export async function SET_ALARM(state, {province, dataList}) {
+    dataList.forEach(item => {
+        item.seen = false;
+    });
+
+    const seenAlarmList = await getSeenAlarmList();
+    if (seenAlarmList !== null) {
+        dataList.forEach(item => {
+            item.seen = seenAlarmList.includes(item.id);
+        });
+    }
+
+    state.alarmList[PROVINCE_NAME_EN[province]] = dataList;
+    state.loadingAlarm[PROVINCE_NAME_EN[province]] = false;
 }
 
 export function FETCHING_NEWS_DETAILS(state) {

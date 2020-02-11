@@ -86,7 +86,7 @@
                     if (!success) {
                         //todo: เปลี่ยนเป็นการแสดง error ใน layout และมีปุ่ม retry
                         //todo: กรณี error พอออกไปแล้วกลับมาใหม่ ก็ไม่ยอม fetch ข้อมูล
-                        Alert('ผิดพลาด', data); // data คือ error message
+                        Alert.alert('ผิดพลาด', data); // data คือ error message
                         this.navigation.goBack();
                     }
                 }

@@ -128,3 +128,42 @@ asyncStorage key province.0-category.2
     lastUpdated: '',
 }
 * */
+
+const KEY_SEEN_ALARM_LIST = 'seen-alarm-list';
+
+export async function setSeenAlarmList(seenAlarm) {
+    try {
+        await AsyncStorage.setItem(KEY_SEEN_ALARM_LIST, JSON.stringify(seenAlarm));
+        console.log(`Saving seen alarm: ${JSON.stringify(seenAlarm)}`);
+
+        return true;
+    } catch (error) {
+        return false;
+    }
+}
+
+export async function addSeenAlarm(alarmId) {
+    const list = await getSeenAlarmList();
+
+    if (list != null) {
+        list.push(alarmId);
+        await setSeenAlarmList(list);
+    }
+}
+
+export async function getSeenAlarmList() {
+    try {
+        const seenAlarmListJson = await AsyncStorage.getItem(KEY_SEEN_ALARM_LIST);
+        if (seenAlarmListJson == null) {
+            console.log(`Loading seen alarm: NULL`);
+            return [];
+        }
+        const seenAlarmList = JSON.parse(seenAlarmListJson);
+        console.log(`Loading seen alarm: ${seenAlarmListJson}`);
+
+        return seenAlarmList;
+    } catch (error) {
+        console.log(`Loading seen alarm: NULL (error)`);
+        return null;
+    }
+}
