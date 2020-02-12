@@ -118,7 +118,7 @@ export function FETCHING_COORDINATES(state) {
     state.loadingMessage = getLoadingMessage('Loading maps data');
 }
 
-export async function SET_COORDINATES(state, {coordinateList, wmsList, callback}) {
+export async function SET_COORDINATES(state, {province, coordinateList, wmsList, callback}) {
     const coordinateSparseArray = [];
     coordinateList.forEach(coordinate => {
         const category = coordinate.properties.CATEGORY;
@@ -128,7 +128,7 @@ export async function SET_COORDINATES(state, {coordinateList, wmsList, callback}
 
         if (coordinate.geometry.coordinates === null) {
             //console.log(`BEFORE: ${JSON.stringify(coordinate)}`);
-            findLatLng(state.province, coordinate);
+            findLatLng(province, coordinate);
             //console.log(`AFTER: ${JSON.stringify(coordinate)}`);
         }
         addHeatMapPoint(state, coordinate);
@@ -157,7 +157,7 @@ export async function SET_COORDINATES(state, {coordinateList, wmsList, callback}
         const markerList = coordinateSparseArray[i];
         if (markerList) {
             await setLocalCategoryData(
-                state.province,
+                province,
                 i,
                 {
                     markerList,
@@ -166,7 +166,7 @@ export async function SET_COORDINATES(state, {coordinateList, wmsList, callback}
         }
     }
 
-    state.coordinateCategoryList[PROVINCE_NAME_EN[state.province]].forEach(categoryTypeItem => {
+    state.coordinateCategoryList[PROVINCE_NAME_EN[province]].forEach(categoryTypeItem => {
         categoryTypeItem.list.forEach(categoryItem => {
             if (coordinateSparseArray[categoryItem.id]) {
                 //coords
@@ -178,7 +178,7 @@ export async function SET_COORDINATES(state, {coordinateList, wmsList, callback}
     });
 
     console.log("----- SET_COORDINATES -----");
-    console.log(JSON.stringify(state.coordinateCategoryList[PROVINCE_NAME_EN[state.province]]));
+    console.log(JSON.stringify(state.coordinateCategoryList[PROVINCE_NAME_EN[province]]));
     console.log("----- SET_COORDINATES -----");
 
     state.loadingCoordinates = false;

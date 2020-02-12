@@ -126,6 +126,7 @@ export async function FETCH_COORDINATES({commit, state}, {province, idList, call
     const apiResult = await fetchCoordinates({province, idList});
     if (apiResult.success) {
         commit('SET_COORDINATES', {
+            province,
             coordinateList: apiResult.data.features,
             wmsList: apiResult.data.wms,
             callback: () => {
@@ -134,6 +135,7 @@ export async function FETCH_COORDINATES({commit, state}, {province, idList, call
         });
     } else {
         commit('SET_COORDINATES', {
+            province,
             coordinateList: [],
             wmsList: [],
             callback: () => {

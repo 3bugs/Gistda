@@ -29,6 +29,7 @@
 
     import bg from '../../../assets/images/screen_splash/bg_splash.jpg';
     import logo from '../../../assets/images/screen_splash/ic_logo.png';
+    import {PROVINCE_NAME_EN} from "../../constants";
 
     const delayInMilliseconds = 0;
     const title = 'ระบบภูมิสารสนเทศ\nด้านความปลอดภัยจังหวัด';
@@ -58,13 +59,31 @@
                 }, delayInMilliseconds);
             },
             loadData: function () {
-
+            },
+            getHeatMap: async function () {
+                await store.dispatch('FETCH_COORDINATES', {
+                    province: 0,
+                    idList: [11],
+                    callback: (success, message) => {
+                        const heatMapPointList = store.state.heatMapPointList[PROVINCE_NAME_EN[0]];
+                        //console.log('HEATMAP POINT LIST: ', JSON.stringify(heatMapPointList));
+                        const count = heatMapPointList.reduce((count, item) => item.weight > 0 ? count + 1 : count, 0);
+                    },
+                });
+                await store.dispatch('FETCH_COORDINATES', {
+                    province: 1,
+                    idList: [11],
+                    callback: (success, message) => {
+                    },
+                });
             }
         },
         created: function () {
             if (baseURL.indexOf('dev') !== -1) {
                 alert(baseURL);
             }
+
+            this.getHeatMap();
 
             // อ่าน user จาก local storage มาเก็บลง vuex store
             store.dispatch('GET_LOGGED_USER', {
@@ -134,6 +153,31 @@
                     // IMPORTANT: task has to be ended by endTask
 
                     const now = Date.now();
+                    console.log('NOW: ', now);
+
+                    const heatMapPointListAll = store.state.heatMapPointList[PROVINCE_NAME_EN[0]].concat(
+                        store.state.heatMapPointList[PROVINCE_NAME_EN[1]]
+                    );
+
+                    let leastDistance = null;
+                    heatMapPointListAll.forEach(point => {
+                        if (point.weight > 0) {
+                            const distance = getDistance(
+                                {latitude: point.latitude, longitude: point.longitude},
+                                {latitude: location.latitude, longitude: location.longitude}
+                            );
+                            if (leastDistance === null || leastDistance > distance) {
+                                leastDistance = distance;
+                            }
+                        }
+                    });
+
+                    let distanceMessage = null;
+                    if (leastDistance === null) {
+                        distanceMessage = 'ไม่มีเขตโรคระบาด';
+                    } else {
+                        distanceMessage = `คุณอยู่ห่างจากเขตโรคระบาดที่ใกล้ที่สุด ${(leastDistance / 1000).toFixed(1)} กม.`;
+                    }
 
                     if (global.lastLocation && global.lastTimestamp) {
                         //Date.now() returns a unix timestamp in milliseconds.
@@ -145,8 +189,16 @@
 
                         // 1 m/s = 3.6 km/h
                         const speedKmPerHour = ((distanceInMeters * 3.6) / elapsedTimeInSeconds).toFixed(1);
+                        const speedMessage = `ระยะทาง ${distanceInMeters} เมตร\nเวลา ${elapsedTimeInSeconds} วินาที\nความเร็ว ${speedKmPerHour} กม./ชม.`;
 
-                        Toast.show(`ระยะทาง ${distanceInMeters} เมตร\nเวลา ${elapsedTimeInSeconds} วินาที\nความเร็ว ${speedKmPerHour} กม./ชม.`, Toast.LONG);
+                        const message = `${distanceMessage}\n\n${speedMessage}`;
+
+                        Toast.show(message, Toast.LONG);
+                        console.log(message);
+
+                        if (leastDistance !== null && leastDistance < 1000) { // 1 กม.
+                            Alert.alert('คุณกำลังเข้าใกล้เขตโรคระบาด');
+                        }
 
                         if (speedKmPerHour > SPEED_MONITOR_THRESHOLD) {
                             //แจ้งเตือนขับเร็วเกินไป
@@ -221,7 +273,7 @@
                 console.log('[INFO] App needs to authorize the http requests');
             });
 
-            /*BackgroundGeolocation.checkStatus(status => {
+            BackgroundGeolocation.checkStatus(status => {
                 console.log('[INFO] BackgroundGeolocation service is running', status.isRunning);
                 console.log('[INFO] BackgroundGeolocation services enabled', status.locationServicesEnabled);
                 console.log('[INFO] BackgroundGeolocation auth status: ' + status.authorization);
@@ -230,12 +282,13 @@
                 if (!status.isRunning) {
                     BackgroundGeolocation.start(); //triggers start on start event
                 }
-            });*/
+            });
 
             // you can also just start without checking for status
-            BackgroundGeolocation.start();
+            //BackgroundGeolocation.start();
         },
         beforeDestroy: function () {
+            //BackgroundGeolocation.stop();
             //BackgroundGeolocation.removeAllListeners();
         },
     }
