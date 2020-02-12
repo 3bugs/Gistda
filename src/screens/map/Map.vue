@@ -265,6 +265,38 @@
                 </touchable-opacity>
             </view>
 
+            <!--zoom-in/out-->
+            <view class="map-tools-container"
+                  :style="{
+                        right: DIMENSION.horizontal_margin,
+                        top: MAP_HEADER.height + 50,
+                  }">
+                <touchable-opacity
+                        class="map-tools-icon-touchable"
+                        :on-press="null"
+                        :on-press="() => handleClickZoom(0)">
+                    <image :source="imageMapToolZoomIn"
+                           class="map-tools-zoom-icon"
+                           resize-mode="contain"
+                           :style="{
+                           }"/>
+                </touchable-opacity>
+                <view :style="{
+                    borderBottomWidth: 1,
+                    borderBottomColor: '#D6D6D6'
+                }"/>
+                <touchable-opacity
+                        class="map-tools-icon-touchable"
+                        :on-press="null"
+                        :on-press="() => handleClickZoom(1)">
+                    <image :source="imageMapToolZoomOut"
+                           class="map-tools-zoom-icon"
+                           resize-mode="contain"
+                           :style="{
+                           }"/>
+                </touchable-opacity>
+            </view>
+
             <view class="map-scale-container"
                   pointer-events="none"
                   :style="{
@@ -710,6 +742,8 @@
     import imageMapToolLineOff from '../../../assets/images/screen_map/ic_map_tool_line_off.png';
     import imageMapToolPolygonOn from '../../../assets/images/screen_map/ic_map_tool_polygon_on.png';
     import imageMapToolPolygonOff from '../../../assets/images/screen_map/ic_map_tool_polygon_off.png';
+    import imageMapToolZoomIn from '../../../assets/images/screen_map/ic_map_tool_zoom_in.png';
+    import imageMapToolZoomOut from '../../../assets/images/screen_map/ic_map_tool_zoom_out.png';
     import imageDeleteMeasure from '../../../assets/images/screen_map/ic_delete_measure.png';
 
     import imageDragMarker from '../../../assets/images/screen_map/ic_drag_marker_new.png';
@@ -801,6 +835,7 @@
                 imageMapToolLineOn, imageMapToolLineOff,
                 imageMapToolPolygonOn, imageMapToolPolygonOff,
                 imageDragMarker, imageDragMarkerEnd, imageDeleteMeasure,
+                imageMapToolZoomIn, imageMapToolZoomOut,
 
                 screenHeight: Dimensions.get('window').height,
                 statusBarHeight: getStatusBarHeight(),
@@ -877,6 +912,16 @@
                     });
                 });
                 return output;
+            },
+            handleClickZoom: function (zoomType) {
+                const SCALE_STEP = 2;
+                const scale = zoomType === 1 ? SCALE_STEP : 1 / SCALE_STEP;
+                this.$refs['mapView'].animateToRegion({
+                    latitude: this.mapCurrentRegion.latitude,
+                    longitude: this.mapCurrentRegion.longitude,
+                    latitudeDelta: this.mapCurrentRegion.latitudeDelta * scale,
+                    longitudeDelta: this.mapCurrentRegion.longitudeDelta * scale,
+                });
             },
 
             handleMapReady: function () {
@@ -1253,6 +1298,11 @@
     .map-tools-icon {
         width: 40;
         height: 40;
+    }
+
+    .map-tools-zoom-icon {
+        width: 22.5;
+        height: 28;
     }
 
     .search-input-container {
