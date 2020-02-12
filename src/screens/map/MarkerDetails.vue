@@ -205,7 +205,7 @@
                     </view>
 
                     <touchable-opacity
-                            :on-press="handleClickNavigate"
+                            :on-press="handleClickShare"
                             :active-opacity="0.4">
                         <view :style="{
                             backgroundColor: '#F0F6FF',
@@ -220,7 +220,7 @@
                                 fontSize: 22,
                                 color: '#435582',
                             }">
-                                {{'นำทาง'}}
+                                {{'แชร์'}}
                             </text>
                         </view>
                     </touchable-opacity>
@@ -261,6 +261,7 @@
     import CardView from 'react-native-cardview';
     import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
     import MapViewDirections from 'react-native-maps-directions';
+    import Share from 'react-native-share';
 
     import imageNavigate from '../../../assets/images/screen_map/ic_navigate_2.png';
 
@@ -343,6 +344,41 @@
                 } else {
                     Alert.alert('ผิดพลาด', 'ไม่สามารถนำทางได้');
                 }
+            },
+            handleClickShare: function () {
+                const markerName = this.marker.properties.NAME_T;
+                const markerDescription = this.marker.properties.DESCRIPTION_T;
+                const markerLocation = this.marker.properties.LOCATION_T;
+
+                let markerLatLng = null;
+                if (this.marker.geometry.type.toLowerCase() === 'point'
+                    && this.marker.geometry.coordinates) {
+                    const latitude = this.marker.geometry.coordinates[1].toFixed(4);
+                    const longitude = this.marker.geometry.coordinates[0].toFixed(4);
+                    markerLatLng = `พิกัด:\nละติจูด ${latitude}, ลองจิจูด ${longitude}`;
+                }
+
+                let message = markerName;
+                message += markerDescription && markerDescription.trim() !== ''
+                    ? ((message === '' ? '' : '\n\n') + `รายละเอียด:\n${markerDescription}`)
+                    : '';
+                message += markerLocation && markerLocation.trim() !== ''
+                    ? ((message === '' ? '' : '\n\n') + `ตำแหน่ง:\n${markerLocation}`)
+                    : '';
+                message += markerLatLng === null ? '' : ((message === '' ? '' : '\n\n') + `${markerLatLng}`);
+                message += '\n\n-------------\nข้อมูลจากแอปพลิเคชัน SAFE SAFE โดยสำนักงานพัฒนาเทคโนโลยีอวกาศและภูมิสารสนเทศ (GISTDA)';
+
+                const shareOptions = {
+                    title: markerName,
+                    subject: markerName,
+                    message,
+                };
+
+                //alert('title: ' + markerName + '\n\nmessage: ' + message);
+
+                Share.open(shareOptions)
+                    .then((res) => { console.log(res) })
+                    .catch((err) => { err && console.log(err); });
             },
         },
         created: function () {

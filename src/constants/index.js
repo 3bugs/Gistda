@@ -25,8 +25,9 @@ export const COLOR_PRIMARY = ['#4041da', '#f47442'];
 export const COLOR_PRIMARY_DARK = ['#09097e', '#ed4100'];
 
 export const HEATMAP_CATEGORY_ID = 11;
-export const SPEED_MONITOR_THRESHOLD = 5; // หน่วย km/h
+export const SPEED_MONITOR_THRESHOLD = 100; // หน่วย km/h
 export const SPEED_ALERT_MIN_INTERVAL = 10; // วินาที
+export const MONITOR_INTERVAL = 20 // วินาที
 
 export const STATIC_MAP_DIMENSION = {
     width: 600, height: 400

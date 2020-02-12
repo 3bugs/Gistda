@@ -43,6 +43,8 @@ target 'gistda' do
 
   pod 'react-native-simple-toast', :path => '../node_modules/react-native-simple-toast'
 
+  pod 'RNShare', :path => '../node_modules/react-native-share'
+
 end
 
 post_install do |installer|

@@ -20,7 +20,7 @@
 <script>
     import store from '../../store';
     import {baseURL} from '../../store/fetch'
-    import {SPEED_MONITOR_THRESHOLD, SPEED_ALERT_MIN_INTERVAL} from '../../constants/index';
+    import {SPEED_MONITOR_THRESHOLD, SPEED_ALERT_MIN_INTERVAL, MONITOR_INTERVAL} from '../../constants/index';
 
     import {Dimensions, Alert} from 'react-native';
     import BackgroundGeolocation from '@mauron85/react-native-background-geolocation';
@@ -123,13 +123,13 @@
                 distanceFilter: 50,
                 notificationTitle: 'ตรวจจับความเร็ว และตรวจสอบการเข้าเขตโรคระบาด',
                 notificationText: 'ทำงาน',
-                debug: true,
+                debug: false,
                 startOnBoot: false,
                 stopOnTerminate: true,
                 locationProvider: BackgroundGeolocation.ACTIVITY_PROVIDER,
-                interval: 10000,
-                fastestInterval: 10000,
-                activitiesInterval: 10000,
+                interval: MONITOR_INTERVAL * 1000,
+                fastestInterval: MONITOR_INTERVAL * 1000,
+                activitiesInterval: MONITOR_INTERVAL * 1000,
                 stopOnStillActivity: false,
                 /*url: 'http://192.168.81.15:3000/location',
                 httpHeaders: {
