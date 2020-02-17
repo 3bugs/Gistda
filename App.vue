@@ -22,6 +22,7 @@
     import News from './src/screens/news/News';
     import SearchResult from './src/screens/search-result/SearchResult';
     import MarkerDetails from './src/screens/map/MarkerDetails';
+    import CategoryInfo from './src/screens/map/CategoryInfo';
     //import MapsPage from './src/screens/search-result/MapsPage'; //todo: ****************
     import Report from './src/screens/report/Report';
     import NewsDetails from './src/screens/news/NewsDetails';
@@ -167,6 +168,12 @@
             },
             MarkerDetails: {
                 screen: MarkerDetails,
+                navigationOptions: {
+                    header: null,
+                }
+            },
+            CategoryInfo: {
+                screen: CategoryInfo,
                 navigationOptions: {
                     header: null,
                 }

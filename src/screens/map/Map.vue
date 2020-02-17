@@ -68,6 +68,28 @@
                     epsgSpec="EPSG:4326"
                 />-->
 
+                <!--<w-m-s-tile
+                        url-template="http://wms.ngis.go.th:8081/geoserver/FGDS_YASOTHON/wms?service=wms&version=1.3.0&request=GetMap&layers=L14_แนวคลองชลประทานจังหวัดยโสธร&bbox={minX},{minY},{maxX},{maxY}&width={width}&height={height}&srs=EPSG:900913&format=image/png&transparent=true"
+                        :_z-index="100"
+                        :opacity="1"
+                        :tile-size="512"
+                />-->
+
+                <!--ภาพไม่แสดง-->
+                <!--<w-m-s-tile
+                        url-template="http://wms.ngis.go.th:8081/geoserver/FGDS_YASOTHON/wms?service=wms&version=1.3.0&request=GetMap&layers=L14_อ่างเก็บน้ำจังหวัดยโสธร&bbox={minX},{minY},{maxX},{maxY}&width={width}&height={height}&srs=EPSG:900913&format=image/png&transparent=true"
+                        :_z-index="100"
+                        :opacity="1"
+                        :tile-size="512"
+                />
+
+                <w-m-s-tile
+                        url-template="http://wms.ngis.go.th:8081/geoserver/admin_test/wms?service=wms&version=1.3.0&request=GetMap&layers=admin_test:L050302_PROVINCE_AREA&bbox={minX},{minY},{maxX},{maxY}&width={width}&height={height}&srs=EPSG:900913&format=image/png&transparent=true"
+                        :_z-index="100"
+                        :opacity="1"
+                        :tile-size="512"
+                />-->
+
                 <view v-if="!isMeasureToolOn && !isMarkerToolOn"
                       v-for="(categoryType, categoryTypeIndex) in mapDataList">
                     <view v-for="(category, categoryIndex) in categoryType.list">
@@ -1188,7 +1210,17 @@
                 }
             },
             getWmsLink: function (wms) {
-                return `${wms.url.replace('GetCapabilities', 'GetMap')}&layers=${wms.layers[0]}&bbox={minX},{minY},{maxX},{maxY}&width={width}&height={height}&srs=EPSG:900913&format=image/png&transparent=true`;
+                //layers: Layers to display on map. Value is a comma-separated list of layer names.
+                if (wms.layers && wms.layers.length > 0) {
+                    const allLayers = wms.layers.reduce((total, layer) => {
+                        return `${total},${layer}`;
+                    });
+                    const wmsUrl = `${wms.url.replace('GetCapabilities', 'GetMap')}&layers=${allLayers}&bbox={minX},{minY},{maxX},{maxY}&width={width}&height={height}&srs=EPSG:900913&format=image/png&transparent=true`;
+                    console.log('WMS URL: ', wmsUrl);
+                    return wmsUrl;
+                }
+
+                return '';
             },
             /*handleClickClearSearch: function () {
                 this.showSearchResult = false;

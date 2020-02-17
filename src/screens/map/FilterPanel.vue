@@ -14,6 +14,7 @@
                     :contentContainerStyle="{margin: 0}">
                 <view render-prop-fn="renderItem">
                     <filter-type
+                            :navigation="navigation"
                             :item="args.item"
                             :typeIndex="args.index"/>
                 </view>

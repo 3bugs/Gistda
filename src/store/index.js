@@ -153,8 +153,8 @@ const store = new Vuex.Store({
             [PROVINCE_NAME_EN[1]]: false,
         },
         alarmList: {
-            [PROVINCE_NAME_EN[0]]: null,
-            [PROVINCE_NAME_EN[1]]: null,
+            [PROVINCE_NAME_EN[0]]: [],
+            [PROVINCE_NAME_EN[1]]: [],
         },
     }
 });

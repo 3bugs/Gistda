@@ -103,7 +103,7 @@
                     :on-click="handleClickLoginFacebook"/>
             <view :style="{marginBottom: 15}"/>
 
-            <!--<my-button
+            <my-button
                     text="LOGIN WITH LINE"
                     :icon="imageLine"
                     bg-color="#00B900"
@@ -114,7 +114,7 @@
                     text="LOGIN WITH GMAIL"
                     :icon="imageGoogle"
                     bg-color="#DD4B39"
-                    :on-click="handleClickLoginGoogle"/>-->
+                    :on-click="handleClickLoginGoogle"/>
             <view :style="{marginBottom: 25}"/>
 
             <view :style="{
@@ -351,7 +351,7 @@
                 new GraphRequestManager().addRequest(req).start();
             },
             handleClickLoginLine: function () {
-                Alert.alert('Under Construction', 'ส่วนนี้อยู่ระหว่างการพัฒนา');
+                //Alert.alert('Under Construction', 'ส่วนนี้อยู่ระหว่างการพัฒนา');
 
                 /*LineLogin.login()
                     .then(user => {

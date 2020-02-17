@@ -152,6 +152,7 @@
                     // eg. ajax post location
                     // IMPORTANT: task has to be ended by endTask
 
+                    //Date.now() returns a unix timestamp in milliseconds.
                     const now = Date.now();
                     console.log('NOW: ', now);
 
@@ -180,7 +181,6 @@
                     }
 
                     if (global.lastLocation && global.lastTimestamp) {
-                        //Date.now() returns a unix timestamp in milliseconds.
                         const elapsedTimeInSeconds = (now - global.lastTimestamp) / 1000;
                         const distanceInMeters = getDistance(
                             {latitude: location.latitude, longitude: location.longitude},

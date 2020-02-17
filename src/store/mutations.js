@@ -102,6 +102,8 @@ async function loadMapDataPref(province, coordinateCategoryList) {
             if (localCategoryData && localCategoryData.markerList) {
                 category.markerList = localCategoryData.markerList;
             }
+
+            category.wmsList = null;
         }
     }
 }
@@ -152,6 +154,9 @@ export async function SET_COORDINATES(state, {province, coordinateList, wmsList,
         wmsSparseArray[category].push(wms);
     });
 
+    console.log('***** WMS Sparse array ****************************************');
+    console.log(JSON.stringify(wmsSparseArray));
+
     // แคชไว้ใน local storage
     for (let i = 0; i < coordinateSparseArray.length; i++) {
         const markerList = coordinateSparseArray[i];
@@ -171,6 +176,8 @@ export async function SET_COORDINATES(state, {province, coordinateList, wmsList,
             if (coordinateSparseArray[categoryItem.id]) {
                 //coords
                 categoryItem.markerList = coordinateSparseArray[categoryItem.id];
+            }
+            if (wmsSparseArray[categoryItem.id]) {
                 //wms
                 categoryItem.wmsList = wmsSparseArray[categoryItem.id];
             }

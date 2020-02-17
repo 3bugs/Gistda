@@ -351,11 +351,13 @@
                 const markerLocation = this.marker.properties.LOCATION_T;
 
                 let markerLatLng = null;
+                let url = null;
                 if (this.marker.geometry.type.toLowerCase() === 'point'
                     && this.marker.geometry.coordinates) {
                     const latitude = this.marker.geometry.coordinates[1].toFixed(4);
                     const longitude = this.marker.geometry.coordinates[0].toFixed(4);
                     markerLatLng = `พิกัด:\nละติจูด ${latitude}, ลองจิจูด ${longitude}`;
+                    url = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
                 }
 
                 let message = markerName;
@@ -368,10 +370,13 @@
                 message += markerLatLng === null ? '' : ((message === '' ? '' : '\n\n') + `${markerLatLng}`);
                 message += '\n\n-------------\nข้อมูลจากแอปพลิเคชัน SAFE SAFE โดยสำนักงานพัฒนาเทคโนโลยีอวกาศและภูมิสารสนเทศ (GISTDA)';
 
+                //https://www.google.com/maps/search/?api=1&query=47.5951518,-122.3316393
+
                 const shareOptions = {
                     title: markerName,
                     subject: markerName,
                     message,
+                    url,
                 };
 
                 //alert('title: ' + markerName + '\n\nmessage: ' + message);
