@@ -9,7 +9,7 @@
                     width: '100%',
                     flexDirection: 'column',
                 }">
-            <menu-trigger :custom-styles="{TriggerTouchableComponent: TouchableOpacity}">
+            <menu-trigger :custom-styles="{TriggerTouchableComponent: null}">
                 <card-view
                         :card-elevation="4"
                         :card-maxElevation="4"
@@ -32,7 +32,8 @@
                             :on-touch-start="() => this.$refs['searchMenu'].open()"
                             _placeholder="mapCurrentRegion ? `${mapCurrentRegion.latitude.toFixed(6)}, ${mapCurrentRegion.longitude.toFixed(6)}` : ''"
                             placeholder="ค้นหา"
-                            placeholder-text-color="#aaa"/>
+                            placeholder-text-color="#aaa"
+                            :editable="false"/>
                     <view class="divider"/>
 
                     <touchable-opacity
@@ -110,7 +111,7 @@
                 DEBUG, COLOR_PRIMARY, MAP_HEADER, PROVINCE_NAME_TH,
                 Dimensions, TouchableOpacity,
                 Popover,
-                menuOptionList: [
+                _menuOptionList: [
                     'ค้นหา',
                     'ค้นหาภายในรัศมี 1 กม.',
                     'ค้นหาภายในรัศมี 5 กม.',
@@ -119,11 +120,35 @@
                     `ค้นหาตำบล อำเภอ ใน จ.${PROVINCE_NAME_TH[store.state.province]}`,
                     `ค้นหาจากพิกัด (ละติจูด, ลองจิจูด)`,
                 ],
+                menuOptionList: [
+                    'ค้นหาจากข้อมูลของแอป',
+                    'ค้นหาจากข้อมูล Google Maps',
+                ],
                 searchTerm: '',
             };
         },
         methods: {
             handleClickSearch: function (index) {
+                getCurrentLocation({
+                    callback: coord => {
+                        const currentLocation = {
+                            latitude: coord.latitude,
+                            longitude: coord.longitude
+                        };
+
+                        switch (index) {
+                            case 0:
+                                break;
+                            case 1:
+                                this.navigation.navigate('Search', {
+                                    currentLocation
+                                });
+                                break;
+                        }
+                    }
+                });
+            },
+            _handleClickSearch: function (index) {
                 if (this.searchTerm && this.searchTerm.trim().length > 0) {
                     Keyboard.dismiss();
 

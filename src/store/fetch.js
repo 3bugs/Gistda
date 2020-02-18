@@ -21,6 +21,82 @@ export function doSearchLocal(province, searchTerm) {
     return districtList.concat(subDistrictList);
 }
 
+export async function doCallGoogleApi({endPoint, params}) {
+    let queryParam = '';
+    for (const prop in params) {
+        if (Object.prototype.hasOwnProperty.call(params, prop)) {
+            queryParam += `&${prop}=${params[prop]}`;
+        }
+    }
+
+    const url = `https://maps.googleapis.com/maps/api/${endPoint}/json?key=${GOOGLE_MAPS.geocodingApiKey}&language=th${queryParam}`;
+
+    try {
+        const response = await fetch(url);
+        const responseJson = await response.json();
+
+        console.log('Response JSON:');
+        console.log(responseJson);
+        console.log(JSON.stringify(responseJson));
+
+        if (responseJson.status === 'OK') {
+            return new ApiResult(
+                true,
+                '',
+                responseJson
+            );
+        } else {
+            return new ApiResult(
+                false,
+                `เกิดข้อผิดพลาดในการเชื่อมต่อ Google Maps API`,
+                null
+            );
+        }
+    } catch (error) {
+        return new ApiResult(
+            false,
+            `เกิดข้อผิดพลาดในการเชื่อมต่อเครือข่าย - ${error}`,
+            null
+        );
+    }
+}
+
+//https://maps.googleapis.com/maps/api/place/autocomplete/json?key=AIzaSyCrBhuovlx9Wk2v7mQNvCg4JIL_affg0ks&language=th&origin=13.7563,100.5018&input=%E0%B8%9A%E0%B8%B2%E0%B8%87
+export async function doGetPlaceAutocomplete(searchTerm, latitude, longitude) {
+    return await doCallGoogleApi({
+        endPoint: 'place/autocomplete',
+        params: {
+            origin: `${latitude},${longitude}`,
+            input: searchTerm,
+        }
+    });
+}
+
+//https://maps.googleapis.com/maps/api/place/details/json?key=AIzaSyCrBhuovlx9Wk2v7mQNvCg4JIL_affg0ks&language=th&fields=name,formatted_address,geometry,photo&place_id=ChIJEeyoKxG1AjER8AcmAwZliuc
+export async function doGetPlaceDetails(placeId) {
+    return await doCallGoogleApi({
+        endPoint: 'place/details',
+        params: {
+            place_id: placeId,
+            fields: 'name,formatted_address,geometry',
+        }
+    });
+}
+
+//https://maps.googleapis.com/maps/api/place/textsearch/json?key=AIzaSyCrBhuovlx9Wk2v7mQNvCg4JIL_affg0ks&language=th&query=%E0%B8%95.%E0%B8%9A%E0%B8%B2%E0%B8%87%E0%B9%80%E0%B8%A5%E0%B8%99%20%E0%B8%99%E0%B8%84%E0%B8%A3%E0%B8%9B%E0%B8%90%E0%B8%A1
+export async function doPlaceTextSearch(query, latitude, longitude, radius) {
+    const params = {query};
+    if (latitude != null && longitude != null && radius != null) {
+        params.location = `${latitude},${longitude}`;
+        params.radius = radius;
+    }
+
+    return await doCallGoogleApi({
+        endPoint: 'place/textsearch',
+        params
+    });
+}
+
 export async function doGetAddressFromCoord(latitude, longitude) {
     const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${GOOGLE_MAPS.geocodingApiKey}&language=th`;
 

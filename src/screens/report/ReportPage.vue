@@ -93,7 +93,7 @@
                             flexDirection: 'row',
                             justifyContent: 'space-between',
                             alignItems: 'center',
-                            marginBottom: 13,
+                            marginBottom: 20,
                         }">
                     <view :style="{
                         flexDirection: 'row',
@@ -122,7 +122,7 @@
                             flexDirection: 'row',
                             justifyContent: 'space-between',
                             alignItems: 'center',
-                            marginBottom: 13,
+                            marginBottom: 20,
                         }">
                     <view :style="{
                         flexDirection: 'row',

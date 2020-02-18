@@ -117,30 +117,28 @@
                         </text>
                     </view>
 
-                    <!--<map-view
+                    <map-view
                             :provider="PROVIDER_GOOGLE"
                             :style="{
                                 width: '100%',
                                 height: STATIC_MAP_DIMENSION.height * (screenWidth - (2 * DIMENSION.horizontal_margin)) / STATIC_MAP_DIMENSION.width,
+                                marginBottom: 15,
                             }"
                             :initial-region="{
-                                latitude: (PROVINCE_DIMENSION[province].minLatitude + PROVINCE_DIMENSION[province].maxLatitude) / 2,
-                                longitude: (PROVINCE_DIMENSION[province].minLongitude + PROVINCE_DIMENSION[province].maxLongitude) / 2,
-                                latitudeDelta: PROVINCE_DIMENSION[province].maxLatitude - PROVINCE_DIMENSION[province].minLatitude,
-                                longitudeDelta: PROVINCE_DIMENSION[province].maxLongitude - PROVINCE_DIMENSION[province].minLongitude,
+                                latitude: marker.geometry.coordinates[1],
+                                longitude: marker.geometry.coordinates[0],
+                                latitudeDelta: marker.geometry.viewport ? marker.geometry.viewport.northeast.lat - marker.geometry.viewport.southwest.lat : 0.01,
+                                longitudeDelta: marker.geometry.viewport ? marker.geometry.viewport.northeast.lng - marker.geometry.viewport.southwest.lng : 0.01,
                             }">
-                        &lt;!&ndash;<marker
-                                v-if="coord"
-                                :coordinate="coord"/>
                         <marker
-                                v-if="currentLocation"
-                                :coordinate="currentLocation"/>&ndash;&gt;
+                                v-if="marker.geometry.coordinates"
+                                :coordinate="{latitude: marker.geometry.coordinates[1], longitude: marker.geometry.coordinates[0]}"/>
 
-                        <map-view-directions
+                        <!--<map-view-directions
                                 :origin="{latitude: 13.7563, longitude: 100.5018}"
                                 :destination="{latitude: 13.7563, longitude: 102.5018}"
-                                :api-key="GOOGLE_MAPS.geocodingApiKey"/>
-                    </map-view>-->
+                                :api-key="GOOGLE_MAPS.geocodingApiKey"/>-->
+                    </map-view>
 
                     <view :style="{flexDirection: 'row'}">
                         <view v-if="distanceText !== '' && !isLoadingStaticMaps"
@@ -367,7 +365,8 @@
                 message += markerLocation && markerLocation.trim() !== ''
                     ? ((message === '' ? '' : '\n\n') + `ตำแหน่ง:\n${markerLocation}`)
                     : '';
-                message += markerLatLng === null ? '' : ((message === '' ? '' : '\n\n') + `${markerLatLng}`);
+                //message += markerLatLng === null ? '' : ((message === '' ? '' : '\n\n') + `${markerLatLng}`);
+                message += url === null ? '' : ((message === '' ? '' : '\n\n') + `${url}`);
                 message += '\n\n-------------\nข้อมูลจากแอปพลิเคชัน SAFE SAFE โดยสำนักงานพัฒนาเทคโนโลยีอวกาศและภูมิสารสนเทศ (GISTDA)';
 
                 //https://www.google.com/maps/search/?api=1&query=47.5951518,-122.3316393
@@ -376,7 +375,7 @@
                     title: markerName,
                     subject: markerName,
                     message,
-                    url,
+                    //url,
                 };
 
                 //alert('title: ' + markerName + '\n\nmessage: ' + message);

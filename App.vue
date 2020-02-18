@@ -20,7 +20,9 @@
     import Province from './src/screens/province/Province';
     import Map from './src/screens/map/Map';
     import News from './src/screens/news/News';
+    import Search from './src/screens/search-result/Search';
     import SearchResult from './src/screens/search-result/SearchResult';
+    import SearchResultGoogle from './src/screens/search-result/SearchResultGoogle';
     import MarkerDetails from './src/screens/map/MarkerDetails';
     import CategoryInfo from './src/screens/map/CategoryInfo';
     //import MapsPage from './src/screens/search-result/MapsPage'; //todo: ****************
@@ -160,8 +162,20 @@
                     header: null,
                 }
             },
+            Search: {
+                screen: Search,
+                navigationOptions: {
+                    header: null,
+                }
+            },
             SearchResult: {
                 screen: SearchResult,
+                navigationOptions: {
+                    header: null,
+                }
+            },
+            SearchResultGoogle: {
+                screen: SearchResultGoogle,
                 navigationOptions: {
                     header: null,
                 }

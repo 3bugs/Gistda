@@ -43,8 +43,8 @@
                     {{details.trim().length === 0 ? '(ไม่มีรายละเอียด)' : details.trim()}}
                 </text>
                 <text class="date"
-                      v-if="showDate">
-                    {{'20/20/2020'}}
+                      v-if="showDate && date && date.trim().length > 0">
+                    {{date}}
                 </text>
             </view>
         </ripple>
@@ -91,6 +91,10 @@
             showDate: {
                 type: Boolean,
                 default: true,
+            },
+            date: {
+                type: String,
+                default: null,
             },
             paddingTop: {
                 type: Number,

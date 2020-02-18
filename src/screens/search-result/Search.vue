@@ -1,0 +1,249 @@
+<template>
+    <view class="container">
+        <header :title="`ค้นหา`"
+                :left-icon="{
+                    icon: imageBack,
+                    width: 24, //22 imageMap
+                    height: 18, //22 imageMap
+                    callback: handleClickBack
+                }"
+                :right-icon="{
+                    icon: null,
+                    width: 22,
+                    height: 22,
+                    callback: null
+                }"/>
+        <view class="text-input-container"
+              :style="{
+                    paddingLeft: DIMENSION.horizontal_margin,
+                    paddingRight: DIMENSION.horizontal_margin,
+              }">
+            <text-input
+                    class="text-input"
+                    v-model="textContent"
+                    return-key-type="search"
+                    :auto-focus="true"
+                    :on-submit-editing="handleClickSearch"
+                    :on-change-text="handleChangeText"/>
+        </view>
+        <!--<view :style="{
+                    marginTop: 0,
+                    marginBottom: 0,
+                    borderBottomWidth: StyleSheet.hairlineWidth,
+                    borderBottomColor: '#cccccc'
+        }"/>-->
+        <flat-list
+                class="list"
+                v-if="dataList && dataList.length > 0"
+                :data="dataList"
+                :keyExtractor="(item, index) => index.toString()"
+                keyboard-should-persist-taps="handled"
+                :contentContainerStyle="{margin: 0}">
+            <view render-prop-fn="renderItem">
+                <touchable-opacity
+                        :on-press="() => handleClickAutocompleteItem(args.item)">
+                    <view
+                          :style="{
+                                paddingLeft: DIMENSION.horizontal_margin,
+                                paddingRight: DIMENSION.horizontal_margin,
+                                paddingTop: 10,
+                                paddingBottom: 10,
+                          }">
+                        <text :style="{
+                            fontFamily: 'DBHeavent',
+                            fontSize: 22,
+                            color: '#626b80',
+                        }">
+                            {{args.item.structured_formatting.main_text}}
+                        </text>
+                    </view>
+                </touchable-opacity>
+                <!--<list-item
+                        :item="args.item"
+                        :index="args.index"
+                        :title="args.item.structured_formatting.main_text"
+                        :details="args.item.description"
+                        :show-date="true"
+                        :date="getDistanceText(args.item.distance_meters)"
+                        :on-click="() => handleClickAutocompleteItem(args.item)"/>-->
+            </view>
+            <!--<view render-prop="ListEmptyComponent"
+                  :style="{width: '100%', height: '100%', borderWidth: 1, borderColor: 'blue'}">
+                <view :style="{flex: 1, borderWidth: 1, borderColor: 'red'}">
+                    <text>ไม่มีข้อมูล</text>
+                </view>
+            </view>-->
+            <!--<view render-prop="ListHeaderComponent">
+                <view :style="{height: 15}"/>
+            </view>-->
+            <view render-prop="ListFooterComponent"
+                  v-if="true">
+                <view :style="{height: 50}"/>
+            </view>
+        </flat-list>
+
+        <activity-indicator
+                class="progress"
+                size="large"
+                :color="COLOR_PRIMARY[province]"
+                v-if="isLoading"/>
+    </view>
+</template>
+
+<script>
+    import store from '../../store';
+    import {doGetPlaceAutocomplete, doGetPlaceDetails, doPlaceTextSearch} from '../../store/fetch';
+    import {
+        DEBUG, PROVINCE_NAME_EN, DIMENSION, COLOR_PRIMARY,
+    } from '../../constants';
+    import Header from '../../components/Header';
+    import ListItem from '../../components/ListItem';
+
+    import React from 'react';
+    import {StyleSheet, Alert} from 'react-native';
+
+    import imageBack from '../../../assets/images/ic_back.png';
+
+    export default {
+        components: {Header, ListItem},
+        props: {
+            navigation: {
+                type: Object
+            }
+        },
+        computed: {
+            province() {
+                return store.state.province;
+            },
+        },
+        data: () => {
+            return {
+                imageBack,
+                PROVINCE_NAME_EN, DIMENSION, COLOR_PRIMARY,
+                StyleSheet,
+                textContent: '',
+                currentLocation: null,
+                dataList: [],
+                isLoading: false,
+            };
+        },
+        methods: {
+            handleClickBack: function () {
+                this.navigation.goBack();
+            },
+            handleChangeText: async function (text) {
+                if (text.trim() === '') {
+                    this.dataList = [];
+                    return;
+                }
+
+                const apiResult = await doGetPlaceAutocomplete(
+                    text.trim(), this.currentLocation.latitude, this.currentLocation.longitude
+                );
+
+                if (apiResult.success) {
+                    this.dataList = apiResult.data.predictions ? apiResult.data.predictions : [];
+                } else {
+                    // error
+                }
+            },
+            handleClickSearch: async function () {
+                if (!this.textContent || this.textContent.trim().length === 0) {
+                    return;
+                }
+
+                this.isLoading = true;
+                const apiResult = await doPlaceTextSearch(
+                    this.textContent.trim()
+                );
+                this.isLoading = false;
+
+                if (apiResult.success) {
+                    const dataList = apiResult.data.results ? apiResult.data.results : [];
+                    if (dataList.length > 0) {
+                        this.navigation.navigate('SearchResultGoogle', {dataList});
+                    } else {
+                        Alert.alert('ผลการค้นหา', 'ไม่พบข้อมูล');
+                    }
+                } else {
+                    Alert.alert('ผิดพลาด', 'เกิดข้อผิดพลาดในการเชื่อมต่อ Google Maps API');
+                }
+            },
+            handleClickAutocompleteItem: async function (item) {
+                this.isLoading = true;
+                const apiResult = await doGetPlaceDetails(item.place_id);
+                this.isLoading = false;
+
+                if (apiResult.success) {
+                    //console.log(`Name: ${apiResult.data.result.name}\nFormatted address: ${apiResult.data.result.formatted_address}`);
+
+                    const lat = apiResult.data.result.geometry.location.lat;
+                    const lng = apiResult.data.result.geometry.location.lng;
+
+                    const marker = {
+                        type: 'Feature',
+                        id: 999999,
+                        geometry: {
+                            type: 'Point',
+                            coordinates: [
+                                lng,
+                                lat
+                            ],
+                            viewport: apiResult.data.result.geometry.viewport,
+                        },
+                        properties: {
+                            NAME_T: apiResult.data.result.name,
+                            DESCRIPTION_T: ``,
+                            LOCATION_T: apiResult.data.result.formatted_address,
+                            CATEGORY: 0,
+                            P_CODE: 0,
+                            IMAGES: []
+                        }
+                    };
+                    this.navigation.navigate('MarkerDetails', {marker});
+                } else {
+                    Alert.alert('ผิดพลาด', 'เกิดข้อผิดพลาดในการเชื่อมต่อ Google Maps API');
+                }
+            },
+            getDistanceText: function (value) {
+                if (value == null) return null;
+
+                return (value / 1000).toFixed(1) + ' กม.';
+            }
+        },
+        mounted: function () {
+            this.currentLocation = this.navigation.getParam('currentLocation');
+            //alert('Current location: ' + JSON.stringify(this.currentLocation))
+        }
+    }
+</script>
+
+<style>
+    .container {
+        flex: 1;
+    }
+
+    .text-input-container {
+
+    }
+
+    .text-input {
+        font-family: DBHeavent;
+        font-size: 22;
+        color: #666666;
+        padding-top: 0;
+        padding-bottom: 5;
+        margin-top: 15;
+        margin-bottom: 15;
+        border-bottom-width: 1;
+        border-bottom-color: #cccccc;
+    }
+
+    .progress {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-width: 0;
+        border-color: yellow;
+    }
+</style>
