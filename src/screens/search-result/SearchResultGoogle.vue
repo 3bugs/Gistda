@@ -23,7 +23,7 @@
                 <list-item
                         :item="args.item"
                         :index="args.index"
-                        :title="args.item.name"
+                        :title="args.item.name ? args.item.name : args.item.formatted_address"
                         :details="args.item.formatted_address"
                         :show-date="true"
                         :date="getDistanceText(args.item)"
@@ -86,6 +86,7 @@
                 StyleSheet,
                 currentLocation: null,
                 dataList: [],
+                currentLocation: null,
                 isLoading: false,
             };
         },
@@ -116,7 +117,7 @@
                             viewport: apiResult.data.result.geometry.viewport,
                         },
                         properties: {
-                            NAME_T: apiResult.data.result.name,
+                            NAME_T: apiResult.data.result.name ? apiResult.data.result.name : apiResult.data.result.formatted_address,
                             DESCRIPTION_T: ``,
                             LOCATION_T: apiResult.data.result.formatted_address,
                             CATEGORY: 0,
@@ -129,19 +130,41 @@
                     Alert.alert('ผิดพลาด', 'เกิดข้อผิดพลาดในการเชื่อมต่อ Google Maps API');
                 }
             },
-            getDistanceText: function (value) {
-                return 'xxxxx กม.';
+            getDistanceText: function (searchResultItem) {
+                return searchResultItem.distance
+                    ? `${(searchResultItem.distance / 1000).toFixed(1)} กม.`
+                    : '';
+            },
+            calculateDistance: function () {
+                const originLatitude = this.currentLocation.latitude;
+                const originLongitude = this.currentLocation.longitude;
 
-                /*if (value == null) return null;
+                this.dataList.forEach(searchResultItem => {
+                    const destinationLatitude = searchResultItem.geometry.location.lat;
+                    const destinationLongitude = searchResultItem.geometry.location.lng;
 
-                return (value / 1000).toFixed(1) + ' กม.';*/
-            }
+                    const distanceMeters = getDistance(
+                        {latitude: originLatitude, longitude: originLongitude},
+                        {latitude: destinationLatitude, longitude: destinationLongitude}
+                    );
+                    searchResultItem.distance = distanceMeters;
+                });
+            },
+            sortDataListByDistance: function () {
+                this.dataList.sort((searchResultItem1, searchResultItem2) => {
+                    return searchResultItem1.distance > searchResultItem2.distance ? 1 : -1;
+                });
+            },
         },
-        mounted: function () {
-            //this.currentLocation = this.navigation.getParam('currentLocation');
-
+        created: function () {
             //todo: sort result list by distance
             this.dataList = this.navigation.getParam('dataList');
+            this.currentLocation = this.navigation.getParam('currentLocation');
+
+            this.calculateDistance();
+            this.sortDataListByDistance();
+        },
+        mounted: function () {
         }
     }
 </script>

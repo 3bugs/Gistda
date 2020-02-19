@@ -1,6 +1,6 @@
 <template>
     <view class="container">
-        <header :title="`ค้นหา`"
+        <header :title="title"
                 :left-icon="{
                     icon: imageBack,
                     width: 24, //22 imageMap
@@ -23,6 +23,8 @@
                     v-model="textContent"
                     return-key-type="search"
                     :auto-focus="true"
+                    :placeholder="placeHolder"
+                    placeholder-text-color="#aaa"
                     :on-submit-editing="handleClickSearch"
                     :on-change-text="handleChangeText"/>
         </view>
@@ -92,7 +94,7 @@
 
 <script>
     import store from '../../store';
-    import {doGetPlaceAutocomplete, doGetPlaceDetails, doPlaceTextSearch} from '../../store/fetch';
+    import {doGetPlaceAutocomplete, doGetPlaceDetails, doPlaceTextSearch, doGetAddress} from '../../store/fetch';
     import {
         DEBUG, PROVINCE_NAME_EN, DIMENSION, COLOR_PRIMARY,
     } from '../../constants';
@@ -115,6 +117,28 @@
             province() {
                 return store.state.province;
             },
+            title() {
+                let title = 'ค้นหา';
+                if (this.searchType === 'backend') {
+                    title += 'ข้อมูลแอป'
+                } else if (this.searchType === 'google') {
+                    title += 'ข้อมูล Google Maps';
+                } else if (this.searchType === 'latlng') {
+                    title += 'ด้วยพิกัด';
+                }
+                return title;
+            },
+            placeHolder() {
+                let placeHolder;
+                if (this.searchType === 'backend') {
+                    placeHolder = 'กรอกคำที่ต้องการค้นหา'
+                } else if (this.searchType === 'google') {
+                    placeHolder = 'กรอกชื่อสถานที่/หมู่บ้าน/ตำบล/อำเภอ ที่ต้องการค้นหา';
+                } else if (this.searchType === 'latlng') {
+                    placeHolder = `กรอกพิกัดในรูปแบบ 'ละติจูด , ลองจิจูด'`;
+                }
+                return placeHolder;
+            },
         },
         data: () => {
             return {
@@ -122,6 +146,7 @@
                 PROVINCE_NAME_EN, DIMENSION, COLOR_PRIMARY,
                 StyleSheet,
                 textContent: '',
+                searchType: null,
                 currentLocation: null,
                 dataList: [],
                 isLoading: false,
@@ -132,19 +157,23 @@
                 this.navigation.goBack();
             },
             handleChangeText: async function (text) {
-                if (text.trim() === '') {
-                    this.dataList = [];
-                    return;
-                }
+                if (this.searchType === 'backend') {
+                    // do nothing for now (that means no suggestion for backend search)
+                } else if (this.searchType === 'google') {
+                    if (text.trim() === '') {
+                        this.dataList = [];
+                        return;
+                    }
 
-                const apiResult = await doGetPlaceAutocomplete(
-                    text.trim(), this.currentLocation.latitude, this.currentLocation.longitude
-                );
+                    const apiResult = await doGetPlaceAutocomplete(
+                        text.trim(), this.currentLocation.latitude, this.currentLocation.longitude
+                    );
 
-                if (apiResult.success) {
-                    this.dataList = apiResult.data.predictions ? apiResult.data.predictions : [];
-                } else {
-                    // error
+                    if (apiResult.success) {
+                        this.dataList = apiResult.data.predictions ? apiResult.data.predictions : [];
+                    } else {
+                        // error, we can safely ignore it
+                    }
                 }
             },
             handleClickSearch: async function () {
@@ -152,21 +181,66 @@
                     return;
                 }
 
-                this.isLoading = true;
-                const apiResult = await doPlaceTextSearch(
-                    this.textContent.trim()
-                );
-                this.isLoading = false;
+                if (this.searchType === 'backend') {
+                    this.isLoading = true;
 
-                if (apiResult.success) {
-                    const dataList = apiResult.data.results ? apiResult.data.results : [];
-                    if (dataList.length > 0) {
-                        this.navigation.navigate('SearchResultGoogle', {dataList});
-                    } else {
-                        Alert.alert('ผลการค้นหา', 'ไม่พบข้อมูล');
+                    await store.dispatch('SEARCH', {
+                        province: this.province,
+                        searchTerm: this.textContent.trim(),
+                        currentLocation: this.currentLocation,
+                        callback: (success, message) => {
+                            this.isLoading = false;
+
+                            if (success) {
+                                if (store.state.searchResultList[PROVINCE_NAME_EN[this.province]].length === 0) {
+                                    Alert.alert('ผลการค้นหา', 'ไม่พบข้อมูล');
+                                } else {
+                                    const currentLocation = this.currentLocation;
+                                    this.navigation.navigate('SearchResult', {currentLocation});
+                                }
+                            } else {
+                                Alert.alert('ผิดพลาด', message);
+                            }
+                        },
+                    });
+
+                } else if (this.searchType === 'google' || this.searchType === 'latlng') {
+                    let lat, lng;
+
+                    if (this.searchType === 'latlng') {
+                        const COMMA = ',';
+                        const textContent = this.textContent.trim();
+                        const part = textContent.split(COMMA);
+
+                        lat = part[0];
+                        lng = part[1];
+
+                        if (textContent.indexOf(COMMA) === -1
+                            || part.length !== 2
+                            || isNaN(parseFloat(part[0]))
+                            || isNaN(parseFloat(part[1]))) {
+                            Alert.alert('ผิดพลาด', 'รูปแบบไม่ถูกต้อง ให้กรอกค่าในรูปแบบ "ละติจูด , ลองจิจูด" เช่น\n\n15.7810 , 104.1192');
+                            return;
+                        }
                     }
-                } else {
-                    Alert.alert('ผิดพลาด', 'เกิดข้อผิดพลาดในการเชื่อมต่อ Google Maps API');
+
+                    this.isLoading = true;
+                    const apiResult = this.searchType === 'google'
+                        ? await doPlaceTextSearch(this.textContent.trim())
+                        : await doGetAddress(lat, lng);
+                    this.isLoading = false;
+
+                    if (apiResult.success) {
+                        const dataList = apiResult.data.results ? apiResult.data.results : [];
+                        const currentLocation = this.currentLocation;
+                        if (dataList.length > 0) {
+                            this.navigation.navigate('SearchResultGoogle', {dataList, currentLocation});
+                        } else {
+                            Alert.alert('ผลการค้นหา', 'ไม่พบข้อมูล');
+                        }
+                    } else {
+                        Alert.alert('ผิดพลาด', 'เกิดข้อผิดพลาดในการเชื่อมต่อ Google Maps API');
+                    }
                 }
             },
             handleClickAutocompleteItem: async function (item) {
@@ -211,9 +285,9 @@
                 return (value / 1000).toFixed(1) + ' กม.';
             }
         },
-        mounted: function () {
+        created: function () {
+            this.searchType = this.navigation.getParam('searchType');
             this.currentLocation = this.navigation.getParam('currentLocation');
-            //alert('Current location: ' + JSON.stringify(this.currentLocation))
         }
     }
 </script>

@@ -123,6 +123,7 @@
                 menuOptionList: [
                     'ค้นหาจากข้อมูลของแอป',
                     'ค้นหาจากข้อมูล Google Maps',
+                    'ค้นหาด้วยพิกัด (ละติจูด, ลองจิจูด)',
                 ],
                 searchTerm: '',
             };
@@ -138,9 +139,20 @@
 
                         switch (index) {
                             case 0:
+                                this.navigation.navigate('Search', {
+                                    searchType: 'backend',
+                                    currentLocation
+                                });
                                 break;
                             case 1:
                                 this.navigation.navigate('Search', {
+                                    searchType: 'google',
+                                    currentLocation
+                                });
+                                break;
+                            case 2:
+                                this.navigation.navigate('Search', {
+                                    searchType: 'latlng',
                                     currentLocation
                                 });
                                 break;

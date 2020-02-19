@@ -99,7 +99,7 @@
                                 v-if="category.markerVisibility"
                                 :url-template="getWmsLink(wms)"
                                 :_z-index="100"
-                                :opacity="1"
+                                :opacity="category.markerOpacity"
                                 :tile-size="512"
                         />
                         <!--จุด-->

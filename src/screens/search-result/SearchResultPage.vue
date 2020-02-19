@@ -43,7 +43,8 @@
                         :image="(args.item.properties.IMAGES && args.item.properties.IMAGES.length > 0) ? args.item.properties.IMAGES[0] : ''"
                         :title="getTitle(args.item)"
                         :details="getDetails(args.item)"
-                        :show-date="false"
+                        :show-date="true"
+                        :date="getDistanceText(args.item)"
                         :on-click="() => handleClickPoint(args.item)"/>
             </view>
             <view render-prop="ListHeaderComponent"
@@ -285,6 +286,11 @@
                 } else {
                     Alert.alert('ผิดพลาด', 'ไม่สามารถนำทางได้')
                 }
+            },
+            getDistanceText: function (searchResultItem) {
+                return searchResultItem.distance
+                    ? `${(searchResultItem.distance / 1000).toFixed(1)} กม.`
+                    : '';
             },
         },
         beforeCreate: function () {

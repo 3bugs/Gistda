@@ -97,6 +97,16 @@ export async function doPlaceTextSearch(query, latitude, longitude, radius) {
     });
 }
 
+//https://maps.googleapis.com/maps/api/geocode/json?latlng=13.7563,100.5018&key=AIzaSyCrBhuovlx9Wk2v7mQNvCg4JIL_affg0ks&language=th
+export async function doGetAddress(latitude, longitude) {
+    return await doCallGoogleApi({
+        endPoint: 'geocode',
+        params: {
+            latlng: `${latitude},${longitude}`,
+        }
+    });
+}
+
 export async function doGetAddressFromCoord(latitude, longitude) {
     const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${GOOGLE_MAPS.geocodingApiKey}&language=th`;
 

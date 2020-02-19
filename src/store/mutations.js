@@ -268,9 +268,33 @@ export async function SET_SEARCH_RESULT(state, {coordinateList, wmsList, current
         });
     }
 
+    calculateDistance(filteredCoordList, currentLocation);
+    sortDataListByDistance(filteredCoordList);
     state.searchResultList[PROVINCE_NAME_EN[state.province]] = filteredCoordList;
 
     callback();
+}
+
+function calculateDistance(dataList, currentLocation) {
+    const originLatitude = currentLocation.latitude;
+    const originLongitude = currentLocation.longitude;
+
+    dataList.forEach(item => {
+        const destinationLatitude = item.geometry.coordinates[1];
+        const destinationLongitude = item.geometry.coordinates[0];
+
+        const distanceMeters = getDistance(
+            {latitude: originLatitude, longitude: originLongitude},
+            {latitude: destinationLatitude, longitude: destinationLongitude}
+        );
+        item.distance = distanceMeters;
+    });
+}
+
+function sortDataListByDistance(dataList) {
+    dataList.sort((item1, item2) => {
+        return item1.distance > item2.distance ? 1 : -1;
+    });
 }
 
 export function GETTING_REPORT(state) {
