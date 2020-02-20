@@ -309,7 +309,7 @@
                             flexDirection: 'column',
                         }">
                     <menu-trigger :custom-styles="{TriggerTouchableComponent: TouchableOpacity}">
-                        <image :source="imageMapToolLayer"
+                        <image :source="imageMapToolLegend"
                                class="map-tools-icon"
                                resize-mode="contain"/>
                     </menu-trigger>
@@ -320,7 +320,7 @@
                                 :on-select="null"
                                 :custom-styles="{OptionTouchableComponent: null}">
                             <view v-for="(category, categoryIndex) in categoryType.list"
-                                  v-if="category.markerVisibility">
+                                  v-if="category.markerVisibility && category.wmsList && category.wmsList.length > 0">
                                 <text class="menu-option-text">
                                     {{category.name}}
                                 </text>
@@ -820,7 +820,7 @@
     import imageMapToolPolygonOff from '../../../assets/images/screen_map/ic_map_tool_polygon_off.png';
     import imageMapToolZoomIn from '../../../assets/images/screen_map/ic_map_tool_zoom_in.png';
     import imageMapToolZoomOut from '../../../assets/images/screen_map/ic_map_tool_zoom_out.png';
-    import imageMapToolLayer from '../../../assets/images/screen_map/ic_map_tool_layer.png';
+    import imageMapToolLegend from '../../../assets/images/screen_map/ic_map_tool_legend.png';
     import imageDeleteMeasure from '../../../assets/images/screen_map/ic_delete_measure.png';
 
     import imageDragMarker from '../../../assets/images/screen_map/ic_drag_marker_new.png';
@@ -927,7 +927,7 @@
                 imageMapToolLineOn, imageMapToolLineOff,
                 imageMapToolPolygonOn, imageMapToolPolygonOff,
                 imageDragMarker, imageDragMarkerEnd, imageDeleteMeasure,
-                imageMapToolZoomIn, imageMapToolZoomOut, imageMapToolLayer,
+                imageMapToolZoomIn, imageMapToolZoomOut, imageMapToolLegend,
 
                 screenHeight: Dimensions.get('window').height,
                 statusBarHeight: getStatusBarHeight(),

@@ -17,6 +17,7 @@
         <my-tab-view
                 v-if="isReady"
                 :routes="routes"
+                :swipe-enabled="false"
                 :renderScene="renderScene"/>
 
         <view
@@ -64,6 +65,7 @@
     import Header from '../../components/Header';
     import MyTabView from '../../components/MyTabView';
     import ReportPage from "./ReportPage";
+    import MapPage from "./MapPage";
     import MyButton from "../../components/MyButton";
 
     import React from 'react';
@@ -72,13 +74,13 @@
     import imageMap from '../../../assets/images/screen_map/ic_map.png';
 
     const routes = [
-        {key: 'map', title: 'ภาพรวมทั้งหมด'},
-        {key: 'by-incident', title: 'สรุปผลตามเหตุ'},
-        {key: 'by-time', title: 'สรุปผลตามช่วงเวลา'},
+        {key: 'map', title: 'ภาพรวม'},
+        {key: 'by-incident', title: 'สรุปตามเหตุ'},
+        {key: 'by-time', title: 'สรุปตามช่วงเวลา'},
     ];
 
     export default {
-        components: {MyButton, Header, MyTabView, ReportPage},
+        components: {MyButton, Header, MyTabView, ReportPage, MapPage},
         props: {
             navigation: {
                 type: Object
@@ -109,11 +111,11 @@
             renderScene: function ({route}) {
                 switch (route.key) {
                     case 'map':
-                        return <ReportPage graphType={0} navigation={this.navigation}/>;
+                        return <MapPage navigation={this.navigation}/>;
                     case 'by-incident':
-                        return <ReportPage graphType={1} navigation={this.navigation}/>;
+                        return <ReportPage graphType={0} navigation={this.navigation}/>;
                     case 'by-time':
-                        return <ReportPage graphType={2} navigation={this.navigation}/>;
+                        return <ReportPage graphType={1} navigation={this.navigation}/>;
                 }
             },
             loadData: function () {

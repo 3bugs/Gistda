@@ -69,7 +69,7 @@
     import store from '../../store';
     import Progress from '../../components/Progress';
 
-    import {Dimensions} from 'react-native';
+    import {Dimensions, Alert} from 'react-native';
 
     import ViewPager from '@react-native-community/viewpager';
     import bgNakhonPathom from '../../../assets/images/screen_province/bg_nakhon_pathom.jpg';
@@ -199,7 +199,7 @@
                                 }
                             );
                         } else {
-                            alert(message);
+                            Alert.alert('ผิดพลาด', message);
                         }
                     }
                 });

@@ -63,9 +63,9 @@
             getHeatMap: async function () {
                 await store.dispatch('FETCH_COORDINATES', {
                     province: 0,
-                    idList: [11],
+                    idList: [11], //todo: hardcoded is bad!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                     callback: (success, message) => {
-                        const heatMapPointList = store.state.heatMapPointList[PROVINCE_NAME_EN[0]];
+                        const heatMapPointList = store.state.heatMapPointListDisease[PROVINCE_NAME_EN[0]];
                         //console.log('HEATMAP POINT LIST: ', JSON.stringify(heatMapPointList));
                         const count = heatMapPointList.reduce((count, item) => item.weight > 0 ? count + 1 : count, 0);
                     },
@@ -156,8 +156,8 @@
                     const now = Date.now();
                     console.log('NOW: ', now);
 
-                    const heatMapPointListAll = store.state.heatMapPointList[PROVINCE_NAME_EN[0]].concat(
-                        store.state.heatMapPointList[PROVINCE_NAME_EN[1]]
+                    const heatMapPointListAll = store.state.heatMapPointListDisease[PROVINCE_NAME_EN[0]].concat(
+                        store.state.heatMapPointListDisease[PROVINCE_NAME_EN[1]]
                     );
 
                     let leastDistance = null;
