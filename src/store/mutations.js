@@ -1,4 +1,4 @@
-import {PROVINCE_NAME_EN, INCIDENT_FORM_DATA, HEATMAP_CATEGORY_ID} from '../constants/index';
+import {PROVINCE_NAME_EN, INCIDENT_FORM_DATA, HEATMAP_CATEGORY_ID_RISK, HEATMAP_CATEGORY_ID_DISEASE} from '../constants/index';
 import {getLocalCategoryData, setLocalCategoryData, getSeenAlarmList, setSeenAlarmList} from './db';
 import {getSubDistrictDataList} from '../data/sub_district.geo';
 import {getDistance} from 'geolib';
@@ -122,27 +122,40 @@ export function FETCHING_COORDINATES(state) {
 
 export async function SET_COORDINATES(state, {province, coordinateList, wmsList, callback}) {
     const coordinateSparseArray = [];
+    const heatMapSparseArray = [];
+
     coordinateList.forEach(coordinate => {
-        const category = coordinate.properties.CATEGORY;
-        if (!coordinateSparseArray[category]) {
-            coordinateSparseArray[category] = [];
+        const categoryId = coordinate.properties.CATEGORY;
+
+        if (categoryId === HEATMAP_CATEGORY_ID_RISK || categoryId === HEATMAP_CATEGORY_ID_DISEASE) {
+            if (coordinate.geometry.coordinates === null) {
+                //console.log(`BEFORE: ${JSON.stringify(coordinate)}`);
+                findLatLng(province, coordinate);
+                //console.log(`AFTER: ${JSON.stringify(coordinate)}`);
+            }
+
+            if (!heatMapSparseArray[categoryId]) {
+                heatMapSparseArray[categoryId] = [];
+            }
+            heatMapSparseArray[categoryId].push(coordinate);
+        } else {
+            if (!coordinateSparseArray[categoryId]) {
+                coordinateSparseArray[categoryId] = [];
+            }
+            coordinateSparseArray[categoryId].push(coordinate);
         }
 
-        if (coordinate.geometry.coordinates === null) {
-            //console.log(`BEFORE: ${JSON.stringify(coordinate)}`);
-            findLatLng(province, coordinate);
-            //console.log(`AFTER: ${JSON.stringify(coordinate)}`);
-        }
-        addHeatMapPoint(state, coordinate);
+        //addHeatMapPoint(state, coordinate);
 
         /*ถ้าเป็น category โรคระบาด และ level = 0 ไม่ต้องเก็บ (จะได้ไม่แสดงในหน้า list)*/
-        if (coordinate.properties.CATEGORY !== HEATMAP_CATEGORY_ID || coordinate.properties.LEVEL !== 0) {
-            coordinateSparseArray[category].push(coordinate);
-        }
+        /*if (!(coordinate.properties.CATEGORY === HEATMAP_CATEGORY_ID_RISK
+            || coordinate.properties.CATEGORY === HEATMAP_CATEGORY_ID_DISEASE)
+            || coordinate.properties.LEVEL !== 0) {
+            coordinateSparseArray[categoryId].push(coordinate);
+        }*/
     });
 
-    //console.log('Heatmap Point List:');
-    //console.log(JSON.stringify(state.heatMapPointList[PROVINCE_NAME_EN[state.province]]));
+    createHeatMapPointList(state, heatMapSparseArray);
 
     //todo: ข้อมูล wms
     const wmsSparseArray = [];
@@ -219,24 +232,58 @@ function findLatLng(provinceIndex, coordinate) {
     }
 }
 
-function addHeatMapPoint(state, coordinate) {
-    if (coordinate.properties.CATEGORY === HEATMAP_CATEGORY_ID) { // ตำแหน่งระบาดของโรค
+function addHeatMapPoint_not_used(state, coordinate) {
+    if (coordinate.properties.CATEGORY === HEATMAP_CATEGORY_ID_RISK
+        || coordinate.properties.CATEGORY === HEATMAP_CATEGORY_ID_DISEASE) { // category ที่เป็น heatmap
         const part = coordinate.properties.NAME_T.trim().split(/\s+/);
         const subDistrict = part[0];
         const district = part[1];
         const province = part[2];
-        coordinate.properties.NAME_T = `ต.${subDistrict} อ.${district} (มีโรคระบาด)`;
+        coordinate.properties.NAME_T = `ต.${subDistrict} อ.${district} (พื้นที่เสี่ยงหรือมีโรคระบาด)`;
 
         const latitude = coordinate.geometry.coordinates[1];
         const longitude = coordinate.geometry.coordinates[0];
         const weight = coordinate.properties.LEVEL;
 
+        console.log('CATEGORY: ', coordinate.properties.CATEGORY);
+
+        const heatMapPointList = coordinate.properties.CATEGORY === HEATMAP_CATEGORY_ID_RISK
+            ? state.heatMapPointListRisk[PROVINCE_NAME_EN[state.province]]
+            : state.heatMapPointListDisease[PROVINCE_NAME_EN[state.province]];
+
         if (true /*weight > 0*/) {
-            state.heatMapPointList[PROVINCE_NAME_EN[state.province]].push({
+            heatMapPointList.push({
                 latitude, longitude, weight
             });
         }
     }
+}
+
+function createHeatMapPointList(state, heatMapSparseArray) {
+    if (heatMapSparseArray[HEATMAP_CATEGORY_ID_RISK]) {
+        state.heatMapPointListRisk[PROVINCE_NAME_EN[state.province]]
+            = getHeatMapPointList(heatMapSparseArray[HEATMAP_CATEGORY_ID_RISK]);
+    }
+    if (heatMapSparseArray[HEATMAP_CATEGORY_ID_DISEASE]) {
+        state.heatMapPointListDisease[PROVINCE_NAME_EN[state.province]]
+            = getHeatMapPointList(heatMapSparseArray[HEATMAP_CATEGORY_ID_DISEASE]);
+    }
+}
+
+function getHeatMapPointList(array) {
+    const heatMapPointList = [];
+
+    array.forEach(coordinate => {
+        const latitude = coordinate.geometry.coordinates[1];
+        const longitude = coordinate.geometry.coordinates[0];
+        const weight = coordinate.properties.LEVEL;
+
+        heatMapPointList.push({
+            latitude, longitude, weight
+        });
+    });
+
+    return heatMapPointList;
 }
 
 export function SEARCHING(state) {

@@ -129,8 +129,13 @@
 
                         <!--heatmap-->
                         <heatmap
-                                v-if="category.id === HEATMAP_CATEGORY_ID && category.markerVisibility"
-                                :points="heatMapPointList"/>
+                                v-if="HEATMAP_CATEGORY_ID_RISK === category.id && category.markerVisibility && heatMapPointListRisk.length > 0"
+                                :opacity="category.markerOpacity"
+                                :points="heatMapPointListRisk"/>
+                        <heatmap
+                                v-if="HEATMAP_CATEGORY_ID_DISEASE === category.id && category.markerVisibility && heatMapPointListDisease.length > 0"
+                                :opacity="category.markerOpacity"
+                                :points="heatMapPointListDisease"/>
                     </view>
                 </view>
 
@@ -285,6 +290,51 @@
                            class="map-tools-icon"
                            resize-mode="contain"/>
                 </touchable-opacity>
+            </view>
+
+            <!--legend-->
+            <view class="map-tools-container-left"
+                  :style="{
+                        left: DIMENSION.horizontal_margin,
+                        top: MAP_HEADER.height + 50,
+                  }">
+                <menu
+                        ref="legend"
+                        v-if="showLegend"
+                        :renderer="Popover"
+                        :rendererProps="{preferredPlacement: 'bottom'}"
+                        :style="{
+                            flex: 1,
+                            width: '100%',
+                            flexDirection: 'column',
+                        }">
+                    <menu-trigger :custom-styles="{TriggerTouchableComponent: TouchableOpacity}">
+                        <image :source="imageMapToolLayer"
+                               class="map-tools-icon"
+                               resize-mode="contain"/>
+                    </menu-trigger>
+                    <menu-options :style="{padding: 10}">
+                        <menu-option
+                                v-for="(categoryType, categoryTypeIndex) in mapDataList"
+                                class="menu-option"
+                                :on-select="null"
+                                :custom-styles="{OptionTouchableComponent: null}">
+                            <view v-for="(category, categoryIndex) in categoryType.list"
+                                  v-if="category.markerVisibility">
+                                <text class="menu-option-text">
+                                    {{category.name}}
+                                </text>
+                                <!--http://wms.ngis.go.th:8081/geoserver/FGDS_YASOTHON/wms?service=wms&version=1.3.0&request=GetLegendGraphic&format=image/png&width=40&height=40&layer=L14_แนวคลองชลประทานจังหวัดยโสธร-->
+                                <view v-for="(wms, wmsIndex) in category.wmsList">
+                                    <image v-for="layerName in wms.layers"
+                                           :source="{uri: getLegendImage(wms.url, layerName)}"
+                                           resize-mode="contain"
+                                           :style="{width: 200, height: 100}"/>
+                                </view>
+                            </view>
+                        </menu-option>
+                    </menu-options>
+                </menu>
             </view>
 
             <!--zoom-in/out-->
@@ -722,7 +772,8 @@
     import store from '../../store';
     import {
         DEBUG, MAP_HEADER, BOTTOM_NAV, PROVINCE_NAME_EN, DIMENSION,
-        PROVINCE_DIMENSION, COLOR_PRIMARY, COLOR_PRIMARY_DARK, HEATMAP_CATEGORY_ID,
+        PROVINCE_DIMENSION, COLOR_PRIMARY, COLOR_PRIMARY_DARK,
+        HEATMAP_CATEGORY_ID_RISK, HEATMAP_CATEGORY_ID_DISEASE,
     } from '../../constants';
     import {requestAndroidPermissions, getCurrentLocation} from '../../constants/utils'
     import {doGetAddressFromCoord} from '../../store/fetch';
@@ -733,6 +784,7 @@
     import {Dimensions, StyleSheet, Alert, PermissionsAndroid, Platform, BackHandler, Linking, TouchableOpacity} from 'react-native';
     import {Fragment} from 'react';
     import MapView, {PROVIDER_GOOGLE, Marker, Polyline, Polygon, WMSTile, Heatmap} from 'react-native-maps';
+    import {Menu, MenuProvider, MenuOptions, MenuOption, MenuTrigger, renderers} from 'react-native-popup-menu';
     import LinearGradient from 'react-native-linear-gradient';
     import CardView from 'react-native-cardview';
     import Drawer from 'react-native-drawer';
@@ -744,6 +796,8 @@
     import Geolocation from 'react-native-geolocation-service';
     import {getStatusBarHeight} from 'react-native-status-bar-height';
     import UTMLatLng from 'utm-latlng';
+
+    const {Popover} = renderers;
     const utm = new UTMLatLng();
 
     import imageMenu from '../../../assets/images/screen_map/ic_menu.png';
@@ -766,6 +820,7 @@
     import imageMapToolPolygonOff from '../../../assets/images/screen_map/ic_map_tool_polygon_off.png';
     import imageMapToolZoomIn from '../../../assets/images/screen_map/ic_map_tool_zoom_in.png';
     import imageMapToolZoomOut from '../../../assets/images/screen_map/ic_map_tool_zoom_out.png';
+    import imageMapToolLayer from '../../../assets/images/screen_map/ic_map_tool_layer.png';
     import imageDeleteMeasure from '../../../assets/images/screen_map/ic_delete_measure.png';
 
     import imageDragMarker from '../../../assets/images/screen_map/ic_drag_marker_new.png';
@@ -780,6 +835,7 @@
             Fragment, MapView, Marker, Polyline, Polygon, WMSTile, Heatmap,
             LinearGradient, CardView, Drawer, FilterPanel, Slider, BottomSheet,
             SliderBox, MeasureLabel, SearchBox,
+            Menu, MenuProvider, MenuOptions, MenuOption, MenuTrigger,
         },
         props: {
             navigation: {
@@ -793,8 +849,11 @@
             mapDataList() {
                 return store.state.coordinateCategoryList[PROVINCE_NAME_EN[this.province]];
             },
-            heatMapPointList() {
-                return store.state.heatMapPointList[PROVINCE_NAME_EN[this.province]];
+            heatMapPointListRisk() {
+                return store.state.heatMapPointListRisk[PROVINCE_NAME_EN[this.province]];
+            },
+            heatMapPointListDisease() {
+                return store.state.heatMapPointListDisease[PROVINCE_NAME_EN[this.province]];
             },
             drawerOpen() {
                 return store.state.drawerOpen;
@@ -843,21 +902,32 @@
                     2
                 );
                 return `${utmObj.ZoneNumber}${utmObj.ZoneLetter}, ${utmObj.Easting}, ${utmObj.Northing}`;
-            }
+            },
+            showLegend() {
+                let wmsCount = 0;
+                this.mapDataList.forEach(categoryType => {
+                    categoryType.list.forEach(category => {
+                        if (category.markerVisibility && category.wmsList && category.wmsList.length > 0) {
+                            wmsCount += category.wmsList.length;
+                        }
+                    });
+                });
+                return wmsCount > 0;
+            },
         },
         data: () => {
             return {
                 store, PROVIDER_GOOGLE, SCALE_WIDTH, TOOLS_MARGIN_BOTTOM, PROVINCE_NAME_EN,
                 Dimensions, StyleSheet, TouchableOpacity, DEBUG, MAP_HEADER, BOTTOM_NAV, DIMENSION,
-                PROVINCE_DIMENSION, COLOR_PRIMARY, COLOR_PRIMARY_DARK, HEATMAP_CATEGORY_ID,
-                utm,
+                PROVINCE_DIMENSION, COLOR_PRIMARY, COLOR_PRIMARY_DARK, HEATMAP_CATEGORY_ID_RISK, HEATMAP_CATEGORY_ID_DISEASE,
+                utm, Popover,
                 imageMenu, imageBack, imageClose, imageNavigate, imageLightOff, imageLightOn,
                 imageMapToolCurrentLocation, imageMapToolMarkerOff, imageMapToolMarkerOn,
                 bgMeasureTools, imageMapToolMeasureOn, imageMapToolMeasureOff,
                 imageMapToolLineOn, imageMapToolLineOff,
                 imageMapToolPolygonOn, imageMapToolPolygonOff,
                 imageDragMarker, imageDragMarkerEnd, imageDeleteMeasure,
-                imageMapToolZoomIn, imageMapToolZoomOut,
+                imageMapToolZoomIn, imageMapToolZoomOut, imageMapToolLayer,
 
                 screenHeight: Dimensions.get('window').height,
                 statusBarHeight: getStatusBarHeight(),
@@ -943,6 +1013,20 @@
                     longitude: this.mapCurrentRegion.longitude,
                     latitudeDelta: this.mapCurrentRegion.latitudeDelta * scale,
                     longitudeDelta: this.mapCurrentRegion.longitudeDelta * scale,
+                });
+            },
+            handleClickLegend: function () {
+                this.mapDataList.forEach(categoryType => {
+                    categoryType.list.forEach(category => {
+                        /*{
+                            "CATEGORY": "12",
+                            "url": "http://wms.ngis.go.th:8081/geoserver/FGDS_YASOTHON/wms?service=wms&version=1.3.0&request=GetCapabilities",
+                            "layers": [
+                                "L14_แนวคลองชลประทานจังหวัดยโสธร"
+                            ]
+                        }*/
+                        const wmsList = category.wmsList;
+                    })
                 });
             },
 
@@ -1222,6 +1306,14 @@
 
                 return '';
             },
+            getLegendImage: function (url, layerName) {
+                const FORMAT = 'image/png';
+                const SIZE = 40;
+
+                return url.replace('GetCapabilities', 'GetLegendGraphic')
+                    + `&format=${FORMAT}&width=${SIZE}&height=${SIZE}&layer=${layerName}`;
+            },
+
             /*handleClickClearSearch: function () {
                 this.showSearchResult = false;
                 this.searchTerm = '';
@@ -1312,6 +1404,13 @@
         border-color: greenyellow;
     }
 
+    .map-tools-container-left {
+        position: absolute;
+        align-items: flex-start;
+        border-width: 0;
+        border-color: greenyellow;
+    }
+
     .map-tools-measure-container {
     }
 
@@ -1395,5 +1494,17 @@
         width: 35;
         height: 38;
         margin-right: 6;
+    }
+
+    .menu-option {
+        width: 100%;
+    }
+
+    .menu-option-text {
+        width: 100%;
+        font-family: DBHeavent;
+        font-size: 22;
+        border-width: 0;
+        border-color: blue;
     }
 </style>

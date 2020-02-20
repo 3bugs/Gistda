@@ -72,6 +72,7 @@
     import imageMap from '../../../assets/images/screen_map/ic_map.png';
 
     const routes = [
+        {key: 'map', title: 'ภาพรวมทั้งหมด'},
         {key: 'by-incident', title: 'สรุปผลตามเหตุ'},
         {key: 'by-time', title: 'สรุปผลตามช่วงเวลา'},
     ];
@@ -107,10 +108,12 @@
             },
             renderScene: function ({route}) {
                 switch (route.key) {
-                    case 'by-incident':
+                    case 'map':
                         return <ReportPage graphType={0} navigation={this.navigation}/>;
-                    case 'by-time':
+                    case 'by-incident':
                         return <ReportPage graphType={1} navigation={this.navigation}/>;
+                    case 'by-time':
+                        return <ReportPage graphType={2} navigation={this.navigation}/>;
                 }
             },
             loadData: function () {

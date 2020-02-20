@@ -24,7 +24,10 @@ export const PROVINCE_NAME_EN = ['Nakhon Pathom', 'Yasothon'];
 export const COLOR_PRIMARY = ['#4041da', '#f47442'];
 export const COLOR_PRIMARY_DARK = ['#09097e', '#ed4100'];
 
-export const HEATMAP_CATEGORY_ID = 11;
+//export const HEATMAP_CATEGORY_ID = [2, 11]; // 2 = พื้นที่เสี่ยง, 11 = ตำแหน่งโรคระบาด
+export const HEATMAP_CATEGORY_ID_RISK = 2;
+export const HEATMAP_CATEGORY_ID_DISEASE = 11;
+
 export const SPEED_MONITOR_THRESHOLD = 90; // หน่วย km/h
 export const SPEED_ALERT_MIN_INTERVAL = 10; // วินาที
 export const MONITOR_INTERVAL = 30; // วินาที
