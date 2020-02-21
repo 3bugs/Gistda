@@ -7,7 +7,7 @@
                                 position: 'absolute',
                                 height: tabBarHeight,
                                 width: '100%',
-                                top: screenHeight - tabBarHeight,
+                                bottom: 0,
                            }"
                       resize-mode="cover">
         <view class="container"
