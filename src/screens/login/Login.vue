@@ -111,7 +111,7 @@
             <view :style="{marginBottom: 15}"/>
 
             <my-button
-                    text="LOGIN WITH GMAIL"
+                    text="LOGIN WITH GOOGLE"
                     :icon="imageGoogle"
                     bg-color="#DD4B39"
                     :on-click="handleClickLoginGoogle"/>
@@ -171,6 +171,7 @@
     import LinearGradient from 'react-native-linear-gradient';
     import CardView from 'react-native-cardview';
     import {LoginManager, GraphRequest, GraphRequestManager} from 'react-native-fbsdk';
+    import {GoogleSignin, GoogleSigninButton, statusCodes} from 'react-native-google-signin';
     //import LineLogin from 'react-native-line-sdk'
 
     import imageBack from '../../../assets/images/ic_back.png';
@@ -305,7 +306,7 @@
 
                         const {id, email, name, picture} = result;
 
-                        store.dispatch('LOGIN_FACEBOOK', {
+                        store.dispatch('LOGIN_SOCIAL', {
                             formData: {
                                 facebook_id: id,
                                 email, name
@@ -351,6 +352,8 @@
                 new GraphRequestManager().addRequest(req).start();
             },
             handleClickLoginLine: function () {
+                Alert.alert('Under Construction', 'ส่วนนี้อยู่ระหว่างการพัฒนา'); //todo: ************************
+
                 //Alert.alert('Under Construction', 'ส่วนนี้อยู่ระหว่างการพัฒนา');
 
                 /*LineLogin.login()
@@ -363,8 +366,90 @@
                         Alert.alert('ผิดพลาด', 'เกิดปัญหาในการเข้าระบบด้วย LINE: ' + err);
                     });*/
             },
-            handleClickLoginGoogle: function () {
-                Alert.alert('Under Construction', 'ส่วนนี้อยู่ระหว่างการพัฒนา'); //todo: ************************
+            handleClickLoginGoogle: async function () {
+                //Alert.alert('Under Construction', 'ส่วนนี้อยู่ระหว่างการพัฒนา');
+
+                try {
+                    await GoogleSignin.hasPlayServices();
+                    const userInfo = await GoogleSignin.signIn();
+
+                    console.log('userInfo: ', JSON.stringify(userInfo));
+                    /*
+                        {
+                          idToken: string,
+                          serverAuthCode: string,
+                          scopes: Array<string>, // on iOS this is empty array if no additional scopes are defined
+                          user: {
+                            email: string,
+                            id: string,
+                            givenName: string,
+                            familyName: string,
+                            photo: string, // url
+                            name: string // full name
+                          }
+                        }
+                    */
+
+                    const {accessToken} = await GoogleSignin.getTokens();
+                    console.log('accessToken: ', accessToken);
+
+                    Alert.alert('Alert', 'เข้าระบบด้วย Google สำเร็จ แต่การทำงานยังไม่สมบูรณ์ รอปรับ API หลังบ้าน!');
+                    return;
+
+                    await store.dispatch('LOGIN_SOCIAL', {
+                        formData: {
+                            google_id: userInfo.user.id,
+                            /*email: userInfo.user.email,
+                            name: userInfo.user.name,*/
+                            token: accessToken,
+                        },
+                        callback: (success, message) => {
+                            if (success) {
+                                Alert.alert(
+                                    'สำเร็จ',
+                                    'เข้าระบบด้วย Google สำเร็จ',
+                                    [
+                                        {
+                                            text: 'OK',
+                                            onPress: () => {
+                                                if (store.state.userToken) {
+                                                    store.dispatch('GET_PROFILE', {
+                                                        callback: (success, message) => { // ไม่ต้องสนใจว่าจะ get profile สำเร็จหรือเปล่า
+                                                            this.navigation.goBack();
+
+                                                            const nextScreen = this.navigation.getParam('forward');
+                                                            if (nextScreen) {
+                                                                const params = this.navigation.getParam('params');
+                                                                this.navigation.navigate(nextScreen, params);
+                                                            }
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                        }
+                                    ],
+                                    {cancelable: false}
+                                );
+                            } else {
+                                Alert.alert(
+                                    'ผิดพลาด',
+                                    message
+                                );
+                            }
+                        }
+                    });
+
+                } catch (error) {
+                    if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+                        Alert.alert('แจ้งเตือน', 'การเข้าระบบด้วย Facebook ถูกยกเลิก');
+                    } else if (error.code === statusCodes.IN_PROGRESS) {
+                        // operation (e.g. sign in) is in progress already
+                    } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+                        Alert.alert('ผิดพลาด', 'Google Play Services ไม่พร้อมใช้งานหรือเป็นรุ่นเก่าเกินไป');
+                    } else {
+                        Alert.alert('ผิดพลาด', 'เกิดปัญหาที่ไม่ทราบสาเหตุในการเข้าระบบด้วย Google:\n\n' + error);
+                    }
+                }
             },
             handleClickForgotPassword: function () {
                 this.navigation.navigate('ForgotPassword');
@@ -380,6 +465,8 @@
             },
         },
         created: function () {
+            //configure needs to be called only once, after your app starts. In the native layer, this is a synchronous call.
+            GoogleSignin.configure();
         }
     }
 </script>

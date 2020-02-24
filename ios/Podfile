@@ -45,6 +45,8 @@ target 'gistda' do
 
   pod 'RNShare', :path => '../node_modules/react-native-share'
 
+  pod 'RNGoogleSignin', :path => '../node_modules/react-native-google-signin'
+
 end
 
 post_install do |installer|

@@ -2,4 +2,5 @@
     <string name="app_name">SAFE SAFE</string>
     <string name="facebook_app_id">1351343988405712</string>
     <string name="line_channel_id" translatable="false">1653799230</string>
+    <string name="server_client_id">664274888190-bumdq8kc57arckobjd8oqen63jnsronp.apps.googleusercontent.com</string>
 </resources>

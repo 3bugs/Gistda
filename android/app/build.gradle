@@ -105,8 +105,8 @@ android {
         applicationId "com.gistda"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 11
-        versionName "0.9.6"
+        versionCode 12
+        versionName "0.9.7"
         multiDexEnabled true
         //missingDimensionStrategy "RNNotifications.reactNativeVersion", "reactNative60"
     }
@@ -157,6 +157,7 @@ repositories {
 }
 
 dependencies {
+    implementation project(':react-native-google-signin')
     implementation project(':react-native-share')
     //implementation project(':reactnativenotifications')
     //implementation 'androidx.multidex:multidex:2.0.1'
@@ -190,3 +191,5 @@ task copyDownloadableDepsToLibs(type: Copy) {
     from configurations.compile
     into 'libs'
 }
+
+apply plugin: 'com.google.gms.google-services' // <--- this should be the last line

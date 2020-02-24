@@ -207,6 +207,18 @@ export async function SET_COORDINATES(state, {province, coordinateList, wmsList,
     callback();
 }
 
+export function CLEAR_COORDINATES(state, {province, categoryId, callback}) {
+    state.coordinateCategoryList[PROVINCE_NAME_EN[province]].forEach(categoryTypeItem => {
+        categoryTypeItem.list.forEach(categoryItem => {
+            if (categoryId === categoryItem.id) {
+                categoryItem.markerList = [];
+                console.log(`Category ${categoryId} is CLEAR!`);
+                callback();
+            }
+        });
+    });
+}
+
 function findLatLng(provinceIndex, coordinate) {
     const location = coordinate.properties.LOCATION_T;
     if (location) {

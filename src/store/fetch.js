@@ -399,8 +399,8 @@ export async function doRegister(formData) {
     return await _fetch('POST', 'users/register', formData);
 }
 
-export async function doLoginFacebook(formData) {
-    return await _fetch('POST', 'users/login/facebook', formData);
+export async function doLoginSocial(socialType, formData) {
+    return await _fetch('POST', `users/login/${socialType}`, formData);
 }
 
 export async function doGetProfile(userToken) {

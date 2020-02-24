@@ -1,0 +1,143 @@
+{
+  "project_info": {
+    "project_number": "421121737463",
+    "firebase_url": "https://exat-member-ceacc.firebaseio.com",
+    "project_id": "exat-member-ceacc",
+    "storage_bucket": "exat-member-ceacc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:421121737463:android:be492222805cbfb30009f2",
+        "android_client_info": {
+          "package_name": "com.gistda"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "421121737463-jk8j2974n9df46vhqvvkedlacsnq4gq0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gistda",
+            "certificate_hash": "03338e0326fc6d174ae5fd3bbefa335ef331af5e"
+          }
+        },
+        {
+          "client_id": "421121737463-bjhpmn7aj5onpnh6h16hfl22mmjdqb29.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyByqRbz8MZGpYNUfnw3qiCrJDplYgdStR8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "421121737463-bjhpmn7aj5onpnh6h16hfl22mmjdqb29.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "421121737463-ab4mb5i7pnsjgm3n1iab19ljbnkkmhj5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.2fellows.NRCT"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:421121737463:android:16cb1348e4e21930",
+        "android_client_info": {
+          "package_name": "th.co.exat.android.member"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "421121737463-bnurvrst1gqk32fvqut94gv59sbvb025.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "th.co.exat.android.member",
+            "certificate_hash": "03338e0326fc6d174ae5fd3bbefa335ef331af5e"
+          }
+        },
+        {
+          "client_id": "421121737463-bjhpmn7aj5onpnh6h16hfl22mmjdqb29.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyByqRbz8MZGpYNUfnw3qiCrJDplYgdStR8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "421121737463-bjhpmn7aj5onpnh6h16hfl22mmjdqb29.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "421121737463-ab4mb5i7pnsjgm3n1iab19ljbnkkmhj5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.2fellows.NRCT"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:421121737463:android:6067dd07d4e803e2",
+        "android_client_info": {
+          "package_name": "th.go.nrct.krw.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "421121737463-hqu8qim2pave2doebkm2v0bjjdm85de7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "th.go.nrct.krw.android",
+            "certificate_hash": "03338e0326fc6d174ae5fd3bbefa335ef331af5e"
+          }
+        },
+        {
+          "client_id": "421121737463-bjhpmn7aj5onpnh6h16hfl22mmjdqb29.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyByqRbz8MZGpYNUfnw3qiCrJDplYgdStR8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "421121737463-bjhpmn7aj5onpnh6h16hfl22mmjdqb29.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "421121737463-ab4mb5i7pnsjgm3n1iab19ljbnkkmhj5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.2fellows.NRCT"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

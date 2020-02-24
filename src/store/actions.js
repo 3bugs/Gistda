@@ -21,7 +21,7 @@ import {
     doGetReportDownloadLink,
     doSearchLocal,
     doGetAlarm,
-    doGetAlarmDetails,
+    doGetAlarmDetails, doLoginSocial,
 } from './fetch';
 
 import {INCIDENT_FORM_DATA, PROVINCE_NAME_EN} from '../constants/index';
@@ -143,6 +143,16 @@ export async function FETCH_COORDINATES({commit, state}, {province, idList, call
             }
         });
     }
+}
+
+export async function CLEAR_COORDINATES({commit, state}, {province, categoryId, callback}) {
+    commit('CLEAR_COORDINATES', {
+        province,
+        categoryId,
+        callback: () => {
+            callback(true, null);
+        }
+    });
 }
 
 export async function FETCH_SINGLE_COORDINATE({commit, state}, {coordId, callback}) {
@@ -475,10 +485,24 @@ export async function REGISTER({commit, state}, {formData, callback}) {
     }
 }
 
-export async function LOGIN_FACEBOOK({commit, state}, {formData, callback}) {
+export async function LOGIN_SOCIAL({commit, state}, {formData, callback}) {
     commit('LOGGING_IN');
 
-    const apiResult = await doLoginFacebook(formData);
+    let socialType = null;
+    if (formData.hasOwnProperty('facebook_id')) {
+        socialType = 'facebook';
+    } else if (formData.hasOwnProperty('google_id')) {
+        socialType = 'google';
+    } else if (formData.hasOwnProperty('line_id')) {
+        socialType = 'line';
+    }
+
+    if (socialType === null) {
+        callback(false, 'No social type specified! กรุณาติดต่อนักพัฒนา');
+        return;
+    }
+
+    const apiResult = await doLoginSocial(socialType, formData);
     if (apiResult.success) {
         await setUser(new User(
             apiResult.data.name,

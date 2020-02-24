@@ -191,6 +191,13 @@
                     });
 
                     await setLocalCategoryData(this.province, this.item.id, {markerVisibility: this.visibilityValue});
+
+                    await store.dispatch('CLEAR_COORDINATES', {
+                        province: this.province,
+                        categoryId: this.item.id,
+                        callback: (success, data) => {
+                        }
+                    });
                 }
             }
         },

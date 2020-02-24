@@ -14,6 +14,37 @@ import imagePhoneYasothon from '../../assets/images/screen_news/ic_phone_yasotho
 import imageSliderThumbNakhonPathom from '../../assets/images/sidebar/ic_slider_thumb_nakhon_pathom_2.png';
 import imageSliderThumbYasothon from '../../assets/images/sidebar/ic_slider_thumb_yasothon_2.png';
 
+/*
+นครปฐม
+https://maps.googleapis.com/maps/api/staticmap
+?center=13.9200,100.08185
+&size=600x450
+&markers=color:red%7Csize:small%7C13.7777,99.9999
+&markers=color:red%7Csize:small%7C14.033827,99.993984
+&markers=color:red%7Csize:small%7C13.853383,100.205311
+&zoom=10
+&maptype=roadmap
+&language=th
+&key=AIzaSyCrBhuovlx9Wk2v7mQNvCg4JIL_affg0ks
+&scale=2
+
+ยโสธร
+https://maps.googleapis.com/maps/api/staticmap
+?center=15.8075,104.3972
+&size=600x450
+&markers=color:red%7Csize:small%7C16.105310,104.313509
+&markers=color:red%7Csize:small%7C15.808543,104.292279
+&markers=color:red%7Csize:small%7C15.937353,104.163262
+&zoom=9
+&maptype=roadmap
+&language=th
+&key=AIzaSyCrBhuovlx9Wk2v7mQNvCg4JIL_affg0ks
+&scale=2
+
+color=0xFF0000
+pre-defined marker colors: black, brown, green, purple, yellow, blue, gray, orange, red, white
+*/
+
 export const DEBUG = false;
 export const APP_NAME = "SAFE SAFE";
 export const APP_VERSION = "1.0";
