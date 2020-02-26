@@ -458,7 +458,7 @@
 
                 } catch (error) {
                     if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-                        Alert.alert('แจ้งเตือน', 'การเข้าระบบด้วย Facebook ถูกยกเลิก');
+                        Alert.alert('แจ้งเตือน', 'การเข้าระบบด้วย Google ถูกยกเลิก');
                     } else if (error.code === statusCodes.IN_PROGRESS) {
                         // operation (e.g. sign in) is in progress already
                     } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {

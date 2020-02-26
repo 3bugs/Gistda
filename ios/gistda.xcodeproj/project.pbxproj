@@ -76,7 +76,6 @@
 		ED2971652150620600B7C4FE /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED2971642150620600B7C4FE /* JavaScriptCore.framework */; };
 		FE618F054CBC446995A4944B /* libRNGestureHandler-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 601E4CA5D95E461F92118E64 /* libRNGestureHandler-tvOS.a */; };
 		460211BD216B4225811061F5 /* libLineLoginManager.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A36072F6502474EA4515480 /* libLineLoginManager.a */; };
-		8C3A30B89B1B48F0A4EB30CB /* libRNLineLoginManager.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 724ACFBE7D53424D85AF48B5 /* libRNLineLoginManager.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -556,8 +555,6 @@
 		FE54E13587FE4498AEA5CC10 /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
 		197D9427DEE944F2855B1E52 /* LineLoginManager.xcodeproj */ = {isa = PBXFileReference; name = "LineLoginManager.xcodeproj"; path = "../node_modules/react-native-line-sdk/ios/LineLoginManager.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		5A36072F6502474EA4515480 /* libLineLoginManager.a */ = {isa = PBXFileReference; name = "libLineLoginManager.a"; path = "libLineLoginManager.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
-		F54F4FF1FB404D699D69604B /* RNLineLoginManager.xcodeproj */ = {isa = PBXFileReference; name = "RNLineLoginManager.xcodeproj"; path = "../node_modules/react-native-line-login/ios/RNLineLoginManager.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
-		724ACFBE7D53424D85AF48B5 /* libRNLineLoginManager.a */ = {isa = PBXFileReference; name = "libRNLineLoginManager.a"; path = "libRNLineLoginManager.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -600,7 +597,6 @@
 				5951564D02C04A2CA9D07D84 /* libRNImgToBase64.a in Frameworks */,
 				BF326903AA781DD74416C85D /* libPods-gistda.a in Frameworks */,
 				460211BD216B4225811061F5 /* libLineLoginManager.a in Frameworks */,
-				8C3A30B89B1B48F0A4EB30CB /* libRNLineLoginManager.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -947,7 +943,6 @@
 				0EBFC68D507741A5AD4C5054 /* RNFetchBlob.xcodeproj */,
 				E80ED059689E47B18AD6A200 /* RNImgToBase64.xcodeproj */,
 				197D9427DEE944F2855B1E52 /* LineLoginManager.xcodeproj */,
-				F54F4FF1FB404D699D69604B /* RNLineLoginManager.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1848,30 +1843,12 @@
 					"$(SRCROOT)/../node_modules/rn-fetch-blob/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-image-base64/ios",
 					"$(SRCROOT)/../node_modules/react-native-line-sdk/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-line-login/ios",
 				);
 				INFOPLIST_FILE = gistdaTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -1903,30 +1880,12 @@
 					"$(SRCROOT)/../node_modules/rn-fetch-blob/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-image-base64/ios",
 					"$(SRCROOT)/../node_modules/react-native-line-sdk/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-line-login/ios",
 				);
 				INFOPLIST_FILE = gistdaTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -1960,7 +1919,6 @@
 					"$(SRCROOT)/../node_modules/rn-fetch-blob/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-image-base64/ios",
 					"$(SRCROOT)/../node_modules/react-native-line-sdk/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-line-login/ios",
 				);
 				INFOPLIST_FILE = gistda/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1997,7 +1955,6 @@
 					"$(SRCROOT)/../node_modules/rn-fetch-blob/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-image-base64/ios",
 					"$(SRCROOT)/../node_modules/react-native-line-sdk/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-line-login/ios",
 				);
 				INFOPLIST_FILE = gistda/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -2040,29 +1997,11 @@
 					"$(SRCROOT)/../node_modules/rn-fetch-blob/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-image-base64/ios",
 					"$(SRCROOT)/../node_modules/react-native-line-sdk/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-line-login/ios",
 				);
 				INFOPLIST_FILE = "gistda-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -2103,29 +2042,11 @@
 					"$(SRCROOT)/../node_modules/rn-fetch-blob/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-image-base64/ios",
 					"$(SRCROOT)/../node_modules/react-native-line-sdk/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-line-login/ios",
 				);
 				INFOPLIST_FILE = "gistda-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -2165,29 +2086,11 @@
 					"$(SRCROOT)/../node_modules/rn-fetch-blob/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-image-base64/ios",
 					"$(SRCROOT)/../node_modules/react-native-line-sdk/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-line-login/ios",
 				);
 				INFOPLIST_FILE = "gistda-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -2227,29 +2130,11 @@
 					"$(SRCROOT)/../node_modules/rn-fetch-blob/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-image-base64/ios",
 					"$(SRCROOT)/../node_modules/react-native-line-sdk/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-line-login/ios",
 				);
 				INFOPLIST_FILE = "gistda-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
