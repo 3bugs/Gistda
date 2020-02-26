@@ -5,6 +5,9 @@ import android.app.Application;
 //import com.wix.reactnativenotifications.RNNotificationsPackage;
 import com.marianhello.bgloc.react.BackgroundGeolocationPackage;
 import com.facebook.react.ReactApplication;
+import com.vunguyen.reactnative.androidsdk.LineReactPackage;
+import jp.line.android.sdk.LineSdkContextManager;
+import com.xmartlabs.lineloginmanager.LineLoginPackage;
 import co.apptailor.googlesignin.RNGoogleSigninPackage;
 import cl.json.RNSharePackage;
 import com.horcrux.svg.SvgPackage;
@@ -43,6 +46,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new LineReactPackage(),
+            new LineLoginPackage(),
             new RNGoogleSigninPackage(),
             new RNSharePackage(),
             //new RNNotificationsPackage(MainApplication.this),
@@ -81,5 +86,7 @@ public class MainApplication extends Application implements ReactApplication {
   public void onCreate() {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
+    // Initialize LINE SDK
+    LineSdkContextManager.initialize(this);
   }
 }

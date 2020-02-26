@@ -172,7 +172,8 @@
     import CardView from 'react-native-cardview';
     import {LoginManager, GraphRequest, GraphRequestManager} from 'react-native-fbsdk';
     import {GoogleSignin, GoogleSigninButton, statusCodes} from 'react-native-google-signin';
-    //import LineLogin from 'react-native-line-sdk'
+    import LineLogin from 'react-native-line-sdk';
+    //import {LoginManager as LineLoginManager} from 'react-native-line-login';
 
     import imageBack from '../../../assets/images/ic_back.png';
     import imageLogo from '../../../assets/images/screen_login/ic_logo.png';
@@ -352,18 +353,33 @@
                 new GraphRequestManager().addRequest(req).start();
             },
             handleClickLoginLine: function () {
-                Alert.alert('Under Construction', 'ส่วนนี้อยู่ระหว่างการพัฒนา'); //todo: ************************
+                //Alert.alert('Under Construction', 'ส่วนนี้อยู่ระหว่างการพัฒนา'); //todo: ************************
 
-                //Alert.alert('Under Construction', 'ส่วนนี้อยู่ระหว่างการพัฒนา');
-
-                /*LineLogin.login()
+                LineLogin.login()
                     .then(user => {
-                        Alert.alert('สำเร็จ', 'เข้าระบบด้วย Facebook สำเร็จ');
+                        /*{
+                            "pictureURL": "https://profile.line-scdn.net/ch/v2/p/u6409759e5ac25edddec978180b8ae04a/1356411236084",
+                            "statusMessage": "3bugs OSK111",
+                            "userID": "U0b50028793ec6d03f6464ce142e28907",
+                            "displayName": "Promlert Lovichit"
+                        }*/
+                        let msg = `ชื่อ: ${user.profile.displayName}\nข้อความสเตตัส: ${user.profile.statusMessage}`;
+                        Alert.alert('สำเร็จ', `เข้าระบบด้วย LINE สำเร็จ แต่การทำงานยังไม่สมบูรณ์ รอปรับ API หลังบ้าน!\n-----\n${msg}`);
 
-                        console.log(JSON.stringify(user.profile));
+                        console.log(JSON.stringify(user));
                     })
                     .catch(err => {
                         Alert.alert('ผิดพลาด', 'เกิดปัญหาในการเข้าระบบด้วย LINE: ' + err);
+                    });
+
+                /*LineLoginManager.login()
+                    .then(user => {
+                        alert(JSON.stringify(user));
+                        console.log(user);
+                    })
+                    .catch(err => {
+                        alert(JSON.stringify(err));
+                        console.log(err);
                     });*/
             },
             handleClickLoginGoogle: async function () {
@@ -393,7 +409,8 @@
                     const {accessToken} = await GoogleSignin.getTokens();
                     console.log('accessToken: ', accessToken);
 
-                    Alert.alert('Alert', 'เข้าระบบด้วย Google สำเร็จ แต่การทำงานยังไม่สมบูรณ์ รอปรับ API หลังบ้าน!');
+                    let msg = `ชื่อ: ${userInfo.user.name}\nอีเมล: ${userInfo.user.email}`;
+                    Alert.alert('Alert', `เข้าระบบด้วย Google สำเร็จ แต่การทำงานยังไม่สมบูรณ์ รอปรับ API หลังบ้าน!\n-----\n${msg}`);
                     return;
 
                     await store.dispatch('LOGIN_SOCIAL', {

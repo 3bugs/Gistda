@@ -175,6 +175,15 @@
                         v-if="point"
                         :coordinate="point"
                         :draggable="false"/>
+
+                <!--marker ตำแหน่งปัจจุบัน-->
+                <marker-animated
+                        ref="locationMarker"
+                        v-if="watchId !== null && currentLocation"
+                        :coordinate="currentLocation"
+                        :image="imageRedDot"
+                        :anchor="{x: 0.5, y: 0.5}"
+                        :draggable="false"/>
             </map-view>
 
             <view class="map-tools-container"
@@ -286,7 +295,7 @@
 
                 <touchable-opacity class="map-tools-icon-touchable"
                                    :on-press="handleClickCurrentLocationTool">
-                    <image :source="imageMapToolCurrentLocation"
+                    <image :source="watchId === null ? imageMapToolCurrentLocationOff : imageMapToolCurrentLocationOn"
                            class="map-tools-icon"
                            resize-mode="contain"/>
                 </touchable-opacity>
@@ -419,22 +428,24 @@
             </view>
 
             <view
+                    v-if="watchId === null"
                     pointer-events="none"
                     :style="{
                         position: 'absolute',
                         alignSelf: 'center',
                         width: 0, height: 20,
-                        bottom: ((screenHeight - MAP_HEADER.height) / 2) - 10,
+                        bottom: ((screenHeight - MAP_HEADER.height - BOTTOM_NAV.height) / 2) - 10,
                         borderRightWidth: 1,
                         borderRightColor: '#333333',
                     }"/>
             <view
+                    v-if="watchId === null"
                     pointer-events="none"
                     :style="{
                         position: 'absolute',
                         alignSelf: 'center',
                         width: 20, height: 0,
-                        bottom: ((screenHeight - MAP_HEADER.height) / 2),
+                        bottom: ((screenHeight - MAP_HEADER.height - BOTTOM_NAV.height) / 2),
                         borderBottomWidth: 1,
                         borderBottomColor: '#333333',
                     }"/>
@@ -783,7 +794,7 @@
 
     import {Dimensions, StyleSheet, Alert, PermissionsAndroid, Platform, BackHandler, Linking, TouchableOpacity} from 'react-native';
     import {Fragment} from 'react';
-    import MapView, {PROVIDER_GOOGLE, Marker, Polyline, Polygon, WMSTile, Heatmap} from 'react-native-maps';
+    import MapView, {PROVIDER_GOOGLE, Marker, Polyline, Polygon, WMSTile, Heatmap, AnimatedRegion, MarkerAnimated} from 'react-native-maps';
     import {Menu, MenuProvider, MenuOptions, MenuOption, MenuTrigger, renderers} from 'react-native-popup-menu';
     import LinearGradient from 'react-native-linear-gradient';
     import CardView from 'react-native-cardview';
@@ -808,7 +819,8 @@
     import imageLightOff from '../../../assets/images/sidebar/ic_light_off.png';
     import imageLightOn from '../../../assets/images/sidebar/ic_light_on.png';
 
-    import imageMapToolCurrentLocation from '../../../assets/images/screen_map/ic_map_tool_current_location.png';
+    import imageMapToolCurrentLocationOff from '../../../assets/images/screen_map/ic_map_tool_current_location_off.png';
+    import imageMapToolCurrentLocationOn from '../../../assets/images/screen_map/ic_map_tool_current_location_on.png';
     import imageMapToolMarkerOff from '../../../assets/images/screen_map/ic_map_tool_marker_off.png';
     import imageMapToolMarkerOn from '../../../assets/images/screen_map/ic_map_tool_marker_on.png';
     import bgMeasureTools from '../../../assets/images/screen_map/bg_measure_tools.png';
@@ -822,6 +834,7 @@
     import imageMapToolZoomOut from '../../../assets/images/screen_map/ic_map_tool_zoom_out.png';
     import imageMapToolLegend from '../../../assets/images/screen_map/ic_map_tool_legend.png';
     import imageDeleteMeasure from '../../../assets/images/screen_map/ic_delete_measure.png';
+    import imageRedDot from '../../../assets/images/screen_map/ic_red_dot.png';
 
     import imageDragMarker from '../../../assets/images/screen_map/ic_drag_marker_new.png';
     import imageDragMarkerEnd from '../../../assets/images/screen_map/ic_drag_marker_end_new.png';
@@ -832,7 +845,7 @@
 
     export default {
         components: {
-            Fragment, MapView, Marker, Polyline, Polygon, WMSTile, Heatmap,
+            Fragment, MapView, Marker, Polyline, Polygon, WMSTile, Heatmap, MarkerAnimated,
             LinearGradient, CardView, Drawer, FilterPanel, Slider, BottomSheet,
             SliderBox, MeasureLabel, SearchBox,
             Menu, MenuProvider, MenuOptions, MenuOption, MenuTrigger,
@@ -922,12 +935,13 @@
                 PROVINCE_DIMENSION, COLOR_PRIMARY, COLOR_PRIMARY_DARK, HEATMAP_CATEGORY_ID_RISK, HEATMAP_CATEGORY_ID_DISEASE,
                 utm, Popover,
                 imageMenu, imageBack, imageClose, imageNavigate, imageLightOff, imageLightOn,
-                imageMapToolCurrentLocation, imageMapToolMarkerOff, imageMapToolMarkerOn,
+                imageMapToolCurrentLocationOff, imageMapToolCurrentLocationOn,
+                imageMapToolMarkerOff, imageMapToolMarkerOn,
                 bgMeasureTools, imageMapToolMeasureOn, imageMapToolMeasureOff,
                 imageMapToolLineOn, imageMapToolLineOff,
                 imageMapToolPolygonOn, imageMapToolPolygonOff,
                 imageDragMarker, imageDragMarkerEnd, imageDeleteMeasure,
-                imageMapToolZoomIn, imageMapToolZoomOut, imageMapToolLegend,
+                imageMapToolZoomIn, imageMapToolZoomOut, imageMapToolLegend, imageRedDot,
 
                 screenHeight: Dimensions.get('window').height,
                 statusBarHeight: getStatusBarHeight(),
@@ -950,6 +964,17 @@
                 point: null,
                 pointAddress: '',
                 justClickCurrentLocation: false,
+
+                watchId: null,
+                currentLocation: null,
+                /*currentLatitude: null,
+                currentLongitude: null,
+                currentCoordinate: new AnimatedRegion({
+                    latitude: null,
+                    longitude: null,
+                    latitudeDelta: null,
+                    longitudeDelta: null,
+                }),*/
             };
         },
         methods: {
@@ -1152,6 +1177,62 @@
                 }
             },
             handleClickCurrentLocationTool: function () {
+                if (this.watchId === null) {
+                    getCurrentLocation({
+                        callback: coord => {
+                            // แสดง marker
+                            this.currentLocation = coord;
+
+                            try {
+                                this.$refs['mapView'].animateToRegion({
+                                    latitude: coord.latitude,
+                                    longitude: coord.longitude,
+                                    latitudeDelta: this.mapCurrentRegion.latitudeDelta,
+                                    longitudeDelta: this.mapCurrentRegion.longitudeDelta,
+                                });
+                            } catch (e) {
+                                console.log('Error animate to region: ' + e);
+                            }
+
+                            this.watchId = navigator.geolocation.watchPosition(position => {
+                                    console.log('TRACKING LOCATION: ', JSON.stringify(position.coords));
+                                    const {latitude, longitude} = position.coords;
+                                    this.currentLocation = position.coords;
+
+                                    /*if (Platform.OS === 'android') {
+                                        if (this.$refs['locationMarker']) {
+                                            this.$refs['locationMarker'].animateMarkerToCoordinate(
+                                                position.coords,
+                                                500
+                                            );
+                                        }
+                                    }*/
+
+                                    this.$refs['mapView'].animateToRegion({
+                                        latitude,
+                                        longitude,
+                                        latitudeDelta: this.mapCurrentRegion.latitudeDelta,
+                                        longitudeDelta: this.mapCurrentRegion.longitudeDelta,
+                                    });
+                                },
+                                null,
+                                {
+                                    maximumAge: 0,
+                                    distanceFilter: 1,
+                                    timeout: 10000,
+                                });
+                        }
+                    });
+                } else {
+                    navigator.geolocation.clearWatch(this.watchId);
+                    this.watchId = null;
+                }
+                return;
+
+                //todo: ***********************************************************
+                //todo: ***********************************************************
+                //todo: ***********************************************************
+
                 if (this.justClickCurrentLocation) {
                     this.point = null;
                 } else {
@@ -1300,7 +1381,7 @@
                         return `${total},${layer}`;
                     });
                     const wmsUrl = `${wms.url.replace('GetCapabilities', 'GetMap')}&layers=${allLayers}&bbox={minX},{minY},{maxX},{maxY}&width={width}&height={height}&srs=EPSG:900913&format=image/png&transparent=true`;
-                    console.log('WMS URL: ', wmsUrl);
+                    //console.log('WMS URL: ', wmsUrl);
                     return wmsUrl;
                 }
 
@@ -1337,6 +1418,11 @@
             });*/
         },
         beforeDestroy: function () {
+            if (this.watchId !== null) {
+                navigator.geolocation.clearWatch(this.watchId);
+                this.watchId = null;
+            }
+
             /*if (this.backHandler) {
                 this.backHandler.remove();
             }*/
@@ -1359,7 +1445,7 @@
         left: 0;
         justify-content: flex-start;
         border-width: 0;
-        border-color: red;
+        border-color: green;
     }
 
     .header {
