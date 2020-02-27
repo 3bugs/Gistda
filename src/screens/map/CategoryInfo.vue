@@ -6,14 +6,14 @@
                 :override-scroll-view="true"
                 :on-click-back="handleClickBack">
 
+            <text class="title">{{data.name}}</text>
             <flat-list
                     class="list"
-                    v-if="dataList && dataList.length > 0"
-                    :data="dataList.filter(item => categoryTypeId === item.id)[0].list"
+                    :data="data.list"
                     :keyExtractor="(item, index) => index.toString()"
                     :contentContainerStyle="{margin: 0}"
                     :style="{
-                        marginTop: DIMENSION.horizontal_margin * 1.5,
+                        marginTop: 18,
                     }">
                 <view render-prop-fn="renderItem">
                     <view :style="{
@@ -30,8 +30,8 @@
                         }">
                             <image :source="{uri: args.item.image}"
                                    :style="{
-                                        width: 45,
-                                        height: 49,
+                                        width: 50, //144
+                                        height: 54, //156
                                         marginRight: 5,
                                    }"
                                    resize-mode="contain"/>
@@ -39,10 +39,10 @@
                                 flex: 1,
                             }">
                                 <text :style="{
-                                    fontFamily: 'DBHeavent-Bold',
+                                    fontFamily: 'DBHeavent-Med',
                                     fontSize: 22,
                                     color: '#333333',
-                                    marginTop: 4,
+                                    marginTop: 8,
                                 }">
                                     {{args.item.name}}
                                 </text>
@@ -50,18 +50,18 @@
                                     fontFamily: 'DBHeavent',
                                     fontSize: 20,
                                     color: '#626b80',
-                                    marginTop: 5,
+                                    marginTop: 6,
                                 }">
                                     {{args.item.description}}
                                 </text>
+                                <view :style="{
+                                    marginTop: 18,
+                                    marginBottom: 15,
+                                    borderBottomWidth: StyleSheet.hairlineWidth,
+                                    borderBottomColor: '#999999',
+                                }"/>
                             </view>
                         </view>
-                        <view :style="{
-                            marginTop: 16,
-                            marginBottom: 15,
-                            borderBottomWidth: StyleSheet.hairlineWidth,
-                            borderBottomColor: '#999999',
-                        }"/>
                     </view>
                 </view>
                 <view render-prop="ListFooterComponent"
@@ -137,8 +137,9 @@
             province() {
                 return store.state.province;
             },
-            dataList() {
-                return store.state.coordinateCategoryList[PROVINCE_NAME_EN[this.province]];
+            data() {
+                const categoryList = store.state.coordinateCategoryList[PROVINCE_NAME_EN[this.province]];
+                return categoryList.filter(item => this.categoryTypeId === item.id)[0];
             },
         },
         data: () => {
@@ -165,6 +166,14 @@
 <style>
     .container {
         flex: 1;
+    }
+
+    .title {
+        font-family: DBHeavent-Bold;
+        font-size: 24;
+        color: #333333;
+        text-align: center;
+        margin-top: 18;
     }
 
     .progress {
