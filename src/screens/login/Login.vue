@@ -227,35 +227,7 @@
                             email: this.emailContent,
                             password: this.passwordContent,
                             callback: (success, message) => {
-                                if (success) {
-                                    Alert.alert(
-                                        'สำเร็จ',
-                                        'เข้าสู่ระบบสำเร็จ',
-                                        [
-                                            {
-                                                text: 'OK',
-                                                onPress: () => {
-                                                    if (store.state.userToken) {
-                                                        store.dispatch('GET_PROFILE', {
-                                                            callback: (success, message) => { // ไม่ต้องสนใจว่าจะ get profile สำเร็จหรือเปล่า
-                                                                this.navigation.goBack();
-
-                                                                const nextScreen = this.navigation.getParam('forward');
-                                                                if (nextScreen) {
-                                                                    const params = this.navigation.getParam('params');
-                                                                    this.navigation.navigate(nextScreen, params);
-                                                                }
-                                                            }
-                                                        });
-                                                    }
-                                                }
-                                            }
-                                        ],
-                                        {cancelable: false}
-                                    );
-                                } else {
-                                    Alert.alert('ผิดพลาด', message);
-                                }
+                                this.handleLoginResponse(success, message);
                             }
                         });
                     } else {
@@ -285,7 +257,7 @@
                         }
                     },
                     function(error) {
-                        Alert.alert('ผิดพลาด', 'เกิดปัญหาในการเข้าระบบด้วย Facebook: ' + error);
+                        Alert.alert('ผิดพลาด', 'เกิดปัญหาในการเข้าระบบด้วย Facebook\n-----\n' + error);
                     }
                 );
             },
@@ -300,7 +272,7 @@
                     }
                 }, (error, result) => {
                     if (error) {
-                        Alert.alert('ผิดพลาด', 'เกิดปัญหาในการอ่านข้อมูลบัญชีผู้ใช้ Facebook: ' + error);
+                        Alert.alert('ผิดพลาด', 'เกิดปัญหาในการอ่านข้อมูลบัญชีผู้ใช้ Facebook\n-----\n' + error);
                         console.log(`Error fetching facebook profile: ${JSON.stringify(error)}`);
                     } else {
                         console.log(`Success fetching data: ${JSON.stringify(result)}`);
@@ -313,38 +285,7 @@
                                 email, name
                             },
                             callback: (success, message) => {
-                                if (success) {
-                                    Alert.alert(
-                                        'สำเร็จ',
-                                        'เข้าระบบด้วย Facebook สำเร็จ',
-                                        [
-                                            {
-                                                text: 'OK',
-                                                onPress: () => {
-                                                    if (store.state.userToken) {
-                                                        store.dispatch('GET_PROFILE', {
-                                                            callback: (success, message) => { // ไม่ต้องสนใจว่าจะ get profile สำเร็จหรือเปล่า
-                                                                this.navigation.goBack();
-
-                                                                const nextScreen = this.navigation.getParam('forward');
-                                                                if (nextScreen) {
-                                                                    const params = this.navigation.getParam('params');
-                                                                    this.navigation.navigate(nextScreen, params);
-                                                                }
-                                                            }
-                                                        });
-                                                    }
-                                                }
-                                            }
-                                        ],
-                                        {cancelable: false}
-                                    );
-                                } else {
-                                    Alert.alert(
-                                        'ผิดพลาด',
-                                        message
-                                    );
-                                }
+                                this.handleLoginResponse(success, message);
                             }
                         });
                     }
@@ -406,56 +347,23 @@
                         }
                     */
 
-                    const {accessToken} = await GoogleSignin.getTokens();
+                    /*const {accessToken} = await GoogleSignin.getTokens();
                     console.log('accessToken: ', accessToken);
 
                     let msg = `ชื่อ: ${userInfo.user.name}\nอีเมล: ${userInfo.user.email}`;
                     Alert.alert('Alert', `เข้าระบบด้วย Google สำเร็จ แต่การทำงานยังไม่สมบูรณ์ รอปรับ API หลังบ้าน!\n-----\n${msg}`);
-                    return;
+                    return;*/
 
                     await store.dispatch('LOGIN_SOCIAL', {
                         formData: {
                             google_id: userInfo.user.id,
-                            /*email: userInfo.user.email,
-                            name: userInfo.user.name,*/
-                            token: accessToken,
+                            email: userInfo.user.email,
+                            name: userInfo.user.name,
                         },
                         callback: (success, message) => {
-                            if (success) {
-                                Alert.alert(
-                                    'สำเร็จ',
-                                    'เข้าระบบด้วย Google สำเร็จ',
-                                    [
-                                        {
-                                            text: 'OK',
-                                            onPress: () => {
-                                                if (store.state.userToken) {
-                                                    store.dispatch('GET_PROFILE', {
-                                                        callback: (success, message) => { // ไม่ต้องสนใจว่าจะ get profile สำเร็จหรือเปล่า
-                                                            this.navigation.goBack();
-
-                                                            const nextScreen = this.navigation.getParam('forward');
-                                                            if (nextScreen) {
-                                                                const params = this.navigation.getParam('params');
-                                                                this.navigation.navigate(nextScreen, params);
-                                                            }
-                                                        }
-                                                    });
-                                                }
-                                            }
-                                        }
-                                    ],
-                                    {cancelable: false}
-                                );
-                            } else {
-                                Alert.alert(
-                                    'ผิดพลาด',
-                                    message
-                                );
-                            }
+                            this.handleLoginResponse(success, message);
                         }
                     });
-
                 } catch (error) {
                     if (error.code === statusCodes.SIGN_IN_CANCELLED) {
                         Alert.alert('แจ้งเตือน', 'การเข้าระบบด้วย Google ถูกยกเลิก');
@@ -464,8 +372,39 @@
                     } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
                         Alert.alert('ผิดพลาด', 'Google Play Services ไม่พร้อมใช้งานหรือเป็นรุ่นเก่าเกินไป');
                     } else {
-                        Alert.alert('ผิดพลาด', 'เกิดปัญหาที่ไม่ทราบสาเหตุในการเข้าระบบด้วย Google:\n\n' + error);
+                        Alert.alert('ผิดพลาด', 'เกิดปัญหาที่ไม่ทราบสาเหตุในการเข้าระบบด้วย Google:\n-----\n' + error);
                     }
+                }
+            },
+            handleLoginResponse: function (success, message) {
+                if (success) {
+                    Alert.alert(
+                        'สำเร็จ',
+                        'เข้าสู่ระบบสำเร็จ',
+                        [
+                            {
+                                text: 'OK',
+                                onPress: () => {
+                                    if (store.state.userToken) {
+                                        store.dispatch('GET_PROFILE', {
+                                            callback: (success, message) => { // ไม่ต้องสนใจว่าจะ get profile สำเร็จหรือเปล่า
+                                                this.navigation.goBack();
+
+                                                const nextScreen = this.navigation.getParam('forward');
+                                                if (nextScreen) {
+                                                    const params = this.navigation.getParam('params');
+                                                    this.navigation.navigate(nextScreen, params);
+                                                }
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+                        ],
+                        {cancelable: false}
+                    );
+                } else {
+                    Alert.alert('ผิดพลาด', message);
                 }
             },
             handleClickForgotPassword: function () {

@@ -72,8 +72,9 @@
         },
         methods: {
             handleClickInfo: function () {
-                //todo: ******************
-                this.navigation.navigate('CategoryInfo');
+                this.navigation.navigate('CategoryInfo', {
+                    categoryTypeId: this.item.id
+                });
             },
         },
     }
