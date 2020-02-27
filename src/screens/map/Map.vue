@@ -1401,6 +1401,7 @@
             },*/
         },
         created: function () {
+            console.log('++++++++++ MAP - CREATED');
             //this.navigation.state.params.header = null;
             //this.navigation.navigate('News');
 
@@ -1408,16 +1409,21 @@
                 province: 0
             });*/
 
-            /*const self = this;
             this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
-                if (this.isBottomSheetOpen) {
-                    this.$refs['markerDetails'].snapTo(2);
+                if (this.drawerOpen) {
+                    store.dispatch('CLOSE_DRAWER', {});
                     return true;
                 }
+                /*if (this.isBottomSheetOpen) {
+                    this.$refs['markerDetails'].snapTo(2);
+                    return true;
+                }*/
                 return false;
-            });*/
+            });
         },
         beforeDestroy: function () {
+            console.log('++++++++++ MAP - BEFORE_DESTROY');
+
             if (this.watchId !== null) {
                 navigator.geolocation.clearWatch(this.watchId);
                 this.watchId = null;
@@ -1426,6 +1432,22 @@
             /*if (this.backHandler) {
                 this.backHandler.remove();
             }*/
+        },
+        beforeMount: function () {
+            console.log('++++++++++ MAP - BEFORE_MOUNT');
+        },
+        mounted: function () {
+            console.log('++++++++++ MAP - MOUNTED');
+        },
+        beforeUpdate: function () {
+            console.log('++++++++++ MAP - BEFORE_UPDATE');
+        },
+        updated: function () {
+            console.log('++++++++++ MAP - UPDATED');
+        },
+        destroyed: function () {
+            console.log('++++++++++ MAP - DESTROYED');
+            this.backHandler.remove();
         },
     }
 </script>

@@ -87,6 +87,8 @@
         },
         methods: {
             handleClickProfile: function () {
+                store.dispatch('CLOSE_DRAWER', {});
+
                 if (this.isLoggedIn) {
                     this.navigation.navigate('Profile');
                 } else {
@@ -94,6 +96,8 @@
                 }
             },
             handleClickBell: function () {
+                store.dispatch('CLOSE_DRAWER', {});
+
                 this.navigation.navigate('Alarm');
             },
         },

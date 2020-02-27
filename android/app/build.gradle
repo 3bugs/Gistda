@@ -105,8 +105,8 @@ android {
         applicationId "com.gistda"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 16
-        versionName "0.9.11"
+        versionCode 17
+        versionName "0.9.12"
         multiDexEnabled true
         //missingDimensionStrategy "RNNotifications.reactNativeVersion", "reactNative60"
     }

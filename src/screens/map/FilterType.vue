@@ -72,6 +72,8 @@
         },
         methods: {
             handleClickInfo: function () {
+                store.dispatch('CLOSE_DRAWER', {});
+
                 this.navigation.navigate('CategoryInfo', {
                     categoryTypeId: this.item.id
                 });

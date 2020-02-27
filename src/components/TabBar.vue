@@ -173,6 +173,8 @@
             handleClickItem: function (itemIndex) {
                 //this.activeItem = itemIndex;
 
+                store.dispatch('CLOSE_DRAWER', {});
+
                 let routeName = null;
                 switch (itemIndex) {
                     case 0:
@@ -209,11 +211,14 @@
                     alert('No route to go!');
                 }
             },
-            addIncidentReport: async function (formType) {
+            addIncidentReport: function (formType) {
                 /*this.navigation.navigate('IncidentForm');
                 return;*/
 
                 //const user = await getUser();
+
+                store.dispatch('CLOSE_DRAWER', {});
+
                 if (this.isLoggedIn /*user === null*/) {
                     this.navigation.navigate('IncidentForm', {
                         formType // 0 = แจ้งเหตุ, 1 = ร้านอาหารปลอดภัย
