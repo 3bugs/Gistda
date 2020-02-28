@@ -155,7 +155,7 @@ export async function SET_COORDINATES(state, {province, coordinateList, wmsList,
         }*/
     });
 
-    createHeatMapPointList(state, heatMapSparseArray);
+    createHeatMapPointList(state, province, heatMapSparseArray);
 
     //todo: ข้อมูล wms
     const wmsSparseArray = [];
@@ -271,13 +271,13 @@ function addHeatMapPoint_not_used(state, coordinate) {
     }
 }
 
-function createHeatMapPointList(state, heatMapSparseArray) {
+function createHeatMapPointList(state, province, heatMapSparseArray) {
     if (heatMapSparseArray[HEATMAP_CATEGORY_ID_RISK]) {
-        state.heatMapPointListRisk[PROVINCE_NAME_EN[state.province]]
+        state.heatMapPointListRisk[PROVINCE_NAME_EN[province]]
             = getHeatMapPointList(heatMapSparseArray[HEATMAP_CATEGORY_ID_RISK]);
     }
     if (heatMapSparseArray[HEATMAP_CATEGORY_ID_DISEASE]) {
-        state.heatMapPointListDisease[PROVINCE_NAME_EN[state.province]]
+        state.heatMapPointListDisease[PROVINCE_NAME_EN[province]]
             = getHeatMapPointList(heatMapSparseArray[HEATMAP_CATEGORY_ID_DISEASE]);
     }
 }
