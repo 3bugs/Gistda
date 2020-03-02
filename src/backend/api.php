@@ -1,8 +1,10 @@
 <?php
 require_once 'global.php';
+require_once 'vendor/autoload.php';
 
 error_reporting(E_ERROR | E_PARSE);
-header('Content-type: application/json; charset=utf-8');
+//header('Content-type: application/json; charset=utf-8');
+header('Content-type: text/html; charset=utf-8');
 
 header('Expires: Sun, 01 Jan 2014 00:00:00 GMT');
 header('Cache-Control: no-store, no-cache, must-revalidate');
@@ -39,6 +41,9 @@ file_put_contents('./log/log_' . date("j.n.Y") . '.txt', $log, FILE_APPEND);
 switch ($action) {
     case 'add_user_tracking':
         doAddUserTracking();
+        break;
+    case 'test_fcm':
+        doTestFcm();
         break;
     default:
         $response[KEY_ERROR_CODE] = ERROR_CODE_ERROR;
@@ -95,6 +100,43 @@ function doAddUserTracking()
         $response[KEY_ERROR_MESSAGE] = 'เกิดข้อผิดพลาดในการบันทึกข้อมูล';
         $errMessage = $db->error;
         $response[KEY_ERROR_MESSAGE_MORE] = "$errMessage\nSQL: $sqlInsert";
+    }
+}
+
+function doTestFcm()
+{
+    global $db, $response;
+
+    ini_set('display_errors', 1);
+
+    $serverKey = 'AAAAYgzPwvc:APA91bE0iYHclpU-3c_fq_a8Tdu-Z04_WiOOY-r9NN71Mva5EhWjrfBhb2eVAsRevvJbOyiLo3JV-VD1YPY_oVXGxgwB8UpR9tkmCUwQp5SExswo2MB3DTNg9cZSO-P2_WMJBVOqYZtc';
+    $senderId = '421121737463';
+    $deviceId = 'fCzXvOMVGXM:APA91bG3XvEwxpUL1_W5Q3V51GToLSl5juhcu5ye2FQ42GqaopkUufTGC6dVTznEplgdPN6z-vT8nGswlukcxLYICuHriDZJ1j6OJU8jbESWb4fvu5yTNBkS3yA1Goo0FbGSejiIvwej';
+
+    try {
+        // Instantiate the client with the project api_token and sender_id.
+        $client = new \Fcm\FcmClient($serverKey, $senderId);
+
+        // Instantiate the push notification request object.
+        $notification = new \Fcm\Push\Notification();
+
+        // Enhance the notification object with our custom options.
+        $notification
+            ->addRecipient($deviceId)
+            ->setTitle('Hello from php-fcm!')
+            ->setBody('Notification body')
+            ->addData('key', 'value');
+
+        // Send the notification to the Firebase servers for further handling.
+        $client->send($notification);
+
+        $response[KEY_ERROR_CODE] = ERROR_CODE_SUCCESS;
+        $response[KEY_ERROR_MESSAGE] = 'ส่ง FCM แล้ว';
+        $response[KEY_ERROR_MESSAGE_MORE] = '';
+    } catch (Exception $e) {
+        $response[KEY_ERROR_CODE] = ERROR_CODE_ERROR;
+        $response[KEY_ERROR_MESSAGE] = 'Error sending FCM: ' . $e->getMessage();
+        $response[KEY_ERROR_MESSAGE_MORE] = '';
     }
 }
 

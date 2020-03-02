@@ -158,6 +158,20 @@ repositories {
 }
 
 dependencies {
+    implementation project(':react-native-firebase')
+    // Firebase dependencies
+    implementation "com.google.android.gms:play-services-base:17.1.0"
+    implementation "com.google.firebase:firebase-core:17.2.2"
+
+    /* No longer add the Android library com.google.firebase:firebase-core.
+    This SDK included the Firebase SDK for Google Analytics.
+    Now, to use Analytics (or any of the Firebase products that require or recommend the use of Analytics),
+    you need to explicitly add the Analytics dependency:
+    com.google.firebase:firebase-analytics:17.2.2 */
+
+    implementation "com.google.firebase:firebase-messaging:20.1.0"
+    //implementation 'me.leolin:ShortcutBadger:1.1.21@aar' // <-- Add this line if you wish to use badge on Android
+
     implementation project(':react-native-line-sdk')
     implementation project(':react-native-google-signin')
     implementation project(':react-native-share')

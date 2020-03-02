@@ -26,6 +26,8 @@
                     }"
                     :style="{marginTop: MAP_HEADER.height}"
                     :rotate-enabled="false"
+                    :showsTraffic="true"
+                    :mapType="mapType"
                     :on-map-ready="handleMapReady"
                     :on-press="e => {handleClickMap(e.nativeEvent.coordinate)}"
                     :on-region-change-complete="handleRegionChange">
@@ -842,6 +844,7 @@
     const SCALE_WIDTH = 90;
     const TOOLS_MARGIN_BOTTOM = 35;
     const CLICK_CURRENT_LOCATION_TIMEOUT = 10;
+    const MAP_TYPE_LIST = ['standard', 'hybrid'];
 
     export default {
         components: {
@@ -956,6 +959,7 @@
                 backHandler: null,
                 isBottomSheetOpen: false,
                 scaleText: null,
+                mapType: MAP_TYPE_LIST[0],
 
                 pointList: [
                     /*{longitude: 99.90637622773647, latitude: 13.739281519255695},
