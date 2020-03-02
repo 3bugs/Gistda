@@ -47,6 +47,7 @@
     import Toast from 'react-native-simple-toast';
     import {getDistance} from 'geolib';
     import firebase from 'react-native-firebase';
+    //import type { Notification } from 'react-native-firebase';
 
     const newsNavigator = createMaterialTopTabNavigator(
         {
@@ -446,9 +447,30 @@
                 console.log('NO TOKEN !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
                 //alert('NO token!!!');
             }
+
+            const enabled = await firebase.messaging().hasPermission();
+            if (enabled) {
+                // user has permissions
+            } else {
+                // user doesn't have permission
+                try {
+                    await firebase.messaging().requestPermission();
+                    // User has authorised
+                } catch (error) {
+                    // User has rejected permissions
+                }
+            }
         },
         mounted: function () {
             console.log('APP - MOUNTED');
+
+            /*this.removeNotificationDisplayedListener = firebase.notifications().onNotificationDisplayed((notification) => {
+                // Process your notification as required
+                // ANDROID: Remote notifications do not contain the channel ID. You will have to specify this manually if you'd like to re-display the notification.
+            });
+            this.removeNotificationListener = firebase.notifications().onNotification((notification) => {
+                // Process your notification as required
+            });*/
         },
         beforeDestroy: function () {
             console.log('APP - BEFORE_DESTROY');

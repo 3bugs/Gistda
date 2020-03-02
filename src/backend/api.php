@@ -78,6 +78,7 @@ function doAddUserTracking()
             $lastLat = doubleval($row['latitude']);
             $lastLng = doubleval($row['longitude']);
             $lastTimestamp = $row['client_timestamp'] + 0;
+            $lastAlert = (int)$row['alert'];
 
             $currentLat = doubleval($latitude);
             $currentLng = doubleval($longitude);
@@ -86,11 +87,18 @@ function doAddUserTracking()
             $distanceMeters = getDistance($lastLat, $lastLng, $currentLat, $currentLng, 'M');
             $elapsedTimeInSeconds = ($currentTimestamp - $lastTimestamp) / 1000;
             $speed = (($distanceMeters * 3.6) / $elapsedTimeInSeconds);
+            $alert = 0;
+
+            if ($speed > 50 && $lastAlert === 0) {
+                if (sendFcm($deviceToken, $speed)) {
+                    $alert = 1;
+                }
+            }
         }
     }
 
-    $sqlInsert = "INSERT INTO user_tracking (device_token, latitude, longitude, speed, client_timestamp)
-            VALUES ('$deviceToken', $latitude, $longitude, $speed, $clientTimestamp)";
+    $sqlInsert = "INSERT INTO user_tracking (device_token, latitude, longitude, speed, alert, client_timestamp)
+            VALUES ('$deviceToken', $latitude, $longitude, $speed, $alert, $clientTimestamp)";
     if ($db->query($sqlInsert)) {
         $response[KEY_ERROR_CODE] = ERROR_CODE_SUCCESS;
         $response[KEY_ERROR_MESSAGE] = 'บันทึกข้อมูลสำเร็จ';
@@ -103,6 +111,34 @@ function doAddUserTracking()
     }
 }
 
+function sendFcm($deviceToken, $speed)
+{
+    $serverKey = 'AAAAYgzPwvc:APA91bE0iYHclpU-3c_fq_a8Tdu-Z04_WiOOY-r9NN71Mva5EhWjrfBhb2eVAsRevvJbOyiLo3JV-VD1YPY_oVXGxgwB8UpR9tkmCUwQp5SExswo2MB3DTNg9cZSO-P2_WMJBVOqYZtc';
+    $senderId = '421121737463';
+
+    try {
+        // Instantiate the client with the project api_token and sender_id.
+        $client = new \Fcm\FcmClient($serverKey, $senderId);
+
+        // Instantiate the push notification request object.
+        $notification = new \Fcm\Push\Notification();
+
+        // Enhance the notification object with our custom options.
+        $notification
+            ->addRecipient($deviceToken)
+            ->setTitle('คุณขับรถเร็วเกินไป!')
+            ->setBody("คุณกำลังขับรถด้วยความเร็ว {$speed} กม./ชม.")
+            ->addData('key', 'value');
+
+        // Send the notification to the Firebase servers for further handling.
+        $client->send($notification);
+
+        return true;
+    } catch (Exception $e) {
+        return false;
+    }
+}
+
 function doTestFcm()
 {
     global $db, $response;
@@ -111,7 +147,7 @@ function doTestFcm()
 
     $serverKey = 'AAAAYgzPwvc:APA91bE0iYHclpU-3c_fq_a8Tdu-Z04_WiOOY-r9NN71Mva5EhWjrfBhb2eVAsRevvJbOyiLo3JV-VD1YPY_oVXGxgwB8UpR9tkmCUwQp5SExswo2MB3DTNg9cZSO-P2_WMJBVOqYZtc';
     $senderId = '421121737463';
-    $deviceId = 'fCzXvOMVGXM:APA91bG3XvEwxpUL1_W5Q3V51GToLSl5juhcu5ye2FQ42GqaopkUufTGC6dVTznEplgdPN6z-vT8nGswlukcxLYICuHriDZJ1j6OJU8jbESWb4fvu5yTNBkS3yA1Goo0FbGSejiIvwej';
+    $deviceId = 'c_6oDfHC5vI:APA91bH4hLmzRDulK9ZQSdpHeAQ6WFrRNoVtmb-FP50WUFHSfgZu2BlTjx67osK5MlyzaHFOuBczdIFuG58Re80dt9obvc61aBoj8DqP_9Jai0t2jUMp8EzjiB_Tp58OJXIxprn6E7pd';
 
     try {
         // Instantiate the client with the project api_token and sender_id.
@@ -123,8 +159,8 @@ function doTestFcm()
         // Enhance the notification object with our custom options.
         $notification
             ->addRecipient($deviceId)
-            ->setTitle('Hello from php-fcm!')
-            ->setBody('Notification body')
+            ->setTitle('คุณขับรถเร็วเกินไป!')
+            ->setBody('คุณกำลังขับรถด้วยความเร็ว 123 กม./ชม.')
             ->addData('key', 'value');
 
         // Send the notification to the Firebase servers for further handling.
