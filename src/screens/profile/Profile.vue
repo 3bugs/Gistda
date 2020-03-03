@@ -4,11 +4,12 @@
                 title="ข้อมูลส่วนตัว"
                 :header-text="headerText"
                 :sub-header-text="subHeaderText"
-                :button-text="null"
+                button-text="ออกจากระบบ"
                 :override-scroll-view="true"
                 :no-close-button="true"
                 :on-click-back="handleClickBack"
-                :on-click-close="handleClickClose">
+                :on-click-close="handleClickClose"
+                :on-click-button="handleClickLogout">
             <view>
                 <flat-list
                         :data="dataList"
@@ -83,6 +84,35 @@
                 this.navigation.goBack();
             },
             handleClickClose: function () {
+            },
+            handleClickLogout: function () {
+                Alert.alert(
+                    'ออกจากระบบ',
+                    'ยืนยันออกจากระบบ?',
+                    [
+                        {
+                            text: 'ออกจากระบบ',
+                            onPress: () => {
+                                store.dispatch('LOGOUT', {
+                                    callback: () => {
+                                        this.navigation.goBack();
+                                        Alert.alert(
+                                            'สำเร็จ',
+                                            'ออกจากระบบสำเร็จ'
+                                        );
+                                    }
+                                });
+                            }
+                        },
+                        {
+                            text: 'ยกเลิก',
+                            onPress: () => {
+                            },
+                            style: 'cancel'
+                        },
+                    ],
+                    {cancelable: true}
+                );
             },
             handleClickItem: function (index) {
                 switch (index) {

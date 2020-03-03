@@ -5,8 +5,10 @@ import android.app.Application;
 //import com.wix.reactnativenotifications.RNNotificationsPackage;
 import com.marianhello.bgloc.react.BackgroundGeolocationPackage;
 import com.facebook.react.ReactApplication;
+import com.zmxv.RNSound.RNSoundPackage;
 import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
+import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
 import com.xmartlabs.lineloginmanager.LineLoginPackage;
 import co.apptailor.googlesignin.RNGoogleSigninPackage;
 import cl.json.RNSharePackage;
@@ -46,8 +48,10 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNSoundPackage(),
             new RNFirebasePackage(),
             new RNFirebaseMessagingPackage(),
+            new RNFirebaseNotificationsPackage(),
             new LineLoginPackage(),
             new RNGoogleSigninPackage(),
             new RNSharePackage(),

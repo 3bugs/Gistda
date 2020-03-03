@@ -49,6 +49,21 @@
     import firebase from 'react-native-firebase';
     //import type { Notification } from 'react-native-firebase';
 
+    const Sound = require('react-native-sound');
+    // Enable playback in silence mode
+    Sound.setCategory('Playback');
+    const alertSound = new Sound(
+        'alert2.mp3',
+        Sound.MAIN_BUNDLE,
+        error => {
+            if (error) {
+                console.log('Failed to load the sound', error);
+                return;
+            }
+            // loaded successfully
+            console.log('duration in seconds: ' + alertSound.getDuration() + ', number of channels: ' + alertSound.getNumberOfChannels());
+        });
+
     const newsNavigator = createMaterialTopTabNavigator(
         {
             Settings: SettingsScreen,
@@ -336,7 +351,7 @@
 
                             const message = `${distanceMessage}\n\n${speedMessage}`;
 
-                            Toast.show(message, Toast.LONG);
+                            //Toast.show(message, Toast.LONG);
                             console.log(message);
 
                             if (leastDistance !== null && leastDistance < 1000) { // 1 กม.
@@ -351,7 +366,7 @@
                                 }
                             }
                         } else {
-                            Toast.show('เริ่มตรวจจับความเร็ว และตรวจสอบการเข้าเขตโรคระบาดและพื้นที่เสี่ยงบนท้องถนน', Toast.LONG);
+                            //Toast.show('เริ่มตรวจจับความเร็ว และตรวจสอบการเข้าเขตโรคระบาดและพื้นที่เสี่ยงบนท้องถนน', Toast.LONG);
                         }
 
                         global.lastLocation = location;
@@ -431,7 +446,7 @@
                 BackgroundGeolocation.start();
             }
         },
-        created: async function() {
+        created: async function () {
             console.log('APP - CREATED');
 
             this.getHeatMap();
@@ -463,16 +478,33 @@
         mounted: function () {
             console.log('APP - MOUNTED');
 
-            this.removeNotificationDisplayedListener = firebase.notifications().onNotificationDisplayed((notification) => {
+            this.removeNotificationDisplayedListener = firebase.notifications().onNotificationDisplayed(notification => {
                 // Process your notification as required
                 // ANDROID: Remote notifications do not contain the channel ID. You will have to specify this manually if you'd like to re-display the notification.
             });
-            this.removeNotificationListener = firebase.notifications().onNotification((notification) => {
+            this.removeNotificationListener = firebase.notifications().onNotification(notification => {
                 // Process your notification as required
+                console.log('+++++++++++++++ NOTIFICATION +++++++++++++++');
+                console.log(notification);
+
+                alertSound.play(success => {
+                    // Can check if play successfully
+                });
+                Alert.alert(
+                    notification._title,
+                    notification._body
+                );
             });
         },
         beforeDestroy: function () {
             console.log('APP - BEFORE_DESTROY');
+
+            if (this.removeNotificationDisplayedListener) {
+                this.removeNotificationDisplayedListener();
+            }
+            if (this.removeNotificationListener) {
+                this.removeNotificationListener();
+            }
 
             //BackgroundGeolocation.stop();
             BackgroundGeolocation.removeAllListeners();

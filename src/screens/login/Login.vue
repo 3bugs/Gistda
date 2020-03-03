@@ -297,17 +297,27 @@
                 //Alert.alert('Under Construction', 'ส่วนนี้อยู่ระหว่างการพัฒนา'); //todo: ************************
 
                 LineLogin.login()
-                    .then(user => {
+                    .then(async user => {
                         /*{
                             "pictureURL": "https://profile.line-scdn.net/ch/v2/p/u6409759e5ac25edddec978180b8ae04a/1356411236084",
                             "statusMessage": "3bugs OSK111",
                             "userID": "U0b50028793ec6d03f6464ce142e28907",
                             "displayName": "Promlert Lovichit"
                         }*/
-                        let msg = `ชื่อ: ${user.profile.displayName}\nข้อความสเตตัส: ${user.profile.statusMessage}`;
-                        Alert.alert('สำเร็จ', `เข้าระบบด้วย LINE สำเร็จ แต่การทำงานยังไม่สมบูรณ์ รอปรับ API หลังบ้าน!\n-----\n${msg}`);
-
+                        //let msg = `ชื่อ: ${user.profile.displayName}\nข้อความสเตตัส: ${user.profile.statusMessage}`;
+                        //Alert.alert('สำเร็จ', `เข้าระบบด้วย LINE สำเร็จ แต่การทำงานยังไม่สมบูรณ์ รอปรับ API หลังบ้าน!\n-----\n${msg}`);
                         console.log(JSON.stringify(user));
+
+                        await store.dispatch('LOGIN_SOCIAL', {
+                            formData: {
+                                line_id: user.profile.userID,
+                                email: '',
+                                name: user.profile.displayName,
+                            },
+                            callback: (success, message) => {
+                                this.handleLoginResponse(success, message);
+                            }
+                        });
                     })
                     .catch(err => {
                         Alert.alert('ผิดพลาด', 'เกิดปัญหาในการเข้าระบบด้วย LINE: ' + err);

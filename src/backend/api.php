@@ -1,7 +1,7 @@
 <?php
 define('SERVER_KEY', 'AAAAYgzPwvc:APA91bE0iYHclpU-3c_fq_a8Tdu-Z04_WiOOY-r9NN71Mva5EhWjrfBhb2eVAsRevvJbOyiLo3JV-VD1YPY_oVXGxgwB8UpR9tkmCUwQp5SExswo2MB3DTNg9cZSO-P2_WMJBVOqYZtc');
 define('SENDER_ID', '421121737463');
-define('SPEED_LIMIT', 5);
+define('SPEED_LIMIT', 30);
 
 require_once 'global.php';
 require_once 'vendor/autoload.php';
@@ -101,7 +101,7 @@ function doAddUserTracking()
             if ($speed > SPEED_LIMIT) {
                 $overLimit = 1;
 
-                if (TRUE /*$lastAlert === 0 &&*/ /*$lastOverLimit === 1*/) {
+                if ($lastAlert === 0 && $lastOverLimit === 1) {
                     if (sendNotification($deviceToken, $speed)) {
                         $alert = 1;
                     }

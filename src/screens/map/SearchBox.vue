@@ -39,8 +39,9 @@
                     <touchable-opacity
                             v-if="!isSearching"
                             class="list-icon-touchable"
-                            :on-press="null">
-                        <image :source="MAP_HEADER.listIcon[province]"
+                            :on-press="handleClickSearch">
+                        <!--MAP_HEADER.listIcon[province]-->
+                        <image :source="imageSearch"
                                class="list-icon"
                                resize-mode="contain"/>
                     </touchable-opacity>
@@ -86,6 +87,8 @@
     import CardView from 'react-native-cardview';
     import {doSearchLocal} from "../../store/fetch";
 
+    import imageSearch from '../../../assets/images/ic_search.png';
+
     const {Popover} = renderers;
 
     export default {
@@ -109,7 +112,7 @@
         data: () => {
             return {
                 DEBUG, COLOR_PRIMARY, MAP_HEADER, PROVINCE_NAME_TH,
-                Dimensions, TouchableOpacity,
+                Dimensions, TouchableOpacity, imageSearch,
                 Popover,
                 _menuOptionList: [
                     'ค้นหา',
@@ -280,12 +283,12 @@
 
     .list-icon-touchable {
         align-self: center;
-        padding: 5;
+        padding: 0;
     }
 
     .list-icon {
-        width: 20;
-        height: 20;
+        width: 24;
+        height: 24;
     }
 
     .menu-option {
