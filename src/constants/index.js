@@ -61,7 +61,7 @@ export const HEATMAP_CATEGORY_ID_DISEASE = 11;
 
 export const SPEED_MONITOR_THRESHOLD = 90; // หน่วย km/h
 export const SPEED_ALERT_MIN_INTERVAL = 10; // วินาที
-export const MONITOR_INTERVAL = 30; // วินาที
+export const MONITOR_INTERVAL = 60; // วินาที
 
 export const STATIC_MAP_DIMENSION = {
     width: 600, height: 400

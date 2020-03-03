@@ -1,10 +1,14 @@
 <?php
+define('SERVER_KEY', 'AAAAYgzPwvc:APA91bE0iYHclpU-3c_fq_a8Tdu-Z04_WiOOY-r9NN71Mva5EhWjrfBhb2eVAsRevvJbOyiLo3JV-VD1YPY_oVXGxgwB8UpR9tkmCUwQp5SExswo2MB3DTNg9cZSO-P2_WMJBVOqYZtc');
+define('SENDER_ID', '421121737463');
+define('SPEED_LIMIT', 5);
+
 require_once 'global.php';
 require_once 'vendor/autoload.php';
 
 error_reporting(E_ERROR | E_PARSE);
-//header('Content-type: application/json; charset=utf-8');
-header('Content-type: text/html; charset=utf-8');
+header('Content-type: application/json; charset=utf-8');
+//header('Content-type: text/html; charset=utf-8');
 
 header('Expires: Sun, 01 Jan 2014 00:00:00 GMT');
 header('Cache-Control: no-store, no-cache, must-revalidate');
@@ -66,39 +70,48 @@ function doAddUserTracking()
     $latitude = $data[0]['latitude'];
     $longitude = $data[0]['longitude'];
     $clientTimestamp = $data[0]['client_timestamp'];
-    $speed = 0;
 
-    $sql = "SELECT latitude, longitude, client_timestamp 
+    $distanceMeters = 0;
+    $speed = 0;
+    $alert = 0;
+    $overLimit = 0;
+
+    $sql = "SELECT * 
             FROM user_tracking 
             WHERE device_token = '$deviceToken' 
             ORDER BY id DESC";
     if ($result = $db->query($sql)) {
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
-            $lastLat = doubleval($row['latitude']);
-            $lastLng = doubleval($row['longitude']);
+            $lastId = (int)$row['id'];
+            $lastLatitude = doubleval($row['latitude']);
+            $lastLongitude = doubleval($row['longitude']);
             $lastTimestamp = $row['client_timestamp'] + 0;
             $lastAlert = (int)$row['alert'];
+            $lastOverLimit = (int)$row['over_limit'];
 
             $currentLat = doubleval($latitude);
             $currentLng = doubleval($longitude);
             $currentTimestamp = $clientTimestamp + 0;
 
-            $distanceMeters = getDistance($lastLat, $lastLng, $currentLat, $currentLng, 'M');
+            $distanceMeters = floor(getDistance($lastLatitude, $lastLongitude, $currentLat, $currentLng, 'M'));
             $elapsedTimeInSeconds = ($currentTimestamp - $lastTimestamp) / 1000;
-            $speed = (($distanceMeters * 3.6) / $elapsedTimeInSeconds);
-            $alert = 0;
+            $speed = floor(($distanceMeters * 3.6) / $elapsedTimeInSeconds); // ความเร็ว ไม่สนใจทศนิยม
 
-            if ($speed > 50 && $lastAlert === 0) {
-                if (sendFcm($deviceToken, $speed)) {
-                    $alert = 1;
+            if ($speed > SPEED_LIMIT) {
+                $overLimit = 1;
+
+                if (TRUE /*$lastAlert === 0 &&*/ /*$lastOverLimit === 1*/) {
+                    if (sendNotification($deviceToken, $speed)) {
+                        $alert = 1;
+                    }
                 }
             }
         }
     }
 
-    $sqlInsert = "INSERT INTO user_tracking (device_token, latitude, longitude, speed, alert, client_timestamp)
-            VALUES ('$deviceToken', $latitude, $longitude, $speed, $alert, $clientTimestamp)";
+    $sqlInsert = "INSERT INTO user_tracking (device_token, latitude, longitude, distance, speed, over_limit, alert, client_timestamp)
+            VALUES ('$deviceToken', $latitude, $longitude, $distanceMeters, $speed, $overLimit, $alert, $clientTimestamp)";
     if ($db->query($sqlInsert)) {
         $response[KEY_ERROR_CODE] = ERROR_CODE_SUCCESS;
         $response[KEY_ERROR_MESSAGE] = 'บันทึกข้อมูลสำเร็จ';
@@ -111,14 +124,11 @@ function doAddUserTracking()
     }
 }
 
-function sendFcm($deviceToken, $speed)
+function sendNotification($deviceToken, $speed)
 {
-    $serverKey = 'AAAAYgzPwvc:APA91bE0iYHclpU-3c_fq_a8Tdu-Z04_WiOOY-r9NN71Mva5EhWjrfBhb2eVAsRevvJbOyiLo3JV-VD1YPY_oVXGxgwB8UpR9tkmCUwQp5SExswo2MB3DTNg9cZSO-P2_WMJBVOqYZtc';
-    $senderId = '421121737463';
-
     try {
         // Instantiate the client with the project api_token and sender_id.
-        $client = new \Fcm\FcmClient($serverKey, $senderId);
+        $client = new \Fcm\FcmClient(SERVER_KEY, SENDER_ID);
 
         // Instantiate the push notification request object.
         $notification = new \Fcm\Push\Notification();
@@ -127,7 +137,7 @@ function sendFcm($deviceToken, $speed)
         $notification
             ->addRecipient($deviceToken)
             ->setTitle('คุณขับรถเร็วเกินไป!')
-            ->setBody("คุณกำลังขับรถด้วยความเร็ว {$speed} กม./ชม.")
+            ->setBody("คุณกำลังขับรถที่ความเร็ว {$speed} กม./ชม.")
             ->addData('key', 'value');
 
         // Send the notification to the Firebase servers for further handling.
@@ -145,13 +155,11 @@ function doTestFcm()
 
     ini_set('display_errors', 1);
 
-    $serverKey = 'AAAAYgzPwvc:APA91bE0iYHclpU-3c_fq_a8Tdu-Z04_WiOOY-r9NN71Mva5EhWjrfBhb2eVAsRevvJbOyiLo3JV-VD1YPY_oVXGxgwB8UpR9tkmCUwQp5SExswo2MB3DTNg9cZSO-P2_WMJBVOqYZtc';
-    $senderId = '421121737463';
     $deviceId = 'c_6oDfHC5vI:APA91bH4hLmzRDulK9ZQSdpHeAQ6WFrRNoVtmb-FP50WUFHSfgZu2BlTjx67osK5MlyzaHFOuBczdIFuG58Re80dt9obvc61aBoj8DqP_9Jai0t2jUMp8EzjiB_Tp58OJXIxprn6E7pd';
 
     try {
         // Instantiate the client with the project api_token and sender_id.
-        $client = new \Fcm\FcmClient($serverKey, $senderId);
+        $client = new \Fcm\FcmClient(SERVER_KEY, SENDER_ID);
 
         // Instantiate the push notification request object.
         $notification = new \Fcm\Push\Notification();
@@ -160,7 +168,7 @@ function doTestFcm()
         $notification
             ->addRecipient($deviceId)
             ->setTitle('คุณขับรถเร็วเกินไป!')
-            ->setBody('คุณกำลังขับรถด้วยความเร็ว 123 กม./ชม.')
+            ->setBody('คุณกำลังขับรถที่ความเร็ว 5555 กม./ชม.')
             ->addData('key', 'value');
 
         // Send the notification to the Firebase servers for further handling.

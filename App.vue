@@ -41,7 +41,7 @@
         createBottomTabNavigator,
         createMaterialTopTabNavigator,
     } from "vue-native-router";
-    import {Alert} from 'react-native';
+    import {Alert, Platform} from 'react-native';
     import {MenuProvider} from 'react-native-popup-menu';
     import BackgroundGeolocation from '@mauron85/react-native-background-geolocation';
     import Toast from 'react-native-simple-toast';
@@ -250,17 +250,17 @@
                     },
                 });
             },
-            setupBackgroundGeolocation: function () {
+            setupBackgroundGeolocation: function (fcmToken) {
                 BackgroundGeolocation.configure({
                     desiredAccuracy: BackgroundGeolocation.HIGH_ACCURACY,
-                    stationaryRadius: 1,
-                    distanceFilter: 1,
-                    notificationTitle: 'ตรวจจับความเร็ว และตรวจสอบการเข้าเขตโรคระบาด/พื้นที่เสี่ยงบนท้องถนน',
+                    stationaryRadius: 10,
+                    distanceFilter: 50,
+                    notificationTitle: 'ตรวจจับความเร็ว และตรวจสอบการเข้าเขตโรคระบาดและพื้นที่เสี่ยงบนท้องถนน',
                     notificationText: 'ทำงาน',
                     debug: false,
                     startOnBoot: true,
                     stopOnTerminate: false,
-                    locationProvider: BackgroundGeolocation.ACTIVITY_PROVIDER,
+                    locationProvider: Platform.OS === 'android' ? BackgroundGeolocation.DISTANCE_FILTER_PROVIDER : BackgroundGeolocation.DISTANCE_FILTER_PROVIDER,
                     interval: MONITOR_INTERVAL * 1000,
                     fastestInterval: MONITOR_INTERVAL * 1000,
                     activitiesInterval: MONITOR_INTERVAL * 1000,
@@ -272,7 +272,7 @@
                     },
                     // customize post properties
                     postTemplate: {
-                        device_token: 'foo_token',
+                        device_token: fcmToken,
                         latitude: '@latitude',
                         longitude: '@longitude',
                         client_timestamp: '@time',
@@ -351,7 +351,7 @@
                                 }
                             }
                         } else {
-                            Toast.show('เริ่มตรวจจับความเร็ว และการเข้าเขตโรคระบาด', Toast.LONG);
+                            Toast.show('เริ่มตรวจจับความเร็ว และตรวจสอบการเข้าเขตโรคระบาดและพื้นที่เสี่ยงบนท้องถนน', Toast.LONG);
                         }
 
                         global.lastLocation = location;
@@ -435,13 +435,12 @@
             console.log('APP - CREATED');
 
             this.getHeatMap();
-            this.setupBackgroundGeolocation();
 
             const fcmToken = await firebase.messaging().getToken();
             if (fcmToken) {
                 // user has a device token
                 console.log('Token: ' + fcmToken);
-                //alert('Token: ' + fcmToken);
+                this.setupBackgroundGeolocation(fcmToken);
             } else {
                 // user doesn't have a device token yet
                 console.log('NO TOKEN !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
@@ -464,13 +463,13 @@
         mounted: function () {
             console.log('APP - MOUNTED');
 
-            /*this.removeNotificationDisplayedListener = firebase.notifications().onNotificationDisplayed((notification) => {
+            this.removeNotificationDisplayedListener = firebase.notifications().onNotificationDisplayed((notification) => {
                 // Process your notification as required
                 // ANDROID: Remote notifications do not contain the channel ID. You will have to specify this manually if you'd like to re-display the notification.
             });
             this.removeNotificationListener = firebase.notifications().onNotification((notification) => {
                 // Process your notification as required
-            });*/
+            });
         },
         beforeDestroy: function () {
             console.log('APP - BEFORE_DESTROY');
