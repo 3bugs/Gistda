@@ -15,7 +15,7 @@
         <view class="container"
               :style="{marginBottom: BOTTOM_NAV.height}">
             <map-view
-                    :provider="PROVIDER_GOOGLE"
+                    :provider="Platform.OS === 'android' ? PROVIDER_GOOGLE : null"
                     ref="mapView"
                     class="map-view"
                     :initial-region="{
@@ -935,7 +935,7 @@
         data: () => {
             return {
                 store, PROVIDER_GOOGLE, SCALE_WIDTH, TOOLS_MARGIN_BOTTOM, PROVINCE_NAME_EN,
-                Dimensions, StyleSheet, TouchableOpacity, DEBUG, MAP_HEADER, BOTTOM_NAV, DIMENSION,
+                Platform, Dimensions, StyleSheet, TouchableOpacity, DEBUG, MAP_HEADER, BOTTOM_NAV, DIMENSION,
                 PROVINCE_DIMENSION, COLOR_PRIMARY, COLOR_PRIMARY_DARK, HEATMAP_CATEGORY_ID_RISK, HEATMAP_CATEGORY_ID_DISEASE,
                 utm, Popover,
                 imageMenu, imageBack, imageClose, imageNavigate, imageLightOff, imageLightOn,

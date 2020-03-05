@@ -492,6 +492,8 @@
         font-family: DBHeavent;
         font-size: 22;
         color: white;
+        padding-top: 12;
+        padding-bottom: 12;
         border-bottom-width: 0;
         border-bottom-color: #adadad;
     }
