@@ -42,22 +42,28 @@
                 :card-maxElevation="1"
                 :corner-radius="10"
                 :style="{
-                flexDirection: 'row',
-                alignItems: 'center',
-                marginLeft: 20,
-                marginRight: 20,
-                paddingTop: 0,
-                paddingBottom: 0,
-                paddingLeft: 10,
-                paddingRight: 10,
-                height: 20,
-                backgroundColor: '#fff'
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    marginLeft: 20,
+                    marginRight: 20,
+                    paddingTop: 0,
+                    paddingBottom: 0,
+                    paddingLeft: 10,
+                    paddingRight: 10,
+                    height: 20,
+                    backgroundColor: '#fff'
                 }">
             <image :source="imageLightOff"
                    class="image-light"
                    resize-mode="contain"/>
-            <slider class="slider"
+            <slider v-if="Platform.OS === 'android'"
+                    class="slider-android"
                     :thumb-tint-color="SIDEBAR.sliderColor[province]"
+                    :minimum-track-tint-color="SIDEBAR.sliderColor[province]"
+                    :value="item.markerOpacity"
+                    :on-value-change="handleSliderValueChange"/>
+            <slider v-if="Platform.OS === 'ios'"
+                    class="slider-ios"
                     :minimum-track-tint-color="SIDEBAR.sliderColor[province]"
                     :value="item.markerOpacity"
                     :thumb-image="SIDEBAR.sliderThumb[province]"
@@ -83,7 +89,7 @@
     import {getLocalCategoryData, setLocalCategoryData} from '../../store/db';
     import {DEBUG, SIDEBAR} from '../../constants';
 
-    import {StyleSheet} from 'react-native';
+    import {StyleSheet, Platform} from 'react-native';
     import Slider from '@react-native-community/slider';
     import CardView from 'react-native-cardview';
     import {CheckBox} from 'react-native-elements';
@@ -123,7 +129,7 @@
         },
         data: () => {
             return {
-                DEBUG, SIDEBAR, StyleSheet,
+                DEBUG, SIDEBAR, StyleSheet, Platform,
                 imageLightOff, imageLightOn,
                 imageCheckOff, imageCheckOn,
                 visibilityValue: true,
@@ -213,10 +219,18 @@
         padding-left: 0;
     }
 
-    .slider {
+    .slider-android {
         flex: 1;
         padding-left: 0;
         padding-right: 0;
+    }
+
+    .slider-ios {
+        flex: 1;
+        padding-left: 0;
+        padding-right: 0;
+        margin-left: 10;
+        margin-right: 10;
     }
 
     .image-light {
