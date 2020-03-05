@@ -43,6 +43,7 @@
 		2DCD954D1E0B4F2C00145EB5 /* gistdaTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* gistdaTests.m */; };
 		2DF0FFEE2056DD460020B375 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3EA31DF850E9000B6D8A /* libReact.a */; };
 		308B251D328D41B5A3B49252 /* Fontisto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CECA81D2B74D403AA50E00C1 /* Fontisto.ttf */; };
+		3092D6312410DD1A0013C551 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3092D5F82410DD1A0013C551 /* GoogleService-Info.plist */; };
 		30F9AAD923D179B8006DFD15 /* libRNCGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30F9AABE23D1781E006DFD15 /* libRNCGeolocation.a */; };
 		345FC57120F04C38BBCB213B /* libRNGestureHandler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B5650CBFD054ECCA3EB80FE /* libRNGestureHandler.a */; };
 		460211BD216B4225811061F5 /* libLineLoginManager.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A36072F6502474EA4515480 /* libLineLoginManager.a */; };
@@ -520,6 +521,7 @@
 		2D02E4901E0B4A5D006451C7 /* gistda-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "gistda-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E6A294751C64CDEB2E3994A /* AirMaps.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = AirMaps.xcodeproj; path = "../node_modules/react-native-maps/lib/ios/AirMaps.xcodeproj"; sourceTree = "<group>"; };
+		3092D5F82410DD1A0013C551 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		30A41BD3240F917200A10728 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		30A41C0D240F918A00A10728 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		30A41C0F240F939700A10728 /* LineSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LineSDK.framework; path = Pods/LineSDK/LineSDK/LineSDK.framework; sourceTree = "<group>"; };
@@ -751,6 +753,7 @@
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
+				3092D5F82410DD1A0013C551 /* GoogleService-Info.plist */,
 				13B07FB71A68108700A75B9A /* main.m */,
 			);
 			name = gistda;
@@ -1736,6 +1739,7 @@
 				240DB68E341B4740A26C322C /* Ionicons.ttf in Resources */,
 				6D3723E3D2624485BF298483 /* MaterialCommunityIcons.ttf in Resources */,
 				7E1036D21B464D3A9B0BD07B /* MaterialIcons.ttf in Resources */,
+				3092D6312410DD1A0013C551 /* GoogleService-Info.plist in Resources */,
 				1BE640C612FF4877AD07EFBF /* Octicons.ttf in Resources */,
 				DD440215703A4ADAB5796085 /* SimpleLineIcons.ttf in Resources */,
 				254AA384946542008746B349 /* Zocial.ttf in Resources */,

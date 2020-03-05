@@ -55,6 +55,8 @@ target 'gistda' do
 
   pod 'LineSDK', '~> 5.0'
   
+  pod 'GoogleSignIn', '~> 5.0.2'
+  
   pod 'Firebase/Messaging', '~> 6.13.0'
 end
 

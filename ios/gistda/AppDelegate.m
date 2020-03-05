@@ -12,6 +12,7 @@
 #import <React/RCTRootView.h>
 #import <GoogleMaps/GoogleMaps.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <LineSDK/LineSDKLogin.h>
 
 @implementation AppDelegate
   
@@ -19,10 +20,27 @@
             openURL:(NSURL *)url
             options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
 {
-  BOOL handled =  [[FBSDKApplicationDelegate sharedInstance] application:application openURL:url options:options];
+  //BOOL handled =  [[FBSDKApplicationDelegate sharedInstance] application:application openURL:url options:options];
   // Add any custom logic here.
-  return handled;
+  //return handled;
+  
+  if ([[FBSDKApplicationDelegate sharedInstance] application:application openURL:url options:options]) {
+    return YES;
+  }
+  
+  if ([[LineSDKLogin sharedInstance] handleOpenURL:url]) {
+    return YES;
+  }
+  
+  return NO;
 }
+
+/*- (BOOL)application:(UIApplication *)app
+            openURL:(NSURL *)url
+            options:(NSDictionary *)options
+{
+  return [[LineSDKLogin sharedInstance] handleOpenURL:url];
+}*/
   
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {

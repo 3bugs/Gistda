@@ -221,6 +221,7 @@ DEPENDENCIES:
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - Google-Maps-iOS-Utils
   - GoogleMaps
+  - GoogleSignIn (~> 5.0.2)
   - LineSDK (~> 5.0)
   - react-native-fbsdk (from `../node_modules/react-native-fbsdk`)
   - react-native-google-maps (from `../node_modules/react-native-maps`)
@@ -346,6 +347,6 @@ SPEC CHECKSUMS:
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
   yoga: 684513b14b03201579ba3cee20218c9d1298b0cc
 
-PODFILE CHECKSUM: a4c3ca046548e05626706c362b74b0f2dcc4d839
+PODFILE CHECKSUM: f8beced8690895b1018f0a64ef4eed3d1c4cde3b
 
 COCOAPODS: 1.8.4
