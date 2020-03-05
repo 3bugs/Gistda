@@ -101,7 +101,7 @@ function doAddUserTracking()
             if ($speed > SPEED_LIMIT) {
                 $overLimit = 1;
 
-                if ($lastAlert === 0 && $lastOverLimit === 1) {
+                if (TRUE /*$lastAlert === 0 && $lastOverLimit === 1*/) {
                     if (sendNotification($deviceToken, $speed)) {
                         $alert = 1;
                     }

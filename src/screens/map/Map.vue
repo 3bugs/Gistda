@@ -27,6 +27,7 @@
                     :style="{marginTop: MAP_HEADER.height}"
                     :rotate-enabled="false"
                     :showsTraffic="true"
+                    :showsUserLocation="watchId !== null"
                     :mapType="mapType"
                     :on-map-ready="handleMapReady"
                     :on-press="e => {handleClickMap(e.nativeEvent.coordinate)}"
@@ -179,13 +180,13 @@
                         :draggable="false"/>
 
                 <!--marker ตำแหน่งปัจจุบัน-->
-                <marker-animated
+                <!--<marker-animated
                         ref="locationMarker"
                         v-if="watchId !== null && currentLocation"
                         :coordinate="currentLocation"
                         :image="imageRedDot"
                         :anchor="{x: 0.5, y: 0.5}"
-                        :draggable="false"/>
+                        :draggable="false"/>-->
             </map-view>
 
             <view class="map-tools-container"
@@ -960,6 +961,7 @@
                 isBottomSheetOpen: false,
                 scaleText: null,
                 mapType: MAP_TYPE_LIST[0],
+                showsUserLocation: false,
 
                 pointList: [
                     /*{longitude: 99.90637622773647, latitude: 13.739281519255695},
