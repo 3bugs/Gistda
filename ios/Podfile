@@ -49,9 +49,18 @@ target 'gistda' do
 
   pod 'RNSound', :path => '../node_modules/react-native-sound'
 
+  pod '@mauron85_react-native-background-geolocation', :path => '../node_modules/@mauron85/react-native-background-geolocation'
+
+  pod 'react-native-notifications', :path => '../node_modules/react-native-notifications'
+
+  pod 'LineSDK', '~> 5.0'
+  
+  pod 'Firebase/Messaging', '~> 6.13.0'
 end
 
 post_install do |installer|
+  fix_fb
+  
   installer.pods_project.targets.each do |target|
     if target.name == 'react-native-google-maps'
       target.build_configurations.each do |config|
@@ -62,4 +71,11 @@ post_install do |installer|
       target.remove_from_project
     end
   end
+end
+
+def fix_fb
+  node_modules_path = '../node_modules'
+  patched_text = File.read("./RCTFBSDKLoginButtonManager.m.patch")
+  
+  File.open("#{node_modules_path}/react-native-fbsdk/ios/RCTFBSDK/login/RCTFBSDKLoginButtonManager.m", "w") {|file| file.puts patched_text}
 end
