@@ -137,6 +137,7 @@
 
     .cover-image {
         flex: 1;
+        border-radius: 10;
     }
 
     .content {
