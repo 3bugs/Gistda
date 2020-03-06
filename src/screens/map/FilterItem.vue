@@ -61,13 +61,13 @@
                     :thumb-tint-color="SIDEBAR.sliderColor[province]"
                     :minimum-track-tint-color="SIDEBAR.sliderColor[province]"
                     :value="item.markerOpacity"
-                    :on-value-change="handleSliderValueChange"/>
+                    :on-sliding-complete="handleSliderValueChange"/>
             <slider v-if="Platform.OS === 'ios'"
                     class="slider-ios"
                     :minimum-track-tint-color="SIDEBAR.sliderColor[province]"
                     :value="item.markerOpacity"
                     :thumb-image="SIDEBAR.sliderThumb[province]"
-                    :on-value-change="handleSliderValueChange"/>
+                    :on-sliding-complete="handleSliderValueChange"/>
             <image :source="imageLightOn"
                    class="image-light"
                    resize-mode="contain"/>

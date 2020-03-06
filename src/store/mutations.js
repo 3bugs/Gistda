@@ -196,6 +196,7 @@ export async function SET_COORDINATES(state, {province, coordinateList, wmsList,
                     coord.visibility = categoryItem.markerVisibility;
                     coord.opacity = categoryItem.markerOpacity;
                     coord.image = categoryItem.image;
+                    coord.categoryType = categoryTypeItem.id;
 
                     state.markerList[PROVINCE_NAME_EN[province]].push(coord);
                 });

@@ -93,7 +93,7 @@
                         :tile-size="512"
                 />-->
 
-                <marker v-if="!isMeasureToolOn && !isMarkerToolOn"
+                <marker v-if="!isMeasureToolOn && !isMarkerToolOn && marker.geometry.type === 'Point'"
                         v-for="(marker, markerIndex) in markerList"
                         :coordinate="{
                             latitude: marker.geometry.coordinates[1],
@@ -105,6 +105,17 @@
                         :image="marker.image"
                         :opacity="marker.opacity"
                         :on-press="() => handleClickPoint(marker)"/>
+
+                <polyline
+                        v-if="!isMeasureToolOn && !isMarkerToolOn && marker.geometry.type === 'Linestring'"
+                        v-for="(marker, markerIndex) in markerList"
+                        :coordinates="getPolylineCoordinates(marker.geometry.coordinates)"
+                        :title="marker.properties.NAME_T"
+                        :strokeColor="marker.categoryType === 1 ? '#DB1A8F' : (marker.categoryType === 2 ? '#ED9749' : '#2CC2F7')"
+                        :strokeWidth="marker.active ? 4 : 2"
+                        :opacity="marker.opacity"
+                        :tappable="true"
+                        :on-press="() => handlePressPolyline(marker)"/>
 
                 <!--<view v-if="!isMeasureToolOn && !isMarkerToolOn"
                       v-for="(categoryType, categoryTypeIndex) in mapDataList">
