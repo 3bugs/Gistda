@@ -93,10 +93,23 @@
                         :tile-size="512"
                 />-->
 
-                <view v-if="!isMeasureToolOn && !isMarkerToolOn"
+                <marker v-if="!isMeasureToolOn && !isMarkerToolOn"
+                        v-for="(marker, markerIndex) in markerList"
+                        :coordinate="{
+                            latitude: marker.geometry.coordinates[1],
+                            longitude: marker.geometry.coordinates[0]
+                        }"
+                        :anchor="{x: 0.5, y: 0.77}"
+                        :title="marker.properties.NAME_T"
+                        :description="null"
+                        :image="marker.image"
+                        :opacity="marker.opacity"
+                        :on-press="() => handleClickPoint(marker)"/>
+
+                <!--<view v-if="!isMeasureToolOn && !isMarkerToolOn"
                       v-for="(categoryType, categoryTypeIndex) in mapDataList">
                     <view v-for="(category, categoryIndex) in categoryType.list">
-                        <!--wms-->
+                        &lt;!&ndash;wms&ndash;&gt;
                         <w-m-s-tile
                                 v-for="(wms, wmsIndex) in category.wmsList"
                                 v-if="category.markerVisibility"
@@ -105,7 +118,7 @@
                                 :opacity="category.markerOpacity"
                                 :tile-size="512"
                         />
-                        <!--จุด-->
+                        &lt;!&ndash;จุด&ndash;&gt;
                         <marker
                                 v-for="(marker, markerIndex) in category.markerList"
                                 v-if="category.markerVisibility && marker.geometry.type === 'Point'"
@@ -119,7 +132,7 @@
                                 :image="category.image"
                                 :opacity="category.markerOpacity"
                                 :on-press="() => handleClickPoint(marker)"/>
-                        <!--เส้น-->
+                        &lt;!&ndash;เส้น&ndash;&gt;
                         <polyline
                                 v-for="(marker, markerIndex) in category.markerList"
                                 v-if="category.markerVisibility && marker.geometry.type === 'Linestring'"
@@ -130,7 +143,7 @@
                                 :tappable="true"
                                 :on-press="() => handlePressPolyline(marker)"/>
 
-                        <!--heatmap-->
+                        &lt;!&ndash;heatmap&ndash;&gt;
                         <heatmap
                                 v-if="HEATMAP_CATEGORY_ID_RISK === category.id && category.markerVisibility && heatMapPointListRisk.length > 0"
                                 :opacity="category.markerOpacity"
@@ -140,7 +153,7 @@
                                 :opacity="category.markerOpacity"
                                 :points="heatMapPointListDisease"/>
                     </view>
-                </view>
+                </view>-->
 
                 <!--เส้นวัดระยะทาง-->
                 <polyline
@@ -797,6 +810,7 @@
 
     import {Dimensions, StyleSheet, Alert, PermissionsAndroid, Platform, BackHandler, Linking, TouchableOpacity} from 'react-native';
     import {Fragment} from 'react';
+    //import MapView from 'react-native-map-clustering';
     import MapView, {PROVIDER_GOOGLE, Marker, Polyline, Polygon, WMSTile, Heatmap, AnimatedRegion, MarkerAnimated} from 'react-native-maps';
     import {Menu, MenuProvider, MenuOptions, MenuOption, MenuTrigger, renderers} from 'react-native-popup-menu';
     import LinearGradient from 'react-native-linear-gradient';
@@ -865,6 +879,10 @@
             },
             mapDataList() {
                 return store.state.coordinateCategoryList[PROVINCE_NAME_EN[this.province]];
+            },
+            //รวม marker ทั้งหมด ทุก category เพื่อแก้ปัญหาการแสดง marker บน ios
+            markerList() {
+                return store.state.markerList[PROVINCE_NAME_EN[this.province]];
             },
             heatMapPointListRisk() {
                 return store.state.heatMapPointListRisk[PROVINCE_NAME_EN[this.province]];

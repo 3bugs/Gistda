@@ -66,6 +66,11 @@ const store = new Vuex.Store({
             [PROVINCE_NAME_EN[0]]: [],
             [PROVINCE_NAME_EN[1]]: [],
         },
+        //เอา marker ทั้งหมด ทุก category มากองรวมในนี้ เพื่อแก้ปัญหาการแสดง marker บน ios
+        markerList: {
+            [PROVINCE_NAME_EN[0]]: [],
+            [PROVINCE_NAME_EN[1]]: [],
+        },
         loadingCoordinates: false,
         loadingSingleCoordinate: false,
 

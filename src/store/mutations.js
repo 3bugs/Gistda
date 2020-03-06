@@ -189,6 +189,16 @@ export async function SET_COORDINATES(state, {province, coordinateList, wmsList,
             if (coordinateSparseArray[categoryItem.id]) {
                 //coords
                 categoryItem.markerList = coordinateSparseArray[categoryItem.id];
+
+                //เอา visibility, opacity, image จาก category ไปกำหนดให้แต่ละ marker
+                //เพื่อเอา marker ใส่ลง array 1 มิติ (แก้ปัญหาการแสดง marker บน ios)
+                coordinateSparseArray[categoryItem.id].forEach(coord => {
+                    coord.visibility = categoryItem.markerVisibility;
+                    coord.opacity = categoryItem.markerOpacity;
+                    coord.image = categoryItem.image;
+
+                    state.markerList[PROVINCE_NAME_EN[province]].push(coord);
+                });
             }
             if (wmsSparseArray[categoryItem.id]) {
                 //wms
@@ -217,6 +227,10 @@ export function CLEAR_COORDINATES(state, {province, categoryId, callback}) {
             }
         });
     });
+
+    state.markerList[PROVINCE_NAME_EN[province]] = state.markerList[PROVINCE_NAME_EN[province]].filter(
+        coord => coord.properties.CATEGORY !== categoryId
+    );
 }
 
 function findLatLng(provinceIndex, coordinate) {
@@ -460,6 +474,19 @@ export function SET_NEWS_DETAILS(state, {newsDetails}) {
 export function SET_MARKER_OPACITY(state, {id, index, typeIndex, opacity}) {
     state.coordinateCategoryList[PROVINCE_NAME_EN[state.province]]
         [typeIndex].list[index].markerOpacity = opacity;
+
+    /*state.markerList[PROVINCE_NAME_EN[state.province]].forEach(coord => {
+        if (coord.properties.CATEGORY === id) {
+            coord.opacity = opacity;
+        }
+    });*/
+
+    state.markerList[PROVINCE_NAME_EN[state.province]] = state.markerList[PROVINCE_NAME_EN[state.province]].map(coord => {
+        if (coord.properties.CATEGORY === id) {
+            coord.opacity = opacity;
+        }
+        return coord;
+    });
 
     /*state.coordinateCategoryList.forEach(categoryType => {
         categoryType.list.forEach(category => {
