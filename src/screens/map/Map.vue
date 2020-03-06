@@ -112,10 +112,24 @@
                         :coordinates="getPolylineCoordinates(marker.geometry.coordinates)"
                         :title="marker.properties.NAME_T"
                         :strokeColor="marker.categoryType === 1 ? '#DB1A8F' : (marker.categoryType === 2 ? '#ED9749' : '#2CC2F7')"
-                        :strokeWidth="marker.active ? 4 : 2"
+                        :strokeWidth="4"
                         :opacity="marker.opacity"
-                        :tappable="true"
+                        :tappable="false"
                         :on-press="() => handlePressPolyline(marker)"/>
+
+                <view v-if="!isMeasureToolOn && !isMarkerToolOn"
+                      v-for="(categoryType, categoryTypeIndex) in mapDataList">
+                    <view v-for="(category, categoryIndex) in categoryType.list">
+                        <w-m-s-tile
+                                v-for="(wms, wmsIndex) in category.wmsList"
+                                v-if="category.markerVisibility"
+                                :url-template="getWmsLink(wms)"
+                                :_z-index="100"
+                                :opacity="category.markerOpacity"
+                                :tile-size="512"
+                        />
+                    </view>
+                </view>
 
                 <!--<view v-if="!isMeasureToolOn && !isMarkerToolOn"
                       v-for="(categoryType, categoryTypeIndex) in mapDataList">
