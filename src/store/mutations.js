@@ -204,6 +204,15 @@ export async function SET_COORDINATES(state, {province, coordinateList, wmsList,
             if (wmsSparseArray[categoryItem.id]) {
                 //wms
                 categoryItem.wmsList = wmsSparseArray[categoryItem.id];
+
+                wmsSparseArray[categoryItem.id].forEach(wms => {
+                    wms.visibility = categoryItem.markerVisibility;
+                    wms.opacity = categoryItem.markerOpacity;
+                    //wms.image = categoryItem.image;
+                    wms.categoryType = categoryTypeItem.id;
+
+                    state.wmsList[PROVINCE_NAME_EN[province]].push(wms);
+                });
             }
         });
     });
@@ -231,6 +240,9 @@ export function CLEAR_COORDINATES(state, {province, categoryId, callback}) {
 
     state.markerList[PROVINCE_NAME_EN[province]] = state.markerList[PROVINCE_NAME_EN[province]].filter(
         coord => coord.properties.CATEGORY !== categoryId
+    );
+    state.wmsList[PROVINCE_NAME_EN[province]] = state.wmsList[PROVINCE_NAME_EN[province]].filter(
+        wms => parseInt(wms.CATEGORY) !== categoryId
     );
 }
 
@@ -487,6 +499,12 @@ export function SET_MARKER_OPACITY(state, {id, index, typeIndex, opacity}) {
             coord.opacity = opacity;
         }
         return coord;
+    });
+    state.wmsList[PROVINCE_NAME_EN[state.province]] = state.wmsList[PROVINCE_NAME_EN[state.province]].map(wms => {
+        if (parseInt(wms.CATEGORY) === id) {
+            wms.opacity = opacity;
+        }
+        return wms;
     });
 
     /*state.coordinateCategoryList.forEach(categoryType => {

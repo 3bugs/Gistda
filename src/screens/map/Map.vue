@@ -117,19 +117,13 @@
                         :tappable="false"
                         :on-press="() => handlePressPolyline(marker)"/>
 
-                <view v-if="!isMeasureToolOn && !isMarkerToolOn"
-                      v-for="(categoryType, categoryTypeIndex) in mapDataList">
-                    <view v-for="(category, categoryIndex) in categoryType.list">
-                        <w-m-s-tile
-                                v-for="(wms, wmsIndex) in category.wmsList"
-                                v-if="category.markerVisibility"
-                                :url-template="getWmsLink(wms)"
-                                :_z-index="100"
-                                :opacity="category.markerOpacity"
-                                :tile-size="512"
-                        />
-                    </view>
-                </view>
+                <w-m-s-tile
+                        v-if="!isMeasureToolOn && !isMarkerToolOn"
+                        v-for="(wms, wmsIndex) in wmsList"
+                        :url-template="getWmsLink(wms)"
+                        :_z-index="100"
+                        :opacity="wms.opacity"
+                        :tile-size="512"/>
 
                 <!--<view v-if="!isMeasureToolOn && !isMarkerToolOn"
                       v-for="(categoryType, categoryTypeIndex) in mapDataList">
@@ -908,6 +902,9 @@
             //รวม marker ทั้งหมด ทุก category เพื่อแก้ปัญหาการแสดง marker บน ios
             markerList() {
                 return store.state.markerList[PROVINCE_NAME_EN[this.province]];
+            },
+            wmsList() {
+                return store.state.wmsList[PROVINCE_NAME_EN[this.province]];
             },
             heatMapPointListRisk() {
                 return store.state.heatMapPointListRisk[PROVINCE_NAME_EN[this.province]];

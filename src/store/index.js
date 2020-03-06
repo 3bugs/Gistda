@@ -71,6 +71,10 @@ const store = new Vuex.Store({
             [PROVINCE_NAME_EN[0]]: [],
             [PROVINCE_NAME_EN[1]]: [],
         },
+        wmsList: {
+            [PROVINCE_NAME_EN[0]]: [],
+            [PROVINCE_NAME_EN[1]]: [],
+        },
         loadingCoordinates: false,
         loadingSingleCoordinate: false,
 
