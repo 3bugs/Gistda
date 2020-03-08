@@ -15,7 +15,7 @@
         <view class="container"
               :style="{marginBottom: BOTTOM_NAV.height}">
             <map-view
-                    :provider="Platform.OS === 'android' ? PROVIDER_GOOGLE : null"
+                    :provider="Platform.OS === 'android' ? PROVIDER_GOOGLE : PROVIDER_GOOGLE"
                     ref="mapView"
                     class="map-view"
                     :initial-region="{
@@ -93,17 +93,10 @@
                         :tile-size="512"
                 />-->
 
-                <marker v-if="!isMeasureToolOn && !isMarkerToolOn && marker.geometry.type === 'Point'"
+                <custom-marker
+                        v-if="!isMeasureToolOn && !isMarkerToolOn && marker.geometry.type === 'Point'"
                         v-for="(marker, markerIndex) in markerList"
-                        :coordinate="{
-                            latitude: marker.geometry.coordinates[1],
-                            longitude: marker.geometry.coordinates[0]
-                        }"
-                        :anchor="{x: 0.5, y: 0.77}"
-                        :title="marker.properties.NAME_T"
-                        :description="null"
-                        :image="marker.image"
-                        :opacity="marker.opacity"
+                        :marker="marker"
                         :on-press="() => handleClickPoint(marker)"/>
 
                 <polyline
@@ -825,6 +818,7 @@
     import {doGetAddressFromCoord} from '../../store/fetch';
     import MeasureLabel from './MeasureLabel';
     import SearchBox from './SearchBox';
+    import CustomMarker from './CustomMarker';
     //import MarkerDetails from '../map/MarkerDetails';
 
     import {Dimensions, StyleSheet, Alert, PermissionsAndroid, Platform, BackHandler, Linking, TouchableOpacity} from 'react-native';
@@ -884,7 +878,7 @@
         components: {
             Fragment, MapView, Marker, Polyline, Polygon, WMSTile, Heatmap, MarkerAnimated,
             LinearGradient, CardView, Drawer, FilterPanel, Slider, BottomSheet,
-            SliderBox, MeasureLabel, SearchBox,
+            SliderBox, MeasureLabel, SearchBox, CustomMarker,
             Menu, MenuProvider, MenuOptions, MenuOption, MenuTrigger,
         },
         props: {

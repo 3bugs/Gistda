@@ -158,6 +158,7 @@ repositories {
 }
 
 dependencies {
+    implementation project(':react-native-notifications')
     implementation project(':react-native-sound')
     implementation project(':react-native-firebase')
     // Firebase dependencies
