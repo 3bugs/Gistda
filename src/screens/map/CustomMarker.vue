@@ -5,19 +5,18 @@
             }"
             :anchor="{x: 0.5, y: 0.77}"
             :title="marker.properties.NAME_T"
-            :icon="require('../../../assets/images/sidebar/ic_filter_basic_government.png')"
             :description="null"
             :opacity="marker.opacity"
             :tracks-view-changes="tracksViewChanges"
             :on-press="onPress">
-        <!--<image :source="{uri: marker.image}"
+        <image :source="{uri: marker.image}"
                resize-mode="contain"
                :style="{
                     width: 36,
                     height: 39,
                }"
                :fade-duration="0"
-               :on-load="stopTrackingViewChanges"/>-->
+               :on-load="stopTrackingViewChanges"/>
     </marker>
 </template>
 
