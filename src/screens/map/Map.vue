@@ -26,7 +26,7 @@
                     }"
                     :style="{marginTop: MAP_HEADER.height}"
                     :rotate-enabled="false"
-                    :showsTraffic="true"
+                    :showsTraffic="showsTraffic"
                     :showsUserLocation="watchId !== null"
                     :mapType="mapType"
                     :on-map-ready="handleMapReady"
@@ -820,7 +820,7 @@
     import {
         DEBUG, MAP_HEADER, BOTTOM_NAV, PROVINCE_NAME_EN, DIMENSION,
         PROVINCE_DIMENSION, COLOR_PRIMARY, COLOR_PRIMARY_DARK,
-        HEATMAP_CATEGORY_ID_RISK, HEATMAP_CATEGORY_ID_DISEASE,
+        HEATMAP_CATEGORY_ID_RISK, HEATMAP_CATEGORY_ID_DISEASE, TRAFFIC_CATEGORY_ID,
     } from '../../constants';
     import {requestAndroidPermissions, getCurrentLocation} from '../../constants/utils'
     import {doGetAddressFromCoord} from '../../store/fetch';
@@ -914,6 +914,20 @@
             heatMapPointListDisease() {
                 return store.state.heatMapPointListDisease[PROVINCE_NAME_EN[this.province]];
             },
+            showsTraffic() {
+                if (store.state.coordinateCategoryList[PROVINCE_NAME_EN[this.province]].length === 0) return false;
+
+                const categoryList = store.state.coordinateCategoryList[PROVINCE_NAME_EN[this.province]][0].list.filter(
+                    category => (category.id === TRAFFIC_CATEGORY_ID)
+                );
+                if (categoryList.length > 0) {
+                    if (categoryList[0].showCategory) {
+                        return categoryList[0].markerVisibility;
+                    }
+                    return false;
+                }
+                return false;
+            },
             drawerOpen() {
                 return store.state.drawerOpen;
             },
@@ -1004,6 +1018,7 @@
                 scaleText: null,
                 mapType: MAP_TYPE_LIST[0],
                 showsUserLocation: false,
+                //showsTraffic: false,
 
                 pointList: [
                     /*{longitude: 99.90637622773647, latitude: 13.739281519255695},

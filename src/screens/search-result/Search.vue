@@ -248,14 +248,17 @@
                     const textContent = this.textContent.trim();
                     const part = textContent.split(COMMA);
 
-                    let lat = part[0];
-                    let lng = part[1];
+                    let lat = parseFloat(part[0]);
+                    let lng = parseFloat(part[1]);
 
                     if (textContent.indexOf(COMMA) === -1
                         || part.length !== 2
-                        || isNaN(parseFloat(part[0]))
-                        || isNaN(parseFloat(part[1]))) {
-                        Alert.alert('ผิดพลาด', 'รูปแบบไม่ถูกต้อง ให้กรอกค่าในรูปแบบ "ละติจูด , ลองจิจูด" เช่น\n\n15.7810 , 104.1192');
+                        || isNaN(lat)
+                        || isNaN(lng)
+                        || lat > 90 || lat < -90
+                        || lng > 180 || lat < -180) {
+                        Alert.alert('ผิดพลาด', 'รูปแบบไม่ถูกต้อง ให้กรอกค่าในรูปแบบ "ละติจูด , ลองจิจูด" โดยที่\n\n-90 <= ละติจูด <= 90 และ\n-180 <= ลองจิจูด <= 180\n\nเช่น\n\n15.7810 , 104.1192');
+                        this.isLoading = false;
                         return;
                     }
 
@@ -266,7 +269,9 @@
                         longitude: lng,
                     });
 
-                    this.isLoading = false;
+                    setTimeout(() => {
+                        this.isLoading = false;
+                    }, 1000);
                 }
             },
             handleClickAutocompleteItem: async function (item) {

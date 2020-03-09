@@ -1,4 +1,4 @@
-import {PROVINCE_NAME_EN, INCIDENT_FORM_DATA, HEATMAP_CATEGORY_ID_RISK, HEATMAP_CATEGORY_ID_DISEASE} from '../constants/index';
+import {PROVINCE_NAME_EN, INCIDENT_FORM_DATA, HEATMAP_CATEGORY_ID_RISK, HEATMAP_CATEGORY_ID_DISEASE, TRAFFIC_CATEGORY_ID} from '../constants/index';
 import {getLocalCategoryData, setLocalCategoryData, getSeenAlarmList, setSeenAlarmList} from './db';
 import {getSubDistrictDataList} from '../data/sub_district.geo';
 import {getDistance} from 'geolib';
@@ -93,7 +93,12 @@ async function loadMapDataPref(province, coordinateCategoryList) {
                 category.markerOpacity = localCategoryData.markerOpacity;
             }
 
-            category.markerVisibility = category.default;
+            if (category.id === TRAFFIC_CATEGORY_ID) {
+                category.showCategory = category.default;
+                category.markerVisibility = false;
+            } else {
+                category.markerVisibility = category.default;
+            }
             if (localCategoryData && (localCategoryData.markerVisibility != null)) {
                 category.markerVisibility = localCategoryData.markerVisibility;
             }

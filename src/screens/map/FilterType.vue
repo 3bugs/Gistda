@@ -31,6 +31,7 @@
             </view>
         </flat-list>-->
         <filter-item
+                v-if="(filter.id !== TRAFFIC_CATEGORY_ID) || filter.showCategory"
                 v-for="(filter, index) in item.list"
                 :item="filter"
                 :index="index"
@@ -40,7 +41,7 @@
 
 <script>
     import store from '../../store';
-    import {DEBUG, SIDEBAR} from '../../constants';
+    import {DEBUG, SIDEBAR, TRAFFIC_CATEGORY_ID} from '../../constants';
 
     import FilterItem from './FilterItem';
 
@@ -66,7 +67,7 @@
         },
         data: () => {
             return {
-                DEBUG, SIDEBAR,
+                DEBUG, SIDEBAR, TRAFFIC_CATEGORY_ID,
                 imageCategoryInfo,
             };
         },

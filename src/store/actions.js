@@ -24,7 +24,7 @@ import {
     doGetAlarmDetails, doLoginSocial,
 } from './fetch';
 
-import {INCIDENT_FORM_DATA, PROVINCE_NAME_EN} from '../constants/index';
+import {INCIDENT_FORM_DATA, PROVINCE_NAME_EN, TRAFFIC_CATEGORY_ID} from '../constants/index';
 import {DISTRICT_DATA} from '../constants/district';
 import User from '../model/User';
 import {setUser, getUser} from '../store/db';
@@ -88,7 +88,9 @@ export async function SET_PROVINCE({commit, state}, {province, callback}) {
                     categoryType.list.forEach(category => {
                         // ถ้า category ถูกเลือกไว้ และยังไม่มีข้อมูลแคช ก็จะดึง coords จาก api
                         if (category.markerVisibility /*&& !category.markerList*/) {
-                            idList.push(category.id);
+                            //if (category.id !== TRAFFIC_CATEGORY_ID) {
+                                idList.push(category.id);
+                            //}
                         }
                     });
                 });
