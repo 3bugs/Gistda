@@ -31,7 +31,7 @@
                             :on-submit-editing="handleClickSearch"
                             :on-touch-start="() => this.$refs['searchMenu'].open()"
                             _placeholder="mapCurrentRegion ? `${mapCurrentRegion.latitude.toFixed(6)}, ${mapCurrentRegion.longitude.toFixed(6)}` : ''"
-                            placeholder="ค้นหา"
+                            :placeholder="placeHolderText ? placeHolderText : 'ค้นหา'"
                             placeholder-text-color="#aaa"
                             :editable="false"/>
                     <view class="divider"/>
@@ -39,9 +39,9 @@
                     <touchable-opacity
                             v-if="!isSearching"
                             class="list-icon-touchable"
-                            :on-press="handleClickSearch">
+                            :on-press="handleClickClearLatLngSearch">
                         <!--MAP_HEADER.listIcon[province]-->
-                        <image :source="imageSearch"
+                        <image :source="placeHolderText ? imageClose : imageSearch"
                                class="list-icon"
                                resize-mode="contain"/>
                     </touchable-opacity>
@@ -88,6 +88,7 @@
     import {doSearchLocal} from "../../store/fetch";
 
     import imageSearch from '../../../assets/images/ic_search.png';
+    import imageClose from '../../../assets/images/ic_close.png';
 
     const {Popover} = renderers;
 
@@ -99,7 +100,13 @@
         props: {
             navigation: {
                 type: Object
-            }
+            },
+            onSearchLatLng: {
+                type: Function
+            },
+            onClearSearchLatLng: {
+                type: Function
+            },
         },
         computed: {
             province() {
@@ -112,7 +119,7 @@
         data: () => {
             return {
                 DEBUG, COLOR_PRIMARY, MAP_HEADER, PROVINCE_NAME_TH,
-                Dimensions, TouchableOpacity, imageSearch,
+                Dimensions, TouchableOpacity, imageSearch, imageClose,
                 Popover,
                 _menuOptionList: [
                     'ค้นหา',
@@ -129,6 +136,7 @@
                     'ค้นหาด้วยพิกัด (ละติจูด, ลองจิจูด)',
                 ],
                 searchTerm: '',
+                placeHolderText: null,
             };
         },
         methods: {
@@ -156,12 +164,21 @@
                             case 2:
                                 this.navigation.navigate('Search', {
                                     searchType: 'latlng',
-                                    currentLocation
+                                    currentLocation,
+                                    onSearch: this.handleSearchLatLng,
                                 });
                                 break;
                         }
                     }
                 });
+            },
+            handleSearchLatLng: function (coord) {
+                this.placeHolderText = `${coord.latitude} , ${coord.longitude}`;
+                this.onSearchLatLng(coord);
+            },
+            handleClickClearLatLngSearch: function () {
+                this.placeHolderText = null;
+                this.onClearSearchLatLng();
             },
             _handleClickSearch: function (index) {
                 if (this.searchTerm && this.searchTerm.trim().length > 0) {

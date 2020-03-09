@@ -204,6 +204,12 @@
                         :coordinate="point"
                         :draggable="false"/>
 
+                <marker
+                        v-if="searchLatLngPoint"
+                        :coordinate="searchLatLngPoint"
+                        :draggable="false"
+                        :on-press="handleClickLatLngPoint"/>
+
                 <!--marker ตำแหน่งปัจจุบัน-->
                 <!--<marker-animated
                         ref="locationMarker"
@@ -513,7 +519,9 @@
                 </linear-gradient>
 
                 <view class="search-input-container">
-                    <search-box :navigation="navigation"/>
+                    <search-box :navigation="navigation"
+                                :on-search-lat-lng="handleSearchLatLng"
+                                :on-clear-search-lat-lng="handleClearSearchLatLng"/>
                 </view>
             </view>
 
@@ -1002,6 +1010,7 @@
                     {longitude: 99.93837732821703, latitude: 13.77968939358877}*/
                 ],
                 point: null,
+                searchLatLngPoint: null,
                 pointAddress: '',
                 justClickCurrentLocation: false,
 
@@ -1053,6 +1062,29 @@
 
                 this.navigation.navigate('MarkerDetails', {marker});
             },
+            handleSearchLatLng: function (coord) {
+                //alert(JSON.stringify(coord));
+                const lat = parseFloat(coord.latitude);
+                const lng = parseFloat(coord.longitude);
+
+                this.searchLatLngPoint = {
+                    latitude: lat,
+                    longitude: lng,
+                };
+
+                this.$refs['mapView'].animateToRegion({
+                    latitude: lat,
+                    longitude: lng,
+                    latitudeDelta: 0.05,
+                    longitudeDelta: 0.05,
+                });
+            },
+            handleClearSearchLatLng: function () {
+                this.searchLatLngPoint = null;
+            },
+            handleClickLatLngPoint: function () {
+                this.showPointDetails(this.searchLatLngPoint);
+            },
             handleClickCloseBottomSheet: function () {
                 this.$refs['markerDetails'].snapTo(2);
             },
@@ -1087,7 +1119,7 @@
                             "CATEGORY": "12",
                             "url": "http://wms.ngis.go.th:8081/geoserver/FGDS_YASOTHON/wms?service=wms&version=1.3.0&request=GetCapabilities",
                             "layers": [
-                                "L14_แนวคลองชลประทานจังหวัดยโสธร"
+                                "L14_แนวคลองชลประทานจังหวัดยโสธร"ส่วน
                             ]
                         }*/
                         const wmsList = category.wmsList;
@@ -1098,7 +1130,7 @@
             handleMapReady: function () {
                 //alert('Map ready!');
             },
-            handleClickMap: async function (coord) {
+            handleClickMap: function (coord) {
                 //console.log(coord);
 
                 if (this.isMeasureToolOn) {
@@ -1108,46 +1140,49 @@
 
                     console.log(this.pointList);
                 } else if (this.isMarkerToolOn) {
-                    const latitudeDelta = this.mapCurrentRegion ? this.mapCurrentRegion.latitudeDelta : 0.005;
-                    const longitudeDelta = this.mapCurrentRegion ? this.mapCurrentRegion.longitudeDelta : 0.005;
-                    this.$refs['mapView'].animateToRegion({
-                        latitude: coord.latitude,
-                        longitude: coord.longitude,
-                        latitudeDelta,
-                        longitudeDelta,
-                    });
-                    const apiResult = await doGetAddressFromCoord(coord.latitude, coord.longitude);
-
-                    //this.$refs['markerDetails'].snapTo(1);
-                    this.point = coord;
-                    if (apiResult.success) {
-                        this.pointAddress = apiResult.data.address;
-                    } else {
-                        this.pointAddress = `${coord.latitude}, ${coord.longitude}`;
-                    }
-
-                    const title = apiResult.success ? apiResult.data.address : `${coord.latitude.toFixed(6)}, ${coord.longitude.toFixed(6)}`;
-                    const marker = {
-                        type: 'Feature',
-                        id: 17678,
-                        geometry: {
-                            type: 'Point',
-                            coordinates: [
-                                coord.longitude,
-                                coord.latitude
-                            ]
-                        },
-                        properties: {
-                            NAME_T: title,
-                            DESCRIPTION_T: ``,
-                            LOCATION_T: `ละติจูด ${coord.latitude.toFixed(6)}, ลองจิจูด ${coord.longitude.toFixed(6)}`,
-                            CATEGORY: 0,
-                            P_CODE: 0,
-                            IMAGES: []
-                        }
-                    };
-                    this.navigation.navigate('MarkerDetails', {marker});
+                    this.showPointDetails(coord);
                 }
+            },
+            showPointDetails: async function (coord) {
+                const latitudeDelta = this.mapCurrentRegion ? this.mapCurrentRegion.latitudeDelta : 0.05;
+                const longitudeDelta = this.mapCurrentRegion ? this.mapCurrentRegion.longitudeDelta : 0.05;
+                this.$refs['mapView'].animateToRegion({
+                    latitude: coord.latitude,
+                    longitude: coord.longitude,
+                    latitudeDelta,
+                    longitudeDelta,
+                });
+                const apiResult = await doGetAddressFromCoord(coord.latitude, coord.longitude);
+
+                //this.$refs['markerDetails'].snapTo(1);
+                this.point = coord;
+                if (apiResult.success) {
+                    this.pointAddress = apiResult.data.address;
+                } else {
+                    this.pointAddress = `${coord.latitude}, ${coord.longitude}`;
+                }
+
+                const title = apiResult.success ? apiResult.data.address : `${coord.latitude.toFixed(6)}, ${coord.longitude.toFixed(6)}`;
+                const marker = {
+                    type: 'Feature',
+                    id: 17678,
+                    geometry: {
+                        type: 'Point',
+                        coordinates: [
+                            coord.longitude,
+                            coord.latitude
+                        ]
+                    },
+                    properties: {
+                        NAME_T: title,
+                        DESCRIPTION_T: ``,
+                        LOCATION_T: `ละติจูด ${coord.latitude.toFixed(6)}, ลองจิจูด ${coord.longitude.toFixed(6)}`,
+                        CATEGORY: 0,
+                        P_CODE: 0,
+                        IMAGES: []
+                    }
+                };
+                this.navigation.navigate('MarkerDetails', {marker});
             },
             handleRegionChange: function (region) {
                 console.log(JSON.stringify(this.mapCurrentRegion));

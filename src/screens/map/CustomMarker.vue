@@ -12,8 +12,8 @@
         <image :source="{uri: marker.image}"
                resize-mode="contain"
                :style="{
-                    width: 36,
-                    height: 39,
+                    width: 40, //42, //36,
+                    height: 43.33, //45.5, //39,
                }"
                :fade-duration="0"
                :on-load="stopTrackingViewChanges"/>
