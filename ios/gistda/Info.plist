@@ -59,6 +59,11 @@
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>LineSDKConfig</key>
+	<dict>
+		<key>ChannelID</key>
+		<string>1653799230</string>
+	</dict>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
@@ -80,6 +85,8 @@
 	<string>คุณต้องระบุตำแหน่งของเหตุการณ์หรือร้านอาหารที่จะแจ้งข้อมูล แอปจะแสดงตำแหน่งเริ่มต้นในแผนที่เป็นตำแหน่งปัจจุบันของคุณ</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>คุณต้องระบุตำแหน่งของเหตุการณ์หรือร้านอาหารที่จะแจ้งข้อมูล แอปจะแสดงตำแหน่งเริ่มต้นในแผนที่เป็นตำแหน่งปัจจุบันของคุณ</string>
+	<key>NSMotionUsageDescription</key>
+	<string>แอปต้องการตรวจสอบการเคลื่อนไหวของคุณ เพื่อตรวจสอบความเร็วในการเดินทาง และสามารถแจ้งให้คุณทราบเมื่อคุณเดินทางหรือขับรถเร็วเกินไปได้</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>เมื่อคุณถ่ายรูปเพื่อแจ้งเหตุหรือแจ้งร้านอาหารปลอดภัย แอปจะบันทึกรูปเก็บไว้ในคลังรูปภาพ</string>
 	<key>NSPhotoLibraryUsageDescription</key>
@@ -107,6 +114,11 @@
 		<string>SimpleLineIcons.ttf</string>
 		<string>Zocial.ttf</string>
 	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>location</string>
+		<string>remote-notification</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
@@ -123,10 +135,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>LineSDKConfig</key>
-	<dict>
-		<key>ChannelID</key>
-		<string>1653799230</string>
-	</dict>
 </dict>
 </plist>
