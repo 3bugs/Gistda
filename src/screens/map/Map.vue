@@ -921,7 +921,9 @@
                     category => (category.id === TRAFFIC_CATEGORY_ID)
                 );
                 if (categoryList.length > 0) {
+                    // showCategory แสดง/ไม่แสดง category นั้นในแถบเมนู
                     if (categoryList[0].showCategory) {
+                        // markerVisibility แสดง/ไม่แสดงเส้นสีจราจร
                         return categoryList[0].markerVisibility;
                     }
                     return false;
