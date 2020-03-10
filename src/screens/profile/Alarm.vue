@@ -110,6 +110,25 @@
             handleClickItem: function (item) {
                 console.log('Alarm ID: ', item.id);
 
+                /*array(
+                    1 => "รอตรวจสอบ",
+                    2 => "ตรวจสอบแล้ว / เผยแพร่",
+                    3 => "เหตุการณ์สิ้นสุดแล้ว",
+                    0 => "ยกเลิก"
+                )*/
+                const statusId = parseInt(item.status.id);
+                switch (statusId) {
+                    case 0:
+                        Alert.alert('แจังเตือน', 'การแจ้งเหตุนี้ถูกยกเลิก');
+                        return;
+                    case 1:
+                        Alert.alert('แจังเตือน', 'การแจ้งเหตุนี้อยู่ระหว่างการตรวจสอบ');
+                        return;
+                    case 3:
+                        Alert.alert('แจังเตือน', 'เหตุการณ์นี้สิ้นสุดแล้ว');
+                        return;
+                }
+
                 store.dispatch('FETCH_ALARM_DETAILS', {
                     alarmId: item.id,
                     callback: (success, alarmDetails) => {
