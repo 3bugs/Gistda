@@ -59,6 +59,7 @@ export const COLOR_PRIMARY_DARK = ['#09097e', '#ed4100'];
 export const HEATMAP_CATEGORY_ID_RISK = 2;
 export const HEATMAP_CATEGORY_ID_DISEASE = 11;
 export const TRAFFIC_CATEGORY_ID = 52;
+export const RISK_POINT_CATEGORY_ID = 6;
 
 export const SPEED_MONITOR_THRESHOLD = 90; // หน่วย km/h
 export const SPEED_ALERT_MIN_INTERVAL = 10; // วินาที

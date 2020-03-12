@@ -903,6 +903,7 @@
             },
             //รวม marker ทั้งหมด ทุก category เพื่อแก้ปัญหาการแสดง marker บน ios
             markerList() {
+                console.log('********** markerList() is called. **********');
                 return store.state.markerList[PROVINCE_NAME_EN[this.province]];
             },
             wmsList() {

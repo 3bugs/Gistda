@@ -95,9 +95,15 @@ function doAddUserTracking()
             $currentTimestamp = $clientTimestamp + 0;
 
             $distanceMeters = floor(getDistance($lastLatitude, $lastLongitude, $currentLat, $currentLng, 'M'));
-            $elapsedTimeInSeconds = ($currentTimestamp - $lastTimestamp) / 1000;
-            $speed = floor(($distanceMeters * 3.6) / $elapsedTimeInSeconds); // ความเร็ว ไม่สนใจทศนิยม
+            $elapsedTimeSeconds = ($currentTimestamp - $lastTimestamp) / 1000;
+            if ($elapsedTimeSeconds < 5) {
+                $response[KEY_ERROR_CODE] = ERROR_CODE_SUCCESS;
+                $response[KEY_ERROR_MESSAGE] = 'ignore ข้อมูล เนื่องจากเวลาน้อยกว่า 5 วินาที';
+                $response[KEY_ERROR_MESSAGE_MORE] = '';
+                return;
+            }
 
+            $speed = floor(($distanceMeters * 3.6) / $elapsedTimeSeconds); // ความเร็ว ไม่สนใจทศนิยม
             if ($speed > SPEED_LIMIT) {
                 $overLimit = 1;
 

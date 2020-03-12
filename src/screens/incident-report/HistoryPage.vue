@@ -14,7 +14,8 @@
                         :image="args.item.image"
                         :title="args.item.detail"
                         :details="args.item.detail"
-                        :show-date="false"
+                        :date="formatDateTime(args.item.date_create)"
+                        :show-date="true"
                         :on-click="() => handleClickItem(args.item)"/>
             </view>
             <!--<view render-prop="ListEmptyComponent"
@@ -42,6 +43,7 @@
 <script>
     import store from '../../store';
     import {DEBUG, APP_NAME, PROVINCE_NAME_EN, BOTTOM_NAV, COLOR_PRIMARY, COLOR_PRIMARY_DARK} from '../../constants';
+    import {formatDateTime} from '../../constants/utils';
     import NoData from '../../components/NoData';
     import ListItem from '../../components/ListItem';
 
@@ -82,6 +84,7 @@
         data: () => {
             return {
                 DEBUG, APP_NAME, BOTTOM_NAV, COLOR_PRIMARY, COLOR_PRIMARY_DARK,
+                formatDateTime,
             };
         },
         methods: {

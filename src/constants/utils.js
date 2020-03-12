@@ -64,3 +64,23 @@ function doGetCurrentLocation(callback) {
         Alert.alert('ผิดพลาด', 'เกิดปัญหาในการตรวจสอบตำแหน่งปัจจุบันของคุณ: ' + e);
     }
 }
+
+export function formatDateTime(dateTimeString) {
+    try {
+        const dateTimePart = dateTimeString.split(' ');
+        const datePart = dateTimePart[0].split('/');
+        const timePart = dateTimePart[1].split(':');
+
+        const monthNames = [
+            'ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.',
+            'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'
+        ];
+
+        const formatDate = `${parseInt(datePart[0])} ${monthNames[parseInt(datePart[1] - 1)]} ${parseInt(datePart[2]) + 543}`;
+        const formatTime = `${timePart[0]}.${timePart[1]} น.`;
+        return `${formatDate} ${formatTime}`;
+    } catch (e) {
+        console.log('Error parsing date/time!!!');
+        return dateTimeString;
+    }
+}

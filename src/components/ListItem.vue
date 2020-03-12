@@ -40,7 +40,7 @@
                 </text>
                 <text class="caption"
                       :numberOfLines="showDate ? 2 : 3">
-                    {{details.trim().length === 0 ? '(ไม่มีรายละเอียด)' : details.trim()}}
+                    {{details.trim().length === 0 ? '(ไม่มีรายละเอียด)' : details.trim().concat('\n‌‌').concat(INVISIBLE_CHAR)}}
                 </text>
                 <text class="date"
                       v-if="showDate && date && date.trim().length > 0">
@@ -66,6 +66,8 @@
     import {StyleSheet} from 'react-native';
     import CardView from 'react-native-cardview';
     import Ripple from 'react-native-material-ripple';
+
+    const INVISIBLE_CHAR = '‌‌ ';
 
     export default {
         components: {CardView, Ripple},
@@ -111,10 +113,12 @@
         },
         data: () => {
             return {
-                StyleSheet, COLOR_PRIMARY, DIMENSION
+                StyleSheet, COLOR_PRIMARY, DIMENSION,
+                INVISIBLE_CHAR,
             };
         },
-        methods: {},
+        methods: {
+        },
     }
 </script>
 
