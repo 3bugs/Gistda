@@ -4,6 +4,7 @@ define('SENDER_ID', '421121737463');
 define('SPEED_LIMIT', 30);
 
 require_once 'global.php';
+require_once 'district_data.php';
 require_once 'vendor/autoload.php';
 
 error_reporting(E_ERROR | E_PARSE);
@@ -35,12 +36,14 @@ $db->set_charset("utf8");
 
 //sleep(1); //todo:
 
+use GuzzleHttp\Client;
+
 //Something to write to txt log
-$log = "User: " . $_SERVER['REMOTE_ADDR'] . ' - ' . date("F j, Y, g:i a") . PHP_EOL .
+/*$log = "User: " . $_SERVER['REMOTE_ADDR'] . ' - ' . date("F j, Y, g:i a") . PHP_EOL .
     "Action: " . $action . PHP_EOL .
-    "-------------------------" . PHP_EOL;
+    "-------------------------" . PHP_EOL;*/
 //Save string to log, use FILE_APPEND to append.
-file_put_contents('./log/log_' . date("j.n.Y") . '.txt', $log, FILE_APPEND);
+//file_put_contents('./log/log_' . date("j.n.Y") . '.txt', $log, FILE_APPEND);
 
 switch ($action) {
     case 'add_user_tracking':
@@ -48,6 +51,9 @@ switch ($action) {
         break;
     case 'test_fcm':
         doTestFcm();
+        break;
+    case 'test_api':
+        doTestApi();
         break;
     default:
         $response[KEY_ERROR_CODE] = ERROR_CODE_ERROR;
@@ -186,6 +192,59 @@ function doTestFcm()
     } catch (Exception $e) {
         $response[KEY_ERROR_CODE] = ERROR_CODE_ERROR;
         $response[KEY_ERROR_MESSAGE] = 'Error sending FCM: ' . $e->getMessage();
+        $response[KEY_ERROR_MESSAGE_MORE] = '';
+    }
+}
+
+function doTestApi()
+{
+    global $response, $districtData;
+
+    $client = new Client([
+        'base_uri' => 'https://safesafe.ngis.go.th',
+        'timeout' => 10,
+    ]);
+
+    $apiResponse = $client->request('GET', '/gapi/coords/', [
+        'query' => ['province_code' => 73, 'cat_id' => '11']
+    ]);
+
+    $statusCode = $apiResponse->getStatusCode();
+    $reason = $apiResponse->getReasonPhrase();
+    if ($statusCode === 200) {
+        $body = $apiResponse->getBody();
+        $stringBody = (string) $body;
+        $dataList = json_decode($stringBody, TRUE)['features'];
+
+        //$districtData = json_decode(DISTRICT_DATA, TRUE);
+        //$test = $districtData[0][0]['properties']['NAME_T'];
+
+        /*$districtList = array();
+        for ($province = 0; $province < count($districtData); $province++) {
+            for ($i = 0; $i < count($districtData[$province]); $i++) {
+                $subDistrictName = $districtData[$province][$i]['properties']['TAMBON_T'];
+                $districtName = $districtData[$province][$i]['properties']['AMPHOE_T'];
+                $provinceName = $districtData[$province][$i]['properties']['CHANGWAT_T'];
+
+                $key = "$subDistrictName $districtName $provinceName";
+                $coord = array();
+                $coord['latitude'] = $districtData[$province][$i]['geometry']['coordinates'][1];
+                $coord['longitude'] = $districtData[$province][$i]['geometry']['coordinates'][0];
+                $districtList[$key] = $coord;
+            }
+        }*/
+
+        $test = '';
+        foreach ($districtData as $key => $value) {
+            //$test .= $key . '[' . $value['latitude'] . ',' . $value['longitude'] . ']' . PHP_EOL;
+        }
+
+        $response[KEY_ERROR_CODE] = ERROR_CODE_SUCCESS;
+        $response[KEY_ERROR_MESSAGE] = count($dataList);
+        $response[KEY_ERROR_MESSAGE_MORE] = '';
+    } else {
+        $response[KEY_ERROR_CODE] = ERROR_CODE_ERROR;
+        $response[KEY_ERROR_MESSAGE] = "HTTP Error [Code {$statusCode}: {$reason}]";
         $response[KEY_ERROR_MESSAGE_MORE] = '';
     }
 }

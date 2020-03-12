@@ -174,7 +174,7 @@ export async function doGetStaticMapsWithDirections(origin, destination, riskPoi
 
             let alertText = '';
             if (nearbyRiskPointList.length > 0) {
-                alertText = `โปรดระวัง! มีจุดเสี่ยงภัย ${nearbyRiskPointList.length} จุดอยู่บนเส้นทางหรือใกล้กับเส้นทางที่ไปยังจุดหมายปลายทางนี้`;
+                alertText = `โปรดระวัง! มีจุดเสี่ยงภัย ${nearbyRiskPointList.length} จุด (แสดงด้วยหมุดสีดำ) อยู่บนเส้นทางหรือใกล้กับเส้นทางที่ไปยังสถานที่แห่งนี้`;
                 Alert.alert('แจ้งเตือนจุดเสี่ยงภัย', alertText);
             }
 
