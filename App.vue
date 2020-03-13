@@ -466,7 +466,7 @@
         created: async function () {
             console.log('APP - CREATED');
 
-            await this.getRiskPoint();
+            //await this.getRiskPoint();
             //await this.getHeatMap();
 
             /*const heatMapPointListAll = store.state.heatMapPointListDisease[PROVINCE_NAME_EN[0]].concat(

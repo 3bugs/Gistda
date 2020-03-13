@@ -118,6 +118,15 @@
                         :opacity="wms.opacity"
                         :tile-size="512"/>
 
+                <heatmap
+                        v-if="!isMeasureToolOn && !isMarkerToolOn && heatMapPointListRisk.length > 0 /*HEATMAP_CATEGORY_ID_RISK === category.id && category.markerVisibility && heatMapPointListRisk.length > 0*/"
+                        :opacity="heatMapOpacityRisk"
+                        :points="heatMapPointListRisk"/>
+                <heatmap
+                        v-if="!isMeasureToolOn && !isMarkerToolOn && heatMapPointListDisease.length > 0 /*HEATMAP_CATEGORY_ID_DISEASE === category.id && category.markerVisibility && heatMapPointListDisease.length > 0*/"
+                        :opacity="heatMapOpacityDisease"
+                        :points="heatMapPointListDisease"/>
+
                 <!--<view v-if="!isMeasureToolOn && !isMarkerToolOn"
                       v-for="(categoryType, categoryTypeIndex) in mapDataList">
                     <view v-for="(category, categoryIndex) in categoryType.list">
@@ -912,8 +921,18 @@
             heatMapPointListRisk() {
                 return store.state.heatMapPointListRisk[PROVINCE_NAME_EN[this.province]];
             },
+            heatMapOpacityRisk() {
+                return store.state.coordinateCategoryList[PROVINCE_NAME_EN[this.province]][0].list.filter(
+                    category => category.id === HEATMAP_CATEGORY_ID_RISK
+                )[0].markerOpacity;
+            },
             heatMapPointListDisease() {
                 return store.state.heatMapPointListDisease[PROVINCE_NAME_EN[this.province]];
+            },
+            heatMapOpacityDisease() {
+                return store.state.coordinateCategoryList[PROVINCE_NAME_EN[this.province]][1].list.filter(
+                    category => category.id === HEATMAP_CATEGORY_ID_DISEASE
+                )[0].markerOpacity;
             },
             showsTraffic() {
                 if (store.state.coordinateCategoryList[PROVINCE_NAME_EN[this.province]].length === 0) return false;

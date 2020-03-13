@@ -266,7 +266,7 @@
     import FormHeader from '../../components/FormHeader';
     import Progress from '../../components/Progress';
     import {getCurrentLocation} from '../../constants/utils';
-    import {doGetStaticMapsWithDirections} from '../../store/fetch';
+    import {doGetStaticMapsWithDirections, fetchCoordinates} from '../../store/fetch';
 
     import {Dimensions, StyleSheet, Alert, Platform, Linking} from 'react-native';
     import CardView from 'react-native-cardview';
@@ -398,19 +398,29 @@
                     .catch((err) => { err && console.log(err); });
             },
         },
-        created: function () {
+        created: async function () {
             this.isLoadingStaticMaps = true;
 
-            const riskCategoryList = [RISK_POINT_CATEGORY_ID];
-            /*store.state.coordinateCategoryList[PROVINCE_NAME_EN[0]][0].list.filter(
-                category => riskCategoryList.includes(category.id)
-            );*/
+            /*const riskCategoryList = [RISK_POINT_CATEGORY_ID];
             const riskPointList = store.state.markerList[PROVINCE_NAME_EN[0]].filter(
                 coord => riskCategoryList.includes(coord.properties.CATEGORY)
             ).concat(store.state.markerList[PROVINCE_NAME_EN[1]].filter(
                 coord => riskCategoryList.includes(coord.properties.CATEGORY)
-            ));
-            //alert(JSON.stringify(riskPointList));
+            ));*/
+
+            let riskPointList = [];
+            const apiResultNakhonPathom = await fetchCoordinates({province: 0, idList: [RISK_POINT_CATEGORY_ID]});
+            if (apiResultNakhonPathom.success) {
+                riskPointList = riskPointList.concat(apiResultNakhonPathom.data.features);
+            } else {
+                // ignore fetch error
+            }
+            const apiResultYasothon = await fetchCoordinates({province: 1, idList: [RISK_POINT_CATEGORY_ID]});
+            if (apiResultYasothon.success) {
+                riskPointList = riskPointList.concat(apiResultYasothon.data.features);
+            } else {
+                // ignore fetch error
+            }
 
             getCurrentLocation({
                 callback: async coordinate => {
