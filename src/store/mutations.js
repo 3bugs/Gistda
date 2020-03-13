@@ -23,6 +23,7 @@ export function FETCHING_COORDINATE_CATEGORIES(state) {
 export async function SET_COORDINATE_CATEGORIES(state, {coordinateCategoryList, callback}) {
     await loadMapDataPref(state.province, coordinateCategoryList);
     state.coordinateCategoryList[PROVINCE_NAME_EN[state.province]] = coordinateCategoryList;
+    state.markerList[PROVINCE_NAME_EN[state.province]] = [];
 
     state.loadingCoordinateCategories = false;
     state.loadingMessage = null;

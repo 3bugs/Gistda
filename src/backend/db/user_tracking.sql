@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Mar 03, 2020 at 12:18 PM
+-- Generation Time: Mar 13, 2020 at 10:59 AM
 -- Server version: 5.7.27
 -- PHP Version: 5.6.40-0+deb8u6
 
@@ -34,10 +34,14 @@ CREATE TABLE `user_tracking` (
   `latitude` double(9,6) NOT NULL,
   `longitude` double(9,6) NOT NULL,
   `distance` int(11) NOT NULL,
+  `elapsed_time` int(11) NOT NULL,
   `speed` float(10,2) DEFAULT NULL,
   `client_timestamp` bigint(20) NOT NULL,
   `over_limit` int(11) NOT NULL DEFAULT '0',
-  `alert` int(11) NOT NULL DEFAULT '0',
+  `alert_speed` int(11) NOT NULL DEFAULT '0',
+  `enter_zone` int(11) NOT NULL DEFAULT '0',
+  `zone_name` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `alert_zone` int(11) NOT NULL DEFAULT '0',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -59,7 +63,7 @@ ALTER TABLE `user_tracking`
 -- AUTO_INCREMENT for table `user_tracking`
 --
 ALTER TABLE `user_tracking`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=259;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
