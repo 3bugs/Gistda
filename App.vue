@@ -42,6 +42,8 @@
     import SettingsScreen from './src/screens/map/SettingsScreen';
     import TabBar from './src/components/TabBar';
 
+    import MapReact from './src/screens/_react/Map-React';
+
     import {
         createAppContainer,
         createSwitchNavigator,
@@ -239,6 +241,12 @@
                 }
             },
             StackNavigator: stackNavigator,
+            MapReact: {
+                screen: MapReact,
+                navigationOptions: {
+                    header: null,
+                }
+            }
         },
         {
             initialRouteName: 'Splash',

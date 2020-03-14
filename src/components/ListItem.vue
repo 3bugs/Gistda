@@ -19,9 +19,10 @@
                     :card-maxElevation="10"
                     :corner-radius="10"
                     :style="{}">
-                <image :source="{uri: image}"
-                       class="cover-image"
-                       resize-mode="cover"/>
+                <image
+                        :source="{uri: image}"
+                        class="cover-image"
+                        resize-mode="cover"/>
                 <view
                         v-if="item.seen != null && item.seen === false"
                         :style="{
@@ -66,11 +67,12 @@
     import {StyleSheet} from 'react-native';
     import CardView from 'react-native-cardview';
     import Ripple from 'react-native-material-ripple';
+    import {CachedImage} from 'react-native-cached-image';
 
     const INVISIBLE_CHAR = '‌‌ ';
 
     export default {
-        components: {CardView, Ripple},
+        components: {CardView, Ripple, CachedImage},
         props: {
             item: {
                 type: Object

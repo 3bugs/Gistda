@@ -58,6 +58,8 @@ target 'gistda' do
   pod 'GoogleSignIn', '~> 5.0.2'
   
   pod 'Firebase/Messaging', '~> 6.13.0'
+  pod 'react-native-netinfo', :path => '../node_modules/@react-native-community/netinfo'
+
 end
 
 post_install do |installer|

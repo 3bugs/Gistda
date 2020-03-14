@@ -11,9 +11,10 @@
                 paddingLeft: 15,
                 paddingRight: 0,
                 }">
-            <image :source="{uri: item.image}"
-                   class="image-filter"
-                   resize-mode="contain"/>
+            <cached-image
+                    :source="{uri: item.image}"
+                    class="image-filter"
+                    resize-mode="contain"/>
             <text class="title">
                 {{title}}
             </text>
@@ -93,6 +94,7 @@
     import Slider from '@react-native-community/slider';
     import CardView from 'react-native-cardview';
     import {CheckBox} from 'react-native-elements';
+    import {CachedImage} from 'react-native-cached-image';
 
     import imageLightOff from '../../../assets/images/sidebar/ic_light_off.png';
     import imageLightOn from '../../../assets/images/sidebar/ic_light_on.png';
@@ -111,7 +113,7 @@
                 type: Number
             }
         },
-        components: {Slider, CardView, CheckBox},
+        components: {Slider, CardView, CheckBox, CachedImage},
         computed: {
             province() {
                 return store.state.province;
