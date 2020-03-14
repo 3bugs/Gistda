@@ -22,7 +22,8 @@
                             :image="args.item.image"
                             :title="args.item.detail"
                             :details="args.item.detail"
-                            :show-date="false"
+                            :date="formatDateTime(args.item.date_create)"
+                            :show-date="true"
                             :padding-top="args.index === 0 ? 5 : 15"
                             :on-click="() => handleClickItem(args.item)"/>
                 </view>
@@ -67,6 +68,7 @@
 <script>
     import store from '../../store';
     import {DEBUG, PROVINCE_NAME_EN, COLOR_PRIMARY, DIMENSION} from '../../constants';
+    import {formatDateTime} from '../../constants/utils';
     import {addSeenAlarm} from '../../store/db';
     import FormHeader from '../../components/FormHeader';
     import NoData from '../../components/NoData';
@@ -101,6 +103,7 @@
                 DEBUG, COLOR_PRIMARY, DIMENSION,
                 Dimensions, StyleSheet,
                 imageBack,
+                formatDateTime,
             };
         },
         methods: {

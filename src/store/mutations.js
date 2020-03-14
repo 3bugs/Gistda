@@ -1,4 +1,11 @@
-import {PROVINCE_NAME_EN, INCIDENT_FORM_DATA, HEATMAP_CATEGORY_ID_RISK, HEATMAP_CATEGORY_ID_DISEASE, TRAFFIC_CATEGORY_ID} from '../constants/index';
+import {
+    PROVINCE_NAME_EN,
+    INCIDENT_FORM_DATA,
+    HEATMAP_CATEGORY_ID_RISK,
+    HEATMAP_CATEGORY_ID_DISEASE,
+    TRAFFIC_CATEGORY_ID,
+    RISK_POINT_CATEGORY_ID,
+} from '../constants/index';
 import {getLocalCategoryData, setLocalCategoryData, getSeenAlarmList, setSeenAlarmList} from './db';
 import {getSubDistrictDataList} from '../data/sub_district.geo';
 import {getDistance} from 'geolib';
@@ -23,13 +30,14 @@ export function FETCHING_COORDINATE_CATEGORIES(state) {
 export async function SET_COORDINATE_CATEGORIES(state, {coordinateCategoryList, callback}) {
     await loadMapDataPref(state.province, coordinateCategoryList);
     state.coordinateCategoryList[PROVINCE_NAME_EN[state.province]] = coordinateCategoryList;
+    state.markerList[PROVINCE_NAME_EN[state.province]] = [];
 
     state.loadingCoordinateCategories = false;
     state.loadingMessage = null;
 
     console.log("----- SET_COORDINATE_CATEGORIES -----");
-    console.log(JSON.stringify(state.coordinateCategoryList[PROVINCE_NAME_EN[state.province]]));
-    console.log("----- SET_COORDINATE_CATEGORIES -----");
+    /*console.log(JSON.stringify(state.coordinateCategoryList[PROVINCE_NAME_EN[state.province]]));
+    console.log("----- /SET_COORDINATE_CATEGORIES -----");*/
 
     // เอา link รูปภาพเก็บเป็น sparse array ไว้ใช้ตอนปักหมูด search result
     state.categoryData = [];
@@ -223,8 +231,8 @@ export async function SET_COORDINATES(state, {province, coordinateList, wmsList,
     });
 
     console.log("----- SET_COORDINATES -----");
-    console.log(JSON.stringify(state.coordinateCategoryList[PROVINCE_NAME_EN[province]]));
-    console.log("----- SET_COORDINATES -----");
+    /*console.log(JSON.stringify(state.coordinateCategoryList[PROVINCE_NAME_EN[province]]));
+    console.log("----- /SET_COORDINATES -----");*/
 
     state.loadingCoordinates = false;
     state.loadingMessage = null;
@@ -249,6 +257,13 @@ export function CLEAR_COORDINATES(state, {province, categoryId, callback}) {
     state.wmsList[PROVINCE_NAME_EN[province]] = state.wmsList[PROVINCE_NAME_EN[province]].filter(
         wms => parseInt(wms.CATEGORY) !== categoryId
     );
+
+    if (categoryId === HEATMAP_CATEGORY_ID_RISK) {
+        state.heatMapPointListRisk[PROVINCE_NAME_EN[province]] = [];
+    }
+    if (categoryId === HEATMAP_CATEGORY_ID_DISEASE) {
+        state.heatMapPointListDisease[PROVINCE_NAME_EN[province]] = [];
+    }
 }
 
 function findLatLng(provinceIndex, coordinate) {

@@ -24,7 +24,7 @@ import {
     doGetAlarmDetails, doLoginSocial,
 } from './fetch';
 
-import {INCIDENT_FORM_DATA, PROVINCE_NAME_EN, TRAFFIC_CATEGORY_ID} from '../constants/index';
+import {INCIDENT_FORM_DATA, PROVINCE_NAME_EN, TRAFFIC_CATEGORY_ID, RISK_POINT_CATEGORY_ID} from '../constants/index';
 import {DISTRICT_DATA} from '../constants/district';
 import User from '../model/User';
 import {setUser, getUser} from '../store/db';

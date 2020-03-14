@@ -8,7 +8,15 @@
 
 <script>
     import store from './src/store';
-    import {PROVINCE_NAME_EN, SPEED_MONITOR_THRESHOLD, SPEED_ALERT_MIN_INTERVAL, MONITOR_INTERVAL} from './src/constants/index';
+    import {
+        PROVINCE_NAME_EN,
+        SPEED_MONITOR_THRESHOLD,
+        SPEED_ALERT_MIN_INTERVAL,
+        MONITOR_INTERVAL,
+        HEATMAP_CATEGORY_ID_DISEASE,
+        HEATMAP_CATEGORY_ID_RISK,
+        RISK_POINT_CATEGORY_ID,
+    } from './src/constants/index';
 
     import Splash from './src/screens/splash/Splash';
     import Province from './src/screens/province/Province';
@@ -33,6 +41,8 @@
     import IncidentForm from './src/screens/incident-report/IncidentForm';
     import SettingsScreen from './src/screens/map/SettingsScreen';
     import TabBar from './src/components/TabBar';
+
+    import MapReact from './src/screens/_react/Map-React';
 
     import {
         createAppContainer,
@@ -231,6 +241,12 @@
                 }
             },
             StackNavigator: stackNavigator,
+            MapReact: {
+                screen: MapReact,
+                navigationOptions: {
+                    header: null,
+                }
+            }
         },
         {
             initialRouteName: 'Splash',
@@ -246,29 +262,36 @@
         },
         methods: {
             getHeatMap: async function () {
-                await store.dispatch('FETCH_COORDINATES', {
-                    province: 0,
-                    idList: [11], //todo: hardcoded is bad!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                    callback: (success, message) => {
-                        const heatMapPointList = store.state.heatMapPointListDisease[PROVINCE_NAME_EN[0]];
-                        console.log('**********\n**********\n**********\nHEATMAP POINT LIST PROVINCE 0: ', JSON.stringify(heatMapPointList));
+                for (let i = 0; i < 2; i++) {
+                    await store.dispatch('FETCH_COORDINATES', {
+                        province: i,
+                        idList: [HEATMAP_CATEGORY_ID_DISEASE, HEATMAP_CATEGORY_ID_RISK], // ตำแหน่งระบาดของโรค, พื้นที่เสี่ยงบนท้องถนน
+                        callback: (success, message) => {
+                            const heatMapPointListDisease = store.state.heatMapPointListDisease[PROVINCE_NAME_EN[i]];
+                            console.log(`**********\nHEATMAP POINT LIST - DISEASE - PROVINCE ${i}: `, JSON.stringify(heatMapPointListDisease));
+                            const heatMapPointListRisk = store.state.heatMapPointListRisk[PROVINCE_NAME_EN[i]];
+                            console.log(`**********\nHEATMAP POINT LIST - RISK - PROVINCE ${i}: `, JSON.stringify(heatMapPointListRisk));
 
-                        //const count = heatMapPointList.reduce((count, item) => item.weight > 0 ? count + 1 : count, 0);
-                    },
-                });
-                await store.dispatch('FETCH_COORDINATES', {
-                    province: 1,
-                    idList: [11],
-                    callback: (success, message) => {
-                        const heatMapPointList = store.state.heatMapPointListDisease[PROVINCE_NAME_EN[1]];
-                        console.log('**********\n**********\n**********\nHEATMAP POINT LIST PROVINCE 1: ', JSON.stringify(heatMapPointList));
-                    },
-                });
+                            //const count = heatMapPointList.reduce((count, item) => item.weight > 0 ? count + 1 : count, 0);
+                        },
+                    });
+                }
+            },
+            getRiskPoint: async function () {
+                for (let i = 0; i < 2; i++) {
+                    await store.dispatch('FETCH_COORDINATES', {
+                        province: i,
+                        idList: [RISK_POINT_CATEGORY_ID], // จุดเสี่ยงภัยบนถนน
+                        callback: (success, message) => {
+
+                        },
+                    });
+                }
             },
             setupBackgroundGeolocation: function (fcmToken) {
                 BackgroundGeolocation.configure({
                     desiredAccuracy: BackgroundGeolocation.HIGH_ACCURACY,
-                    stationaryRadius: 10,
+                    stationaryRadius: 20,
                     distanceFilter: 50,
                     notificationTitle: 'ตรวจจับความเร็ว และตรวจสอบการเข้าเขตโรคระบาดและพื้นที่เสี่ยงบนท้องถนน',
                     notificationText: 'ทำงาน',
@@ -297,6 +320,8 @@
 
                 BackgroundGeolocation.on('location', (location) => {
                     console.log('BACKGROUND TRACKING: ', JSON.stringify(location));
+
+                    return;
 
                     // handle your locations here
                     // to perform long running operation on iOS
@@ -449,7 +474,14 @@
         created: async function () {
             console.log('APP - CREATED');
 
-            this.getHeatMap();
+            //await this.getRiskPoint();
+            //await this.getHeatMap();
+
+            /*const heatMapPointListAll = store.state.heatMapPointListDisease[PROVINCE_NAME_EN[0]].concat(
+                store.state.heatMapPointListDisease[PROVINCE_NAME_EN[1]]
+            );
+            console.log('$$$$$$$$$$ HEATMAP POINT LIST $$$$$$$$$$');
+            console.log(JSON.stringify(heatMapPointListAll));*/
 
             const fcmToken = await firebase.messaging().getToken();
             if (fcmToken) {

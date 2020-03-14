@@ -3,6 +3,9 @@ import {GOOGLE_MAPS, OPEN_WEATHER, STATIC_MAP_DIMENSION} from '../constants/inde
 import {add} from "react-native-reanimated";
 import {getDistrictDataList} from '../data/district.geo';
 import {getSubDistrictDataList} from '../data/sub_district.geo';
+import {getDistanceFromLine} from 'geolib';
+import {object} from "prop-types";
+import {Alert} from 'react-native';
 
 //export const baseURL = 'https://fenrir.studio/d/gistda_dev';
 export const baseURL = 'https://safesafe.ngis.go.th/gapi';
@@ -10,6 +13,7 @@ export const provinceCode = [
     73, // นครปฐม
     35, // ยโสธร
 ];
+const RISK_POINT_DISTANCE_THRESHOLD_METERS = 500;
 
 export function doSearchLocal(province, searchTerm) {
     const districtList = getDistrictDataList(province).filter(
@@ -143,11 +147,12 @@ export async function doGetAddressFromCoord(latitude, longitude) {
     }
 }
 
-export async function doGetStaticMapsWithDirections(origin, destination) {
+export async function doGetStaticMapsWithDirections(origin, destination, riskPointList) {
     const WIDTH = STATIC_MAP_DIMENSION.width;
     const HEIGHT = STATIC_MAP_DIMENSION.height;
 
     const directionsUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}&key=${GOOGLE_MAPS.geocodingApiKey}&language=th`;
+    console.log(`Directions URL: ${directionsUrl}`);
 
     try {
         const response = await fetch(directionsUrl);
@@ -158,14 +163,27 @@ export async function doGetStaticMapsWithDirections(origin, destination) {
         console.log(JSON.stringify(responseJson));
 
         if (responseJson.routes.length > 0) {
+            const nearbyRiskPointList = getNearbyRiskPoints(riskPointList, responseJson.routes[0].legs[0].steps);
+            let riskPointMarkers = nearbyRiskPointList.reduce(
+                (total, item) => total + `&markers=color:black%7C${item.geometry.coordinates[1]},${item.geometry.coordinates[0]}`,
+                ''
+            );
+
             const distanceText = responseJson.routes[0].legs[0].distance.text;
             const durationText = responseJson.routes[0].legs[0].duration.text;
+
+            let alertText = '';
+            if (nearbyRiskPointList.length > 0) {
+                alertText = `โปรดระวัง! มีจุดเสี่ยงภัย ${nearbyRiskPointList.length} จุด (แสดงด้วยหมุดสีดำ) อยู่บนเส้นทางหรือใกล้กับเส้นทางที่ไปยังสถานที่แห่งนี้`;
+                Alert.alert('แจ้งเตือนจุดเสี่ยงภัย', alertText);
+            }
+
             const encodedPolyline = responseJson.routes[0].overview_polyline.points;
             console.log(`Encoded polyline: ${encodedPolyline}`);
 
             const marker = `&markers=color:red%7C${destination.latitude},${destination.longitude}`;
-            const staticMapsUrl = `https://maps.googleapis.com/maps/api/staticmap?size=${WIDTH}x${HEIGHT}${marker}&path=enc%3A${encodedPolyline}&key=${GOOGLE_MAPS.geocodingApiKey}&language=th`;
-            console.log(`Static maps: ${staticMapsUrl}`);
+            const staticMapsUrl = `https://maps.googleapis.com/maps/api/staticmap?size=${WIDTH}x${HEIGHT}${marker}${riskPointMarkers}&path=enc%3A${encodedPolyline}&key=${GOOGLE_MAPS.geocodingApiKey}&language=th`;
+            console.log(`Static maps URL: ${staticMapsUrl}`);
 
             return new ApiResult(
                 true,
@@ -173,6 +191,7 @@ export async function doGetStaticMapsWithDirections(origin, destination) {
                 {
                     distanceText,
                     durationText,
+                    alertText,
                     staticMapsUrl
                 }
             );
@@ -190,6 +209,64 @@ export async function doGetStaticMapsWithDirections(origin, destination) {
             null
         );
     }
+}
+
+function getNearbyRiskPoints(riskPointList, pathList) {
+    return riskPointList.filter(riskPoint =>
+        (pathList.filter(path =>
+            (getDistanceFromLine(
+                {latitude: riskPoint.geometry.coordinates[1], longitude: riskPoint.geometry.coordinates[0]},
+                {latitude: path.start_location.lat, longitude: path.start_location.lng},
+                {latitude: path.end_location.lat, longitude: path.end_location.lng}
+            ) < RISK_POINT_DISTANCE_THRESHOLD_METERS)
+        ).length > 0)
+    );
+    /*riskPointList object
+    {
+        "type": "Feature",
+        "id": 2903,
+        "geometry": {
+            "type": "Point",
+            "coordinates": [
+                100.17999627158,
+                14.015818238569
+            ]
+        },
+        "properties": {
+            "NAME_T": "สะพานข้ามแม่น้ำท",
+            "DESCRIPTION_T": "",
+            "LOCATION_T": "บางเลน บางเลน นครปฐม, ",
+            "CATEGORY": 12,
+            "P_CODE": 73,
+            "IMAGES": [],
+            "DATE_CREATE": "30/11/-0001 00:00:00"
+        }
+    }*/
+
+    /*pathList object
+    {
+        distance: {
+            text: "0.1 กม.",
+            value: 136
+        },
+        duration: {
+            text: "1 นาที",
+            value: 49
+        },
+        end_location: {
+            lat: 13.8535199,
+            lng: 100.5783111
+        },
+        html_instructions: "มุ่งหน้าทาง<b>ตะวันตก</b>",
+        polyline: {
+            points: "o{psAqi{dR@H@PBb@Bj@@B?@@@?@@?@@@?D?hAGJA@?@@B?@@@@?@?@@J"
+        },
+        start_location: {
+            lat: 13.8541626,
+            lng: 100.5789732
+        },
+        travel_mode: "DRIVING"
+    }*/
 }
 
 export async function doGetWeather(province) {

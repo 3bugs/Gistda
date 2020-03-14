@@ -75,6 +75,7 @@ const store = new Vuex.Store({
             [PROVINCE_NAME_EN[0]]: [],
             [PROVINCE_NAME_EN[1]]: [],
         },
+        riskPointList: [], // รวมจุดเสี่ยงภัย 2 จังหวัด
         loadingCoordinates: false,
         loadingSingleCoordinate: false,
 

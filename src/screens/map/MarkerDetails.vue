@@ -140,9 +140,9 @@
                                 :api-key="GOOGLE_MAPS.geocodingApiKey"/>-->
                     </map-view>
 
-                    <view :style="{flexDirection: 'row'}">
+                    <view :style="{flexDirection: 'row', marginBottom: 15}">
                         <view v-if="distanceText !== '' && !isLoadingStaticMaps"
-                              :style="{flex: 1, marginBottom: 15}">
+                              :style="{flex: 1}">
                             <text :style="{
                             fontFamily: 'DBHeavent-Med',
                             color: '#333333',
@@ -160,7 +160,7 @@
                             </text>
                         </view>
                         <view v-if="durationText !== '' && !isLoadingStaticMaps"
-                              :style="{flex: 1, marginBottom: 15}">
+                              :style="{flex: 1}">
                             <text :style="{
                             fontFamily: 'DBHeavent-Med',
                             color: '#333333',
@@ -170,14 +170,26 @@
                                 {{'ใช้เวลาเดินทาง'}}
                             </text>
                             <text :style="{
-                            fontFamily: 'DBHeavent',
-                            color: '#333333',
-                            fontSize: 22,
-                        }">
+                                fontFamily: 'DBHeavent',
+                                color: '#333333',
+                                fontSize: 22,
+                            }">
                                 {{durationText}}
                             </text>
                         </view>
                     </view>
+
+                    <text v-if="alertText"
+                          :style="{
+                                fontFamily: 'DBHeavent-Med',
+                                paddingTop: 5,
+                                paddingBottom: 5,
+                                paddingLeft: 10,
+                                paddingRight: 10,
+                                color: 'white',
+                                backgroundColor: 'red',
+                                fontSize: 22,
+                          }">{{alertText}}</text>
 
                     <image
                             v-if="staticMaps && !isLoadingStaticMaps"
@@ -248,12 +260,13 @@
     import store from '../../store';
     import {
         DEBUG, DIMENSION, STATIC_MAP_DIMENSION, PROVINCE_DIMENSION,
-        GOOGLE_MAPS, COLOR_PRIMARY, COLOR_PRIMARY_DARK,
+        GOOGLE_MAPS, COLOR_PRIMARY, COLOR_PRIMARY_DARK, PROVINCE_NAME_EN,
+        RISK_POINT_CATEGORY_ID,
     } from '../../constants';
     import FormHeader from '../../components/FormHeader';
     import Progress from '../../components/Progress';
     import {getCurrentLocation} from '../../constants/utils';
-    import {doGetStaticMapsWithDirections} from '../../store/fetch';
+    import {doGetStaticMapsWithDirections, fetchCoordinates} from '../../store/fetch';
 
     import {Dimensions, StyleSheet, Alert, Platform, Linking} from 'react-native';
     import CardView from 'react-native-cardview';
@@ -288,7 +301,7 @@
                 screenHeight: Dimensions.get('window').height,
                 imageNavigate,
 
-                distanceText: '', durationText: '',
+                distanceText: '', durationText: '', alertText: '',
                 staticMaps: null,
                 isLoadingStaticMaps: false,
             };
@@ -385,27 +398,52 @@
                     .catch((err) => { err && console.log(err); });
             },
         },
-        created: function () {
+        created: async function () {
             this.isLoadingStaticMaps = true;
+
+            /*const riskCategoryList = [RISK_POINT_CATEGORY_ID];
+            const riskPointList = store.state.markerList[PROVINCE_NAME_EN[0]].filter(
+                coord => riskCategoryList.includes(coord.properties.CATEGORY)
+            ).concat(store.state.markerList[PROVINCE_NAME_EN[1]].filter(
+                coord => riskCategoryList.includes(coord.properties.CATEGORY)
+            ));*/
+
+            let riskPointList = [];
+            const apiResultNakhonPathom = await fetchCoordinates({province: 0, idList: [RISK_POINT_CATEGORY_ID]});
+            if (apiResultNakhonPathom.success) {
+                riskPointList = riskPointList.concat(apiResultNakhonPathom.data.features);
+            } else {
+                // ignore fetch error
+            }
+            const apiResultYasothon = await fetchCoordinates({province: 1, idList: [RISK_POINT_CATEGORY_ID]});
+            if (apiResultYasothon.success) {
+                riskPointList = riskPointList.concat(apiResultYasothon.data.features);
+            } else {
+                // ignore fetch error
+            }
 
             getCurrentLocation({
                 callback: async coordinate => {
                     try {
                         const apiResult = await doGetStaticMapsWithDirections(
                             {latitude: coordinate.latitude, longitude: coordinate.longitude},
-                            {latitude: this.marker.geometry.coordinates[1], longitude: this.marker.geometry.coordinates[0]}
+                            {latitude: this.marker.geometry.coordinates[1], longitude: this.marker.geometry.coordinates[0]},
+                            riskPointList
                         );
 
                         this.isLoadingStaticMaps = false;
                         if (apiResult.success) {
                             this.distanceText = apiResult.data.distanceText;
                             this.durationText = apiResult.data.durationText;
+                            this.alertText = apiResult.data.alertText;
                             this.staticMaps = apiResult.data.staticMapsUrl;
                         } else {
                             this.distanceText = '';
                             this.durationText = '';
+                            this.alertText = '';
                             this.staticMaps = null;
                             //todo: กำนหดภาพ default / error
+                            alert(apiResult.message);
                         }
                     } catch (e) {
                         console.log('Error get static maps: ' + e);
