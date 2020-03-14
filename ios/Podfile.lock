@@ -140,6 +140,8 @@ PODS:
     - React
   - react-native-maps (0.26.1):
     - React
+  - react-native-netinfo (5.6.2):
+    - React
   - react-native-notifications (2.1.7):
     - React
   - react-native-simple-toast (1.0.0):
@@ -226,6 +228,7 @@ DEPENDENCIES:
   - react-native-fbsdk (from `../node_modules/react-native-fbsdk`)
   - react-native-google-maps (from `../node_modules/react-native-maps`)
   - react-native-maps (from `../node_modules/react-native-maps`)
+  - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-notifications (from `../node_modules/react-native-notifications`)
   - react-native-simple-toast (from `../node_modules/react-native-simple-toast`)
   - React/Core (from `../node_modules/react-native`)
@@ -291,6 +294,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-maps"
   react-native-maps:
     :path: "../node_modules/react-native-maps"
+  react-native-netinfo:
+    :path: "../node_modules/@react-native-community/netinfo"
   react-native-notifications:
     :path: "../node_modules/react-native-notifications"
   react-native-simple-toast:
@@ -338,6 +343,7 @@ SPEC CHECKSUMS:
   react-native-fbsdk: c35d42169e64aaf66f01713c1e18d0674f7f6519
   react-native-google-maps: 2e2e697dab576abd5809d78cd74e775865b62bf7
   react-native-maps: 6e499eee4eabf422ba8b6f94e993cc768bf35153
+  react-native-netinfo: c67896313964727ddae153d6e119f65dae840d51
   react-native-notifications: 24706907104a0f00c35c4bde7e0ca76a50f730e1
   react-native-simple-toast: 9c2f5979dfe555d0aa7b084348a06fd6ef7a6f55
   RNGoogleSignin: 6baed9bb19c9c54614bef63bdc55c381b4e33c44
@@ -347,6 +353,6 @@ SPEC CHECKSUMS:
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
   yoga: 684513b14b03201579ba3cee20218c9d1298b0cc
 
-PODFILE CHECKSUM: f8beced8690895b1018f0a64ef4eed3d1c4cde3b
+PODFILE CHECKSUM: 5d19760e58aed9ca78add6a54e37ea3049cb4b5f
 
 COCOAPODS: 1.8.4
