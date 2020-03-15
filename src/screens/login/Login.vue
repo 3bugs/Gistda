@@ -167,7 +167,7 @@
     import Header from '../../components/Header';
     import MyButton from '../../components/MyButton';
 
-    import {Alert, Dimensions} from 'react-native';
+    import {Alert, Dimensions, Platform} from 'react-native';
     import LinearGradient from 'react-native-linear-gradient';
     import CardView from 'react-native-cardview';
     import {LoginManager, GraphRequest, GraphRequestManager} from 'react-native-fbsdk';
@@ -294,9 +294,11 @@
                 new GraphRequestManager().addRequest(req).start();
             },
             handleClickLoginLine: function () {
-                //Alert.alert('Under Construction', 'ส่วนนี้อยู่ระหว่างการพัฒนา'); //todo: ************************
+                const loginPromise = Platform.OS === 'android'
+                    ? LineLogin.login()
+                    : LineLogin.loginWithPermissions(['profile']);
 
-                LineLogin.login()
+                loginPromise
                     .then(async user => {
                         /*{
                             "pictureURL": "https://profile.line-scdn.net/ch/v2/p/u6409759e5ac25edddec978180b8ae04a/1356411236084",

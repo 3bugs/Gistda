@@ -1,4 +1,5 @@
 //https://medium.com/@buchereli/performant-custom-map-markers-for-react-native-maps-ddc8d5a1eeb0
+//https://blog.bam.tech/developer-news/four-tips-optimize-react-native-map-performance-user-experience
 
 import React, {PureComponent} from 'react';
 import {Image} from 'react-native';
