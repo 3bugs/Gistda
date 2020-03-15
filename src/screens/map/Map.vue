@@ -145,10 +145,12 @@
 
                 <heatmap
                         v-if="!isMeasureToolOn && !isMarkerToolOn && heatMapPointListRisk.length > 0 /*HEATMAP_CATEGORY_ID_RISK === category.id && category.markerVisibility && heatMapPointListRisk.length > 0*/"
+                        :radius="30"
                         :opacity="heatMapOpacityRisk"
                         :points="heatMapPointListRisk"/>
                 <heatmap
                         v-if="!isMeasureToolOn && !isMarkerToolOn && heatMapPointListDisease.length > 0 /*HEATMAP_CATEGORY_ID_DISEASE === category.id && category.markerVisibility && heatMapPointListDisease.length > 0*/"
+                        :radius="30"
                         :opacity="heatMapOpacityDisease"
                         :points="heatMapPointListDisease"/>
 
