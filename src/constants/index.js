@@ -92,6 +92,7 @@ export const INCIDENT_FORM_DATA = {
     KEY_PHONE: 'phone',
     KEY_LATITUDE: 'latitude',
     KEY_LONGITUDE: 'longitude',
+    KEY_ADDRESS: 'address',
 };
 
 export const DIMENSION = {

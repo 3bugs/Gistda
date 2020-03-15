@@ -215,12 +215,10 @@ export function SEARCH_LOCAL({commit, state}, {province, searchTerm, callback}) 
 export async function SUBMIT_INCIDENT_FORM_DATA({commit, state}, {callback}) {
     commit('SUBMITTING_INCIDENT_FORM_DATA', {isSubmitting: true});
 
-    //todo: validate form data first!!!
-
     const formData = {
         type: state.incidentFormData[INCIDENT_FORM_DATA.KEY_INCIDENT_CATEGORY],
         detail: state.incidentFormData[INCIDENT_FORM_DATA.KEY_DETAILS],
-        address: '',
+        address: state.incidentFormData[INCIDENT_FORM_DATA.KEY_ADDRESS],
         /*subdistrict: DISTRICT_DATA[state.province][state.incidentFormData[INCIDENT_FORM_DATA.KEY_DISTRICT]]
             .subDistricts[state.incidentFormData[INCIDENT_FORM_DATA.KEY_SUB_DISTRICT]],
         district: DISTRICT_DATA[state.province][state.incidentFormData[INCIDENT_FORM_DATA.KEY_DISTRICT]].district,*/

@@ -77,6 +77,13 @@
                     </view>
                 </view>
 
+                <!--<incident-form-text-input
+                        :name="INCIDENT_FORM_DATA.KEY_ADDRESS"
+                        label="ที่อยู่"
+                        :margin-top="25"
+                        :multiline="true"
+                        :editable="true"/>-->
+
                 <incident-form-text-input
                         :name="INCIDENT_FORM_DATA.KEY_PROVINCE"
                         label="จังหวัด"
@@ -250,6 +257,7 @@
     import IncidentFormTextInput from '../../components/IncidentFormTextInput';
     import MyButton from '../../components/MyButton';
     import {requestAndroidPermissions, getCurrentLocation} from '../../constants/utils';
+    import {doGetAddressFromCoord} from '../../store/fetch';
 
     import {Alert, Platform, PermissionsAndroid, Dimensions, Picker} from 'react-native';
     import CardView from 'react-native-cardview';
@@ -475,13 +483,23 @@
                 });
                 this.showImageDialog = false;
             },
-            handleRegionChange: function (region) {
-                store.dispatch('SET_INCIDENT_FORM_DATA', {
+            handleRegionChange: async function (region) {
+                await store.dispatch('SET_INCIDENT_FORM_DATA', {
                     formData: {
                         [INCIDENT_FORM_DATA.KEY_LATITUDE]: region.latitude,
                         [INCIDENT_FORM_DATA.KEY_LONGITUDE]: region.longitude,
                     },
                 });
+
+                const apiResult = await doGetAddressFromCoord(region.latitude, region.longitude);
+                if (apiResult.success) {
+                    const address = apiResult.data.address;
+                    await store.dispatch('SET_INCIDENT_FORM_DATA', {
+                        formData: {
+                            [INCIDENT_FORM_DATA.KEY_ADDRESS]: address,
+                        },
+                    });
+                }
             },
             handleClickSubmitButton: function () {
                 if (this.isSubmitting) return;
@@ -586,7 +604,7 @@
             this.formType = formType;
 
             getCurrentLocation({
-                callback: coord => {
+                callback: async coord => {
                     try {
                         this.$refs['mapView'].animateToRegion({
                             latitude: coord.latitude,
