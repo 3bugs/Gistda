@@ -145,12 +145,12 @@
 
                 <heatmap
                         v-if="!isMeasureToolOn && !isMarkerToolOn && heatMapPointListRisk.length > 0 /*HEATMAP_CATEGORY_ID_RISK === category.id && category.markerVisibility && heatMapPointListRisk.length > 0*/"
-                        :radius="30"
+                        :radius="heatMapRadius"
                         :opacity="heatMapOpacityRisk"
                         :points="heatMapPointListRisk"/>
                 <heatmap
                         v-if="!isMeasureToolOn && !isMarkerToolOn && heatMapPointListDisease.length > 0 /*HEATMAP_CATEGORY_ID_DISEASE === category.id && category.markerVisibility && heatMapPointListDisease.length > 0*/"
-                        :radius="30"
+                        :radius="heatMapRadius"
                         :opacity="heatMapOpacityDisease"
                         :points="heatMapPointListDisease"/>
 
@@ -578,7 +578,7 @@
     import CustomMarker from './CustomMarker2';
     //import MarkerDetails from '../map/MarkerDetails';
 
-    import {Dimensions, StyleSheet, Alert, PermissionsAndroid, Platform, BackHandler, Linking, TouchableOpacity} from 'react-native';
+    import {Dimensions, StyleSheet, Alert, PermissionsAndroid, Platform, BackHandler, Linking, TouchableOpacity, PixelRatio} from 'react-native';
     import {Fragment} from 'react';
     //import MapView from 'react-native-map-clustering';
     import {ClusterMap} from "react-native-cluster-map";
@@ -674,6 +674,10 @@
                 return store.state.coordinateCategoryList[PROVINCE_NAME_EN[this.province]][1].list.filter(
                     category => category.id === HEATMAP_CATEGORY_ID_DISEASE
                 )[0].markerOpacity;
+            },
+            heatMapRadius() {
+                const radius = PixelRatio.getPixelSizeForLayoutSize(8);
+                return radius > 50 ? 50 : radius;
             },
             showsTraffic() {
                 if (store.state.coordinateCategoryList[PROVINCE_NAME_EN[this.province]].length === 0) return false;
