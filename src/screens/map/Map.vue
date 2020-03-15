@@ -676,7 +676,7 @@
                 )[0].markerOpacity;
             },
             heatMapRadius() {
-                const radius = PixelRatio.getPixelSizeForLayoutSize(8);
+                const radius = PixelRatio.getPixelSizeForLayoutSize(10);
                 return radius > 50 ? 50 : radius;
             },
             showsTraffic() {
