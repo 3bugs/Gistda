@@ -6,27 +6,37 @@
                 ref="mapView"
                 class="map-view"
                 :initial-region="{
-                        latitude: (PROVINCE_DIMENSION[province].minLatitude + PROVINCE_DIMENSION[province].maxLatitude) / 2,
-                        longitude: (PROVINCE_DIMENSION[province].minLongitude + PROVINCE_DIMENSION[province].maxLongitude) / 2,
-                        latitudeDelta: PROVINCE_DIMENSION[province].maxLatitude - PROVINCE_DIMENSION[province].minLatitude,
-                        longitudeDelta: PROVINCE_DIMENSION[province].maxLongitude - PROVINCE_DIMENSION[province].minLongitude,
-                    }"
+                    latitude: (PROVINCE_DIMENSION[province].minLatitude + PROVINCE_DIMENSION[province].maxLatitude) / 2,
+                    longitude: (PROVINCE_DIMENSION[province].minLongitude + PROVINCE_DIMENSION[province].maxLongitude) / 2,
+                    latitudeDelta: PROVINCE_DIMENSION[province].maxLatitude - PROVINCE_DIMENSION[province].minLatitude,
+                    longitudeDelta: PROVINCE_DIMENSION[province].maxLongitude - PROVINCE_DIMENSION[province].minLongitude,
+                }"
                 :style="{marginTop: 0 /*MAP_HEADER.height*/}"
                 :rotate-enabled="false"
                 :on-map-ready="handleMapReady"
                 :on-press="null"
                 :on-region-change-complete="null">
 
-            <marker v-for="(marker, index) in coordinateList"
+            <custom-marker
+                    v-for="(marker, index) in coordinateList"
                     v-if="marker.geometry.type === 'Point'"
                     :coordinate="{
-                            latitude: marker.geometry.coordinates[1],
-                            longitude: marker.geometry.coordinates[0]
-                        }"
+                        latitude: marker.geometry.coordinates[1],
+                        longitude: marker.geometry.coordinates[0]
+                    }"
+                    :marker="marker"
+                    :on-press="() => handleClickPoint(marker)"/>
+
+            <!--<marker v-for="(marker, index) in coordinateList"
+                    v-if="marker.geometry.type === 'Point'"
+                    :coordinate="{
+                        latitude: marker.geometry.coordinates[1],
+                        longitude: marker.geometry.coordinates[0]
+                    }"
                     :title="marker.properties.NAME_T"
                     :description="null"
                     :image="getIcon(marker)"
-                    :on-press="() => handleClickPoint(marker)"/>
+                    :on-press="() => handleClickPoint(marker)"/>-->
         </map-view>
     </view>
 </template>
@@ -34,12 +44,13 @@
 <script>
     import store from '../../store';
     import {DEBUG, FORM, DIMENSION, PROVINCE_NAME_EN, BOTTOM_NAV, MAP_HEADER, PROVINCE_DIMENSION} from '../../constants';
+    import CustomMarker from '../map/CustomMarker2';
 
     import {Dimensions, StyleSheet, Alert, Platform} from 'react-native';
-    import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
+    import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 
     export default {
-        components: {MapView, Marker},
+        components: {MapView, CustomMarker},
         props: {
             navigation: {
                 type: Object

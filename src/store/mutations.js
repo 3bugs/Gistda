@@ -408,9 +408,17 @@ export function GETTING_REPORT(state) {
     state.loadingMessage = getLoadingMessage('Loading...');
 }
 
-export async function SET_REPORT(state, {data}) {
+export function SET_REPORT(state, {data}) {
     state.loadingReport = false;
     state.loadingMessage = null;
+
+    // todo: ถ้าระบุ async ที่หัวฟังก์ชั่นจะ error, ต้องสลับ 2 statement นี้ถึงจะไม่ error ?!?
+    data.coords.features.forEach(coord => (
+        // บางกรณี CATEGORY ของ coord เป็น 0 (คิดว่าน่าจะเป็น category ที่ลบไปแล้ว)
+        coord.image = state.categoryData[coord.properties.CATEGORY]
+            ? state.categoryData[coord.properties.CATEGORY].image
+            : null
+    ));
     state.reportData[PROVINCE_NAME_EN[state.province]] = data;
 }
 

@@ -96,7 +96,6 @@
                 <custom-marker
                         v-if="!isMeasureToolOn && !isMarkerToolOn && marker.geometry.type === 'Point'"
                         v-for="(marker, markerIndex) in markerList"
-                        :id="markerIndex"
                         :coordinate="{
                             latitude: marker.geometry.coordinates[1],
                             longitude: marker.geometry.coordinates[0]

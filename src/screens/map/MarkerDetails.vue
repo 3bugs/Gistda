@@ -49,6 +49,7 @@
                                        :style="{
                                             width: 150,
                                             height: 100,
+                                            borderRadius: 10,
                                        }"
                                        resize-mode="cover"/>
                             </card-view>
@@ -130,9 +131,13 @@
                                 latitudeDelta: marker.geometry.viewport ? marker.geometry.viewport.northeast.lat - marker.geometry.viewport.southwest.lat : 0.01,
                                 longitudeDelta: marker.geometry.viewport ? marker.geometry.viewport.northeast.lng - marker.geometry.viewport.southwest.lng : 0.01,
                             }">
-                        <marker
+                        <custom-marker
                                 v-if="marker.geometry.coordinates"
-                                :coordinate="{latitude: marker.geometry.coordinates[1], longitude: marker.geometry.coordinates[0]}"/>
+                                :marker="marker"/>
+
+                        <!--<marker
+                                v-if="marker.geometry.coordinates"
+                                :coordinate="{latitude: marker.geometry.coordinates[1], longitude: marker.geometry.coordinates[0]}"/>-->
 
                         <!--<map-view-directions
                                 :origin="{latitude: 13.7563, longitude: 100.5018}"
@@ -265,19 +270,20 @@
     } from '../../constants';
     import FormHeader from '../../components/FormHeader';
     import Progress from '../../components/Progress';
+    import CustomMarker from './CustomMarker2';
     import {getCurrentLocation} from '../../constants/utils';
     import {doGetStaticMapsWithDirections, fetchCoordinates} from '../../store/fetch';
 
     import {Dimensions, StyleSheet, Alert, Platform, Linking} from 'react-native';
     import CardView from 'react-native-cardview';
-    import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
-    import MapViewDirections from 'react-native-maps-directions';
+    import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
+    //import MapViewDirections from 'react-native-maps-directions';
     import Share from 'react-native-share';
 
     import imageNavigate from '../../../assets/images/screen_map/ic_navigate_2.png';
 
     export default {
-        components: {FormHeader, CardView, Progress, MapView, Marker, MapViewDirections},
+        components: {FormHeader, CardView, Progress, MapView, CustomMarker},
         props: {
             navigation: {
                 type: Object
