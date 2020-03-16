@@ -192,7 +192,9 @@ export async function doGetStaticMapsWithDirections(origin, destination, riskPoi
                     distanceText,
                     durationText,
                     alertText,
-                    staticMapsUrl
+                    staticMapsUrl,
+                    pathList: getPolylineData(responseJson.routes[0].legs[0].steps),
+                    nearbyRiskPointList,
                 }
             );
         } else {
@@ -209,6 +211,25 @@ export async function doGetStaticMapsWithDirections(origin, destination, riskPoi
             null
         );
     }
+}
+
+function getPolylineData(pathList) {
+    const dataList = [];
+    if (pathList.length > 0) {
+        pathList.forEach((path, index) => {
+            if (index === 0) {
+                dataList.push({
+                    latitude: path.start_location.lat,
+                    longitude: path.start_location.lng
+                });
+            }
+            dataList.push({
+                latitude: path.end_location.lat,
+                longitude: path.end_location.lng
+            });
+        });
+    }
+    return dataList;
 }
 
 function getNearbyRiskPoints(riskPointList, pathList) {
