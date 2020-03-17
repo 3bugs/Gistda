@@ -32,6 +32,9 @@
             <view-pager class="view-pager"
                         :initial-page="0"
                         :page-margin="-130"
+                        :on-page-scroll="e => handlePageScroll(e)"
+                        :on-page-scroll-state-changed="e => handlePageScrollStateChanged(e)"
+                        :on-move-should-set-responder-capture="e => handleMoveShouldSetResponderCapture(e)"
                         :on-page-selected="handlePageSelect">
                 <view key="1">
                     <touchable-opacity
@@ -118,6 +121,7 @@
                 temperatureUnitMarginLeft: 0,
 
                 test: false,
+                isPageScrolling: false,
 
                 screenWidth: Dimensions.get('window').width,
                 screenHeight: Dimensions.get('window').height,
@@ -170,6 +174,19 @@
             handleTemperatureLayoutChange: function (e) {
                 const {x, y, width, height} = e.nativeEvent.layout;
                 this.temperatureUnitMarginLeft = this.isTallScreen ? width - 7 : width - 3;
+            },
+            handlePageScroll: function (e) {
+                this.isPageScrolling = true;
+            },
+            handlePageScrollStateChanged: function (e) {
+                if ('idle' === e.nativeEvent.pageScrollState) {
+                    this.isPageScrolling = false;
+                } else {
+                    this.isPageScrolling = true;
+                }
+            },
+            handleMoveShouldSetResponderCapture: function (e) {
+                return this.isPageScrolling;
             },
             handlePageSelect: function (e) {
                 const selectedPageIndex = e.nativeEvent.position;
