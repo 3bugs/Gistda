@@ -136,6 +136,17 @@
                                 :marker="marker"/>
 
                         <!--<marker
+                                v-for="point in nearbyRiskPointList"
+                                v-if="nearbyRiskPointList"
+                                :coordinate="{latitude: point.geometry.coordinates[1], longitude: point.geometry.coordinates[0]}"
+                                pin-color="#000000"/>
+
+                        <polyline
+                                :coordinates="pathList"
+                                :stroke-color="'#008000'"
+                                :stroke-width="3"/>-->
+
+                        <!--<marker
                                 v-if="marker.geometry.coordinates"
                                 :coordinate="{latitude: marker.geometry.coordinates[1], longitude: marker.geometry.coordinates[0]}"/>-->
 
@@ -276,14 +287,14 @@
 
     import {Dimensions, StyleSheet, Alert, Platform, Linking} from 'react-native';
     import CardView from 'react-native-cardview';
-    import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
+    import MapView, {PROVIDER_GOOGLE, Marker, Polyline} from 'react-native-maps';
     //import MapViewDirections from 'react-native-maps-directions';
     import Share from 'react-native-share';
 
     import imageNavigate from '../../../assets/images/screen_map/ic_navigate_2.png';
 
     export default {
-        components: {FormHeader, CardView, Progress, MapView, CustomMarker},
+        components: {FormHeader, CardView, Progress, MapView, Marker, Polyline, CustomMarker},
         props: {
             navigation: {
                 type: Object
@@ -309,6 +320,8 @@
 
                 distanceText: '', durationText: '', alertText: '',
                 staticMaps: null,
+                nearbyRiskPointList: [],
+                pathList: [],
                 isLoadingStaticMaps: false,
             };
         },
@@ -443,6 +456,8 @@
                             this.durationText = apiResult.data.durationText;
                             this.alertText = apiResult.data.alertText;
                             this.staticMaps = apiResult.data.staticMapsUrl;
+                            this.pathList = apiResult.data.pathList;
+                            this.nearbyRiskPointList = apiResult.data.nearbyRiskPointList;
                         } else {
                             this.distanceText = '';
                             this.durationText = '';
