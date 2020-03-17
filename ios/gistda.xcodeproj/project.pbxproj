@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -1156,11 +1157,11 @@
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
-						DevelopmentTeam = DDWPE4NQAQ;
+						DevelopmentTeam = U5MLDYL35L;
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						DevelopmentTeam = DDWPE4NQAQ;
+						DevelopmentTeam = U5MLDYL35L;
 						SystemCapabilities = {
 							com.apple.Keychain = {
 								enabled = 1;
@@ -1906,7 +1907,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				DEVELOPMENT_TEAM = DDWPE4NQAQ;
+				DEVELOPMENT_TEAM = U5MLDYL35L;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -1949,7 +1950,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
-				DEVELOPMENT_TEAM = DDWPE4NQAQ;
+				DEVELOPMENT_TEAM = U5MLDYL35L;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
@@ -1991,7 +1992,7 @@
 				CODE_SIGN_ENTITLEMENTS = "gistda/SAFE SAFE.entitlements";
 				CURRENT_PROJECT_VERSION = 8;
 				DEAD_CODE_STRIPPING = NO;
-				DEVELOPMENT_TEAM = DDWPE4NQAQ;
+				DEVELOPMENT_TEAM = U5MLDYL35L;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Pods/LineSDK/LineSDK",
@@ -2033,7 +2034,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "gistda/SAFE SAFE.entitlements";
 				CURRENT_PROJECT_VERSION = 8;
-				DEVELOPMENT_TEAM = DDWPE4NQAQ;
+				DEVELOPMENT_TEAM = U5MLDYL35L;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Pods/LineSDK/LineSDK",
