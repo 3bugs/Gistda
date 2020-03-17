@@ -163,9 +163,12 @@ export async function doGetStaticMapsWithDirections(origin, destination, riskPoi
         console.log(JSON.stringify(responseJson));
 
         if (responseJson.routes.length > 0) {
+            const VERTICAL_BAR = '|';
+            const COLON = ':';
+
             const nearbyRiskPointList = getNearbyRiskPoints(riskPointList, responseJson.routes[0].legs[0].steps);
             let riskPointMarkers = nearbyRiskPointList.reduce(
-                (total, item) => total + `&markers=color:black%7C${item.geometry.coordinates[1]},${item.geometry.coordinates[0]}`,
+                (total, item) => total + `&markers=color:black${VERTICAL_BAR}${item.geometry.coordinates[1]},${item.geometry.coordinates[0]}`,
                 ''
             );
 
@@ -181,8 +184,8 @@ export async function doGetStaticMapsWithDirections(origin, destination, riskPoi
             const encodedPolyline = responseJson.routes[0].overview_polyline.points;
             console.log(`Encoded polyline: ${encodedPolyline}`);
 
-            const marker = `&markers=color:red%7C${destination.latitude},${destination.longitude}`;
-            const staticMapsUrl = `https://maps.googleapis.com/maps/api/staticmap?size=${WIDTH}x${HEIGHT}${marker}${riskPointMarkers}&path=enc%3A${encodedPolyline}&key=${GOOGLE_MAPS.geocodingApiKey}&language=th`;
+            const marker = `&markers=color:red${VERTICAL_BAR}${destination.latitude},${destination.longitude}`;
+            const staticMapsUrl = `https://maps.googleapis.com/maps/api/staticmap?size=${WIDTH}x${HEIGHT}${marker}${riskPointMarkers}&path=enc:${encodedPolyline}&key=${GOOGLE_MAPS.geocodingApiKey}&language=th`;
             console.log(`Static maps URL: ${staticMapsUrl}`);
 
             return new ApiResult(

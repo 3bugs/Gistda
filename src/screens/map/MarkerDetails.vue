@@ -463,7 +463,7 @@
                             this.durationText = '';
                             this.alertText = '';
                             this.staticMaps = null;
-                            //todo: กำนหดภาพ default / error
+                            //todo: กำหนดภาพ default / error
                             alert(apiResult.message);
                         }
                     } catch (e) {
