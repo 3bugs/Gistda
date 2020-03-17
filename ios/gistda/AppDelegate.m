@@ -13,6 +13,7 @@
 #import <GoogleMaps/GoogleMaps.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <LineSDK/LineSDKLogin.h>
+#import <Firebase.h>
 
 @implementation AppDelegate
   
@@ -44,6 +45,7 @@
   
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  [FIRApp configure];
   [GMSServices provideAPIKey:@"AIzaSyC1e9L1eA1YyOhsKW4-BhhwHD2fgtqWnak"];
 
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
