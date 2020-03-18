@@ -29,6 +29,7 @@
                     {{status}}
                 </text>
             </view>
+            <!--https://stackoverflow.com/questions/43212931/react-native-horizontal-scroll-view-pagination-preview-next-page-card-->
             <view-pager class="view-pager"
                         :initial-page="0"
                         :page-margin="-130"
@@ -73,8 +74,8 @@
     import Progress from '../../components/Progress';
 
     import {Dimensions, Alert} from 'react-native';
-
     import ViewPager from '@react-native-community/viewpager';
+
     import bgNakhonPathom from '../../../assets/images/screen_province/bg_nakhon_pathom.jpg';
     import bgYasothon from '../../../assets/images/screen_province/bg_yasothon.jpg';
     import imageNakhonPathom from '../../../assets/images/screen_province/bg_card_nakhon_pathom_w500.png';
