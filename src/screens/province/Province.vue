@@ -30,7 +30,7 @@
                 </text>
             </view>
             <!--https://stackoverflow.com/questions/43212931/react-native-horizontal-scroll-view-pagination-preview-next-page-card-->
-            <view-pager class="view-pager"
+            <!--<view-pager class="view-pager"
                         :initial-page="0"
                         :page-margin="-130"
                         :on-page-scroll="e => handlePageScroll(e)"
@@ -58,7 +58,39 @@
                                resize-mode="contain"/>
                     </touchable-opacity>
                 </view>
-            </view-pager>
+            </view-pager>-->
+
+            <view
+                    :style="{
+                        flex: 1,
+                        marginTop: 170,
+                    }">
+                <carousel
+                        :data="provinceList"
+                        :slider-width="screenWidth"
+                        :item-width="screenWidth - 100"
+                        :inactive-slide-scale="1"
+                        :on-snap-to-item="handlePageSelect">
+                    <view render-prop-fn="renderItem">
+                        <!--<view :style="{width: '100%', height: '100%', borderWidth: 2, borderColor: 'white'}">-->
+                            <touchable-opacity
+                                    :activeOpacity="0.85"
+                                    :on-press="() => handleSelectProvince(args.index)"
+                                    :style="{
+                                        width: '100%',
+                                        height: '100%',
+                                        borderWidth: 0,
+                                        borderColor: 'white'
+                                    }">
+                                <image :source="args.item.imageCarousel"
+                                       :style="{flex: 1, width: '100%'}"
+                                       resize-mode="contain"/>
+                            <!--</touchable-opacity>-->
+                        </view>
+                    </view>
+                </carousel>
+            </view>
+
         </view>
         <Progress :showIf="loadingCoordinateCategories || loadingCoordinates"
                   :message="loadingMessage"
@@ -75,22 +107,25 @@
 
     import {Dimensions, Alert} from 'react-native';
     import ViewPager from '@react-native-community/viewpager';
+    import Carousel from 'react-native-snap-carousel';
 
     import bgNakhonPathom from '../../../assets/images/screen_province/bg_nakhon_pathom.jpg';
     import bgYasothon from '../../../assets/images/screen_province/bg_yasothon.jpg';
-    import imageNakhonPathom from '../../../assets/images/screen_province/bg_card_nakhon_pathom_w500.png';
-    import imageYasothon from '../../../assets/images/screen_province/bg_card_yasothon_w500.png';
+    import imageNakhonPathom from '../../../assets/images/screen_province/bg_card_nakhon_pathom_w480.png';
+    import imageYasothon from '../../../assets/images/screen_province/bg_card_yasothon_w480.png';
     import {PROVINCE_NAME_EN} from "../../constants";
 
     const provinceList = [
         {
             bg: bgNakhonPathom,
+            imageCarousel: imageNakhonPathom,
             nameTh: 'นครปฐม',
             nameEn: 'Nakhon Pathom',
             temperature: 32,
             status: 'แดดจัด ห่างออกไป 239 กิโลเมตร',
         }, {
             bg: bgYasothon,
+            imageCarousel: imageYasothon,
             nameTh: 'ยโสธร',
             nameEn: 'Yasothon',
             temperature: 38,
@@ -99,7 +134,7 @@
     ];
 
     export default {
-        components: {ViewPager, Progress},
+        components: {ViewPager, Progress, Carousel},
         props: {
             navigation: { // stack navigator
                 type: Object
@@ -107,6 +142,7 @@
         },
         data: () => {
             return {
+                provinceList,
                 currentProvince: 0,
 
                 bg: provinceList[0].bg,
@@ -190,12 +226,12 @@
                 return this.isPageScrolling;
             },
             handlePageSelect: function (e) {
-                const selectedPageIndex = e.nativeEvent.position;
-                this.currentProvince = selectedPageIndex;
+                //const selectedPageIndex = e.nativeEvent.position;
+                this.currentProvince = e; //selectedPageIndex;
 
-                this.bg = provinceList[selectedPageIndex].bg;
-                this.provinceNameTh = provinceList[selectedPageIndex].nameTh;
-                this.provinceNameEn = provinceList[selectedPageIndex].nameEn;
+                this.bg = provinceList[e].bg;
+                this.provinceNameTh = provinceList[e].nameTh;
+                this.provinceNameEn = provinceList[e].nameEn;
                 //this.temperature = store.state.temperature[PROVINCE_NAME_EN[selectedPageIndex]];
                 //this.status = provinceList[selectedPageIndex].status;
             },
