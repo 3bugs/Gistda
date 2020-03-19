@@ -328,6 +328,8 @@
                     }
                 });
             },
+            //todo: ********************************
+            /*https://stackoverflow.com/questions/54099610/how-can-i-download-file-from-a-url-in-react-native-for-ios*/
             doDownload: function (url) {
                 if (false /*Platform.OS === 'ios'*/) {
                     const shareOptions = {

@@ -66,6 +66,7 @@
                         marginTop: 170,
                     }">
                 <carousel
+                        ref="carousel"
                         :data="provinceList"
                         :slider-width="screenWidth"
                         :item-width="screenWidth - 100"
@@ -85,12 +86,11 @@
                                 <image :source="args.item.imageCarousel"
                                        :style="{flex: 1, width: '100%'}"
                                        resize-mode="contain"/>
-                            <!--</touchable-opacity>-->
-                        </view>
+                            </touchable-opacity>
+                        <!--</view>-->
                     </view>
                 </carousel>
             </view>
-
         </view>
         <Progress :showIf="loadingCoordinateCategories || loadingCoordinates"
                   :message="loadingMessage"
@@ -240,23 +240,29 @@
                     return;
                 }
 
-                // Set province + load coordinate categories data / coordinates data
-                store.dispatch('SET_PROVINCE', {
-                    province,
-                    callback: (success, message) => {
-                        if (success) {
-                            this.navigation.navigate(
-                                'BottomTabNavigator',
-                                {
-                                    // todo: refactor, คิดว่าไม่จำเป็นต้องส่ง stack navigation ไป
-                                    stackNavigation: this.navigation,
-                                }
-                            );
-                        } else {
-                            Alert.alert('ผิดพลาด', message);
+                if (province !== this.currentProvince) {
+                    setTimeout(() => {
+                        this.$refs['carousel'].snapToItem(province);
+                    }, 250);
+                } else {
+                    // Set province + load coordinate categories data / coordinates data
+                    store.dispatch('SET_PROVINCE', {
+                        province,
+                        callback: (success, message) => {
+                            if (success) {
+                                this.navigation.navigate(
+                                    'BottomTabNavigator',
+                                    {
+                                        // todo: refactor, คิดว่าไม่จำเป็นต้องส่ง stack navigation ไป
+                                        stackNavigation: this.navigation,
+                                    }
+                                );
+                            } else {
+                                Alert.alert('ผิดพลาด', message);
+                            }
                         }
-                    }
-                });
+                    });
+                }
             }
         },
         created: function () {
