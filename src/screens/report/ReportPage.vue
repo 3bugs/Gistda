@@ -332,14 +332,14 @@
                 let extension = this.getExtension(url);
                 extension = "." + extension[0];
                 const {config, fs} = RNFetchBlob;
-                let pictureDir = fs.dirs.PictureDir;
+                let dir = fs.dirs.DownloadDir;
                 let options = {
                     fileCache: true,
                     addAndroidDownloads: {
                         useDownloadManager: true,
                         notification: true,
-                        path: pictureDir + "/report_" + Math.floor(date.getTime() + date.getSeconds() / 2) + extension,
-                        description: 'Image'
+                        path: dir + "/report_" + Math.floor(date.getTime() + date.getSeconds() / 2) + extension,
+                        description: 'รายงานสรุปการแจ้งเหตุ'
                     }
                 };
                 config(options).fetch('GET', url)
