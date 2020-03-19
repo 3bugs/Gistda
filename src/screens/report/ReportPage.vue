@@ -355,9 +355,10 @@
                                 message: 'รายงานสรุปการแจ้งเหตุ',
                                 url: 'file://' + path,
                             };
-                            Share.open(shareOptions)
-                                .then((res) => { console.log(res) })
-                                .catch((err) => { err && console.log(err); });
+                            Share.open(shareOptions);
+
+                                /*.then((res) => { console.log(res) })
+                                .catch((err) => { err && console.log(err); });*/
                         }
                     })
                     .catch(error => {
