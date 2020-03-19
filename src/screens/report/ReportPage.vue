@@ -329,7 +329,7 @@
                 });
             },
             doDownload: function (url) {
-                if (Platform.OS === 'ios') {
+                if (false /*Platform.OS === 'ios'*/) {
                     const shareOptions = {
                         title: 'รายงานสรุปการแจ้งเหตุ',
                         subject: 'รายงานสรุปการแจ้งเหตุ',
@@ -357,7 +357,19 @@
                     };
                     config(options).fetch('GET', url)
                         .then(res => {
-                            Alert.alert('สำเร็จ', 'ดาวน์โหลดสำเร็จ');
+                            if (Platform.OS === 'ios') {
+                                const shareOptions = {
+                                    title: 'รายงานสรุปการแจ้งเหตุ',
+                                    subject: 'รายงานสรุปการแจ้งเหตุ',
+                                    message: 'รายงานสรุปการแจ้งเหตุ',
+                                    url: 'file://' + path,
+                                };
+                                Share.open(shareOptions)
+                                    .then((res) => { console.log(res) })
+                                    .catch((err) => { err && console.log(err); });
+                            } else {
+                                Alert.alert('สำเร็จ', 'ดาวน์โหลดสำเร็จ');
+                            }
                         })
                         .catch(error => {
                             Alert.alert('ผิดพลาด', error);
