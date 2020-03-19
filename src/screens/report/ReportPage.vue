@@ -329,42 +329,40 @@
                 });
             },
             doDownload: function (url) {
-                const date = new Date();
-                let extension = this.getExtension(url);
-                extension = "." + extension[0];
-                const {config, fs} = RNFetchBlob;
-                const dir = fs.dirs.DownloadDir;
-                const path = dir + "/report_" + Math.floor(date.getTime() + date.getSeconds() / 2) + extension;
-                let options = {
-                    fileCache: true,
-                    addAndroidDownloads: {
-                        useDownloadManager: true,
-                        notification: true,
-                        path: path,
-                        description: 'รายงานสรุปการแจ้งเหตุ'
-                    }
-                };
-                config(options).fetch('GET', url)
-                    .then(res => {
-                        Alert.alert('สำเร็จ', 'ดาวน์โหลดสำเร็จ');
-                    })
-                    .catch(error => {
-                        Alert.alert('ผิดพลาด', error);
-                    });
-
-                setTimeout(() => {
-                    if (Platform.OS === 'ios') {
-                        const shareOptions = {
-                            title: 'รายงานสรุปการแจ้งเหตุ',
-                            subject: 'รายงานสรุปการแจ้งเหตุ',
-                            message: 'รายงานสรุปการแจ้งเหตุ',
-                            url: 'file://' + path,
-                        };
-                        Share.open(shareOptions)
-                            .then((res) => { console.log(res) })
-                            .catch((err) => { err && console.log(err); });
-                    }
-                }, 4000);
+                if (Platform.OS === 'ios') {
+                    const shareOptions = {
+                        title: 'รายงานสรุปการแจ้งเหตุ',
+                        subject: 'รายงานสรุปการแจ้งเหตุ',
+                        message: 'รายงานสรุปการแจ้งเหตุ',
+                        url: url,
+                    };
+                    Share.open(shareOptions)
+                        .then((res) => { console.log(res) })
+                        .catch((err) => { err && console.log(err); });
+                } else {
+                    const date = new Date();
+                    let extension = this.getExtension(url);
+                    extension = "." + extension[0];
+                    const {config, fs} = RNFetchBlob;
+                    const dir = fs.dirs.DownloadDir;
+                    const path = dir + "/report_" + Math.floor(date.getTime() + date.getSeconds() / 2) + extension;
+                    let options = {
+                        fileCache: true,
+                        addAndroidDownloads: {
+                            useDownloadManager: true,
+                            notification: true,
+                            path: path,
+                            description: 'รายงานสรุปการแจ้งเหตุ'
+                        }
+                    };
+                    config(options).fetch('GET', url)
+                        .then(res => {
+                            Alert.alert('สำเร็จ', 'ดาวน์โหลดสำเร็จ');
+                        })
+                        .catch(error => {
+                            Alert.alert('ผิดพลาด', error);
+                        });
+                }
             },
             getExtension: function(filename) {
                 return (/[.]/.exec(filename)) ? /[^.]+$/.exec(filename) : undefined;
