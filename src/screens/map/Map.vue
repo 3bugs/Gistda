@@ -124,14 +124,14 @@
                             }"/>
                 </marker>-->
 
+                <!--#DB1A8F, #ED9749, #2CC2F7-->
                 <polyline
                         v-if="!isMeasureToolOn && !isMarkerToolOn && marker.geometry.type === 'Linestring' && !drawerOpen"
                         v-for="(marker, markerIndex) in markerList"
                         :coordinates="getPolylineCoordinates(marker.geometry.coordinates)"
                         :title="marker.properties.NAME_T"
-                        :strokeColor="marker.categoryType === 1 ? '#DB1A8F' : (marker.categoryType === 2 ? '#ED9749' : '#2CC2F7')"
-                        :strokeWidth="4"
-                        :opacity="marker.opacity"
+                        :stroke-color="marker.categoryType === 1 ? `rgba(219,26,143,${marker.opacity})` : (marker.categoryType === 2 ? `rgba(237,151,73,${marker.opacity})` : `rgba(44,194,143,${marker.opacity})`)"
+                        :stroke-width="3"
                         :tappable="false"
                         :on-press="() => handlePressPolyline(marker)"/>
 
