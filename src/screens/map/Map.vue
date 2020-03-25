@@ -94,7 +94,7 @@
                 />-->
 
                 <custom-marker
-                        v-if="!isMeasureToolOn && !isMarkerToolOn && marker.geometry.type === 'Point'"
+                        v-if="!isMeasureToolOn && !isMarkerToolOn && marker.geometry.type === 'Point' && !drawerOpen"
                         v-for="(marker, markerIndex) in markerList"
                         :coordinate="{
                             latitude: marker.geometry.coordinates[1],
@@ -142,6 +142,24 @@
                         :_z-index="100"
                         :opacity="wms.opacity"
                         :tile-size="512"/>
+
+                <!--<w-m-s-tile
+                        :url-template="`http://wms.ngis.go.th:8081/geoserver/FGDS_YASOTHON/wms?service=wms&version=1.3.0&request=GetMap&layers=L14_ฝายทดน้ำจังหวัดยโสธร&bbox={minX},{minY},{maxX},{maxY}&width={width}&height={height}&srs=EPSG:900913&format=image/png&transparent=true`"
+                        :_z-index="100"
+                        :opacity="1"
+                        :tile-size="512"/>
+
+                <w-m-s-tile
+                        :url-template="`http://wms.ngis.go.th:8081/geoserver/FGDS_YASOTHON/wms?service=wms&version=1.3.0&request=GetMap&layers=L14_พื้นที่ชลประทานจังหวัดยโสธร&bbox={minX},{minY},{maxX},{maxY}&width={width}&height={height}&srs=EPSG:900913&format=image/png&transparent=true`"
+                        :_z-index="100"
+                        :opacity="1"
+                        :tile-size="512"/>
+
+                <w-m-s-tile
+                        :url-template="`http://wms.ngis.go.th:8081/geoserver/FGDS_YASOTHON/wms?service=wms&version=1.3.0&request=GetMap&layers=L14_สถานีสูบน้ำด้วยไฟฟ้าจังหวัดยโสธร&bbox={minX},{minY},{maxX},{maxY}&width={width}&height={height}&srs=EPSG:900913&format=image/png&transparent=true`"
+                        :_z-index="100"
+                        :opacity="1"
+                        :tile-size="512"/>-->
 
                 <heatmap
                         v-if="!isMeasureToolOn && !isMarkerToolOn && heatMapPointListRisk.length > 0 /*HEATMAP_CATEGORY_ID_RISK === category.id && category.markerVisibility && heatMapPointListRisk.length > 0*/"

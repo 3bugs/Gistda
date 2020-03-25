@@ -3,8 +3,8 @@ session_start();
 
 define('SERVER_KEY', 'AAAAYgzPwvc:APA91bE0iYHclpU-3c_fq_a8Tdu-Z04_WiOOY-r9NN71Mva5EhWjrfBhb2eVAsRevvJbOyiLo3JV-VD1YPY_oVXGxgwB8UpR9tkmCUwQp5SExswo2MB3DTNg9cZSO-P2_WMJBVOqYZtc');
 define('SENDER_ID', '421121737463');
-define('SPEED_LIMIT', 30);
-define('ZONE_ALERT_MIN_INTERVAL', 5); //นาที
+define('SPEED_LIMIT', 120);
+define('ZONE_ALERT_MIN_INTERVAL', 15); //นาที
 define('ZONE_ALERT_DISTANCE', 1000); //เมตร
 define('LAST_SPEED_ALERT_TIME', 'last_speed_alert_time');
 define('LAST_ZONE_ALERT_TIME', 'last_zone_alert_time');
@@ -82,6 +82,14 @@ function doAddUserTracking()
     $latitude = $data[0]['latitude'];
     $longitude = $data[0]['longitude'];
     $clientTimestamp = $data[0]['client_timestamp'];
+
+    if ($deviceToken === 'dR3mbgadRCg:APA91bEZNUc1Hwp1qPe1H9giexaLAA0Wb2l3xAspLI1Jlo6ioOVBrgCKDzS6yWKem1ndylgmX0JxQ7TCyrnclTaUL3chWYygZNE6fFBpZg-tB8SZiFzNLqPhRg3LnnGFJmab_CNOgixo') {
+        sendNotification(
+            $deviceToken,
+            'คุณขับรถเร็วเกินไป!',
+            "คุณกำลังขับรถที่ความเร็ว 85 กม./ชม."
+        );
+    }
 
     $currentLat = doubleval($latitude);
     $currentLng = doubleval($longitude);
@@ -256,6 +264,10 @@ function doTestFcm()
 function checkEnterZone($currentLat, $currentLng)
 {
     $heatmapDataList = array_merge(getHeatmapDataFromApi(73), getHeatmapDataFromApi(35));
+
+    //เพิ่มพิกัดทดสอบ (hard coding)
+    //$heatmapDataList = addTestCoord($heatmapDataList);
+
     $enterZone = 0;
     $zoneName = NULL;
     $zoneCategory = 0;
@@ -284,6 +296,32 @@ function checkEnterZone($currentLat, $currentLng)
         'zoneCategory' => $zoneCategory,
         'distanceZone' => $distanceZone
     );
+}
+
+function addTestCoord($heatmapDataList) {
+    /*{
+        "type": "Feature",
+        "id": 0,
+        "geometry": {
+            "type": null,
+            "coordinates": null
+        },
+        "properties": {
+            "NAME_T": "คลองจินดา สามพราน นครปฐม",
+            "DESCRIPTION_T": "",
+            "LOCATION_T": "คลองจินดา สามพราน นครปฐม",
+            "CATEGORY": 11,
+            "P_CODE": 73,
+            "IMAGES": [],
+            "QUANTITY": 0,
+            "LEVEL": 1
+        }
+    }*/
+
+    //13.881395, 100.564907
+    $jsonPoint = '{"type": "Feature", "id": 0, "geometry": {"latitude": 13.881395, "longitude": 100.564907, "type": null, "coordinates": null}, "properties": {"NAME_T": "ศูนย์ราชการแจ้งวัฒนะ(ข้อมูลทดสอบ) หลักสี่ กรุงเทพมหานคร", "DESCRIPTION_T": "", "LOCATION_T": "คลองจินดา สามพราน นครปฐม", "CATEGORY": 11, "P_CODE": 73, "IMAGES": [], "QUANTITY": 0, "LEVEL": 1}}';
+    array_push($heatmapDataList, json_decode($jsonPoint, TRUE));
+    return $heatmapDataList;
 }
 
 function doTestApi()

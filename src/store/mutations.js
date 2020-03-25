@@ -31,6 +31,7 @@ export async function SET_COORDINATE_CATEGORIES(state, {coordinateCategoryList, 
     await loadMapDataPref(state.province, coordinateCategoryList);
     state.coordinateCategoryList[PROVINCE_NAME_EN[state.province]] = coordinateCategoryList;
     state.markerList[PROVINCE_NAME_EN[state.province]] = [];
+    state.wmsList[PROVINCE_NAME_EN[state.province]] = [];
 
     state.loadingCoordinateCategories = false;
     state.loadingMessage = null;
@@ -254,6 +255,14 @@ export function CLEAR_COORDINATES(state, {province, categoryId, callback}) {
     state.markerList[PROVINCE_NAME_EN[province]] = state.markerList[PROVINCE_NAME_EN[province]].filter(
         coord => coord.properties.CATEGORY !== categoryId
     );
+    /*let i = state.markerList[PROVINCE_NAME_EN[province]].length;
+    while (i--) {
+        const marker = state.markerList[PROVINCE_NAME_EN[province]][i];
+        if (marker.properties.CATEGORY === categoryId) {
+            state.markerList[PROVINCE_NAME_EN[province]].splice(i, 1);
+        }
+    }*/
+
     state.wmsList[PROVINCE_NAME_EN[province]] = state.wmsList[PROVINCE_NAME_EN[province]].filter(
         wms => parseInt(wms.CATEGORY) !== categoryId
     );

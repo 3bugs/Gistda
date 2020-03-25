@@ -13,6 +13,20 @@ export default class CustomMarker extends PureComponent {
         };
     }
 
+    /*componentWillReceiveProps(nextProps) {
+        if (this.shouldUpdate(nextProps)) {
+            this.setState(() => ({
+                tracksViewChanges: true,
+            }), () => {
+                this.stopTrackingViewChanges();
+            });
+        }
+    }
+
+    shouldUpdate = nextProps => {
+        return true;
+    };*/
+
     stopTrackingViewChanges = () => {
         this.setState(() => ({
             tracksViewChanges: false,
