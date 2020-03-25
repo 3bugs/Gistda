@@ -40,7 +40,7 @@
     import imageBack from '../../../assets/images/ic_back.png';
 
     const routes = [
-        {key: 'wait-approve', title: 'รอตวจสอบ'},
+        {key: 'wait-approve', title: 'รอตรวจสอบ'},
         {key: 'publish', title: 'ตรวจสอบแล้ว / เผยแพร่'},
     ];
 

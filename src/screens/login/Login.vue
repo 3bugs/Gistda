@@ -322,7 +322,7 @@
                         });
                     })
                     .catch(err => {
-                        Alert.alert('ผิดพลาด', 'เกิดปัญหาในการเข้าระบบด้วย LINE: ' + err);
+                        //Alert.alert('ผิดพลาด', 'เกิดปัญหาในการเข้าระบบด้วย LINE: ' + err);
                     });
 
                 /*LineLoginManager.login()

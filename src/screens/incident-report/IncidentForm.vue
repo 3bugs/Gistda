@@ -564,6 +564,9 @@
                 if (!phone || phone.trim().length === 0) {
                     valid = false;
                     reason += '- ต้องกรอกเบอร์โทรของผู้แจ้ง\n';
+                } else if (phone.replace(/\D/g,'').length < 9) {
+                    valid = false;
+                    reason += '- เบอร์โทรต้องเป็นตัวเลข 9 หลักขึ้นไป\n';
                 }
 
                 if (!valid) {

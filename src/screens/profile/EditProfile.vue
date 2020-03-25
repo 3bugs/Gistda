@@ -139,6 +139,9 @@
                 if (this.formData.phone.length === 0) {
                     valid = false;
                     reason += '- ต้องกรอกเบอร์โทร\n';
+                } else if (this.formData.phone.replace(/\D/g,'').length < 9) {
+                    valid = false;
+                    reason += '- เบอร์โทรต้องเป็นตัวเลข 9 หลักขึ้นไป\n';
                 }
 
                 if (this.formData.email.length === 0) {

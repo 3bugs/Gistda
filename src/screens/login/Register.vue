@@ -169,6 +169,9 @@
                 if (this.formData.phone.length === 0) {
                     valid = false;
                     reason += '- ต้องกรอกเบอร์โทร\n';
+                } else if (this.formData.phone.replace(/\D/g,'').length < 9) {
+                    valid = false;
+                    reason += '- เบอร์โทรต้องเป็นตัวเลข 9 หลักขึ้นไป\n';
                 }
 
                 if (this.formData.email.length === 0) {
@@ -179,9 +182,9 @@
                     reason += '- รูปแบบอีเมลไม่ถูกต้อง\n';
                 }
 
-                if (this.formData.password.length === 0) {
+                if (this.formData.password.length < 6) {
                     valid = false;
-                    reason += '- ต้องกรอกรหัสผ่าน\n';
+                    reason += '- ต้องกรอกรหัสผ่าน และต้องมีความยาว 6 ตัวอักษรขึ้นไป\n';
                 } else if (this.formData.password !== this.formData.confirmPassword) {
                     valid = false;
                     reason += '- ต้องกรอกรหัสผ่านอีกครั้งให้ตรงกัน\n';

@@ -136,7 +136,7 @@
                         :on-press="() => handlePressPolyline(marker)"/>
 
                 <w-m-s-tile
-                        v-if="!isMeasureToolOn && !isMarkerToolOn  && !drawerOpen"
+                        v-if="!isMeasureToolOn && !isMarkerToolOn && !drawerOpen"
                         v-for="(wms, wmsIndex) in wmsList"
                         :url-template="getWmsLink(wms)"
                         :_z-index="100"
@@ -162,12 +162,12 @@
                         :tile-size="512"/>-->
 
                 <heatmap
-                        v-if="!isMeasureToolOn && !isMarkerToolOn && heatMapPointListRisk.length > 0 /*HEATMAP_CATEGORY_ID_RISK === category.id && category.markerVisibility && heatMapPointListRisk.length > 0*/"
+                        v-if="!isMeasureToolOn && !isMarkerToolOn && heatMapPointListRisk.length > 0 && !drawerOpen /*HEATMAP_CATEGORY_ID_RISK === category.id && category.markerVisibility && heatMapPointListRisk.length > 0*/"
                         :radius="heatMapRadius"
                         :opacity="heatMapOpacityRisk"
                         :points="heatMapPointListRisk"/>
                 <heatmap
-                        v-if="!isMeasureToolOn && !isMarkerToolOn && heatMapPointListDisease.length > 0 /*HEATMAP_CATEGORY_ID_DISEASE === category.id && category.markerVisibility && heatMapPointListDisease.length > 0*/"
+                        v-if="!isMeasureToolOn && !isMarkerToolOn && heatMapPointListDisease.length > 0 && !drawerOpen /*HEATMAP_CATEGORY_ID_DISEASE === category.id && category.markerVisibility && heatMapPointListDisease.length > 0*/"
                         :radius="heatMapRadius"
                         :opacity="heatMapOpacityDisease"
                         :points="heatMapPointListDisease"/>

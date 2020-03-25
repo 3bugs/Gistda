@@ -1,0 +1,222 @@
+[33mcommit 553230bfbd6329dec29e26db29953ac6a4777fc3[m
+Author: Promlert Lovichit <promlert@gmail.com>
+Date:   Fri Dec 13 03:10:49 2019 +0700
+
+    ย่อขนาด slider thumb image (สำหรับ ios)
+
+[33mcommit c92f3a02cd04e05361a832a0a988fe0b9b1f6acf[m
+Author: Promlert Lovichit <promlert@gmail.com>
+Date:   Fri Dec 13 03:00:07 2019 +0700
+
+    กำหนด slider thumb image (สำหรับ ios)
+
+[33mcommit 2efac6d79aed54806aa1d6cb6e450b85f2c6e448[m
+Author: Promlert Lovichit <promlert@gmail.com>
+Date:   Fri Dec 13 02:19:14 2019 +0700
+
+    bug fixed: กดปุ่มแสดงเมนูข้างไม่ได้
+
+[33mcommit c50de1704a2ae9fcdb9e8a7967f6d82b180ae759[m
+Author: Promlert Lovichit <promlert@gmail.com>
+Date:   Fri Dec 13 01:04:42 2019 +0700
+
+    แก้ปัญหาการแสดง card view โดยกำหนดพื้นหลังของ card view เป็นสีขาว
+
+[33mcommit 9330931de7efd71d3a3a5d61360c51810874da13[m
+Author: Promlert Lovichit <promlert@gmail.com>
+Date:   Thu Dec 12 23:37:03 2019 +0700
+
+    ปรับระยะข้อความในหน้าเลือกจังหวัด
+
+[33mcommit b573db295d07202c259cf74d359b88b1c22440f6[m
+Author: Promlert Lovichit <promlert@gmail.com>
+Date:   Thu Dec 12 23:33:22 2019 +0700
+
+    ปรับ page margin ของ view pager หน้าเลือกจังหวัด
+
+[33mcommit b35e91cbe1f685b3205431f3a3a1bc2f157308bf[m
+Author: Promlert Lovichit <promlert@gmail.com>
+Date:   Thu Dec 12 23:11:57 2019 +0700
+
+    ปรับขนาดข้อความหน้าเลือกจังหวัด
+
+[33mcommit c885e3220f632cfb2ea3bba1b7f20f835face09d[m
+Author: Promlert Lovichit <promlert@gmail.com>
+Date:   Thu Dec 12 17:59:30 2019 +0700
+
+    ปรับ layout bottom nav เพื่อลองแก้ปัญหากดหน้าจอไม่ได้บน ios, ขนาดข้อความหน้าเลือกจังหวัด รองรับหน้าจอสูง
+
+[33mcommit 41638d4cf66024bad12c2d4fbb6446b8356908db[m
+Author: Promlert Lovichit <promlert@gmail.com>
+Date:   Thu Dec 12 16:41:46 2019 +0700
+
+    disable bottom sheet เนื่องจากมี bug
+
+[33mcommit c1504a22ec190d8d1d3f2d248904d69163697072[m
+Author: Promlert Lovichit <promlert@gmail.com>
+Date:   Wed Dec 11 17:54:42 2019 +0700
+
+    เริ่มสร้าง bottom sheet หน้า map
+
+[33mcommit 89a8dcb3fb0aabc67aa9427bbe2f8036f49c09f9[m
+Author: Promlert Lovichit <promlert@gmail.com>
+Date:   Wed Dec 11 16:18:20 2019 +0700
+
+    dialog ยืนยันการโทร
+
+[33mcommit c6f28267471e5128cc7bdd6b704bb314d723b8b2[m
+Author: Promlert Lovichit <promlert@gmail.com>
+Date:   Tue Dec 10 09:31:18 2019 +0700
+
+    Bug fixed: กรณี fetch news details แล้ว error, ไม่ต้องใส่ news details (null) ลงในแคช
+
+[33mcommit 6bfb2f306a63d189d53208087a603c1ba967dcc5[m
+Author: Promlert Lovichit <promlert@gmail.com>
+Date:   Tue Dec 10 01:11:45 2019 +0700
+
+    วาง layout หน้า news details
+
+[33mcommit 05f3639851cb3f68f8f18031e314f8d468be11e5[m
+Author: Promlert Lovichit <promlert@gmail.com>
+Date:   Mon Dec 9 18:00:06 2019 +0700
+
+    แคชรายละเอียดข่าวใน vuex store
+
+[33mcommit 1b0d2851bd0a1f46cd1bbd6ea76c62cbf4332456[m
+Author: Promlert Lovichit <promlert@gmail.com>
+Date:   Mon Dec 9 16:39:28 2019 +0700
+
+    ปรับ vuex store ให้รองรับ state 2 จังหวัด
+
+[33mcommit b864e93f57746b3f08900ce7b4cc1575887c7577[m
+Author: Promlert Lovichit <promlert@gmail.com>
+Date:   Fri Dec 6 18:21:23 2019 +0700
+
+    เริ่มหน้ารายละเอียดข่าว
+
+[33mcommit f03ba6cdbd096c044b96e4a7dd9ea2ef12ea4b24[m
+Author: Promlert Lovichit <promlert@gmail.com>
+Date:   Fri Dec 6 16:24:11 2019 +0700
+
+    หน้าความปลอดภัย, คำแนะนำ
+
+[33mcommit 3e31d37b205a6a27371940a66eeedfeec149d996[m
+Author: Promlert Lovichit <promlert@gmail.com>
+Date:   Wed Dec 4 17:39:54 2019 +0700
+
+    หน้าประชาสัมพันธ์
+
+[33mcommit b3da9e240b85940cfa70a4d3556ce7bd238e581b[m
+Author: Promlert Lovichit <promlert@gmail.com>
+Date:   Wed Dec 4 12:15:05 2019 +0700
+
+    Refactor: แยก header ออกมาเป็น component
+
+[33mcommit e7f371152e02476876df5d09fd67a921450c8dbc[m
+Author: Promlert Lovichit <promlert@gmail.com>
+Date:   Wed Dec 4 11:43:46 2019 +0700
+
+    แก้ปัญหา tab view (ทดสอบเฉพาะ android)
+    handle stack / bottom tab navigation flow
+
+[33mcommit 425834cf6bbbef5bc564ccf23323335cfd3b7e89[m
+Author: Promlert Lovichit <promlert@gmail.com>
+Date:   Tue Dec 3 17:48:05 2019 +0700
+
+    เพิ่มหน้าข่าว, custom tab view
+
+[33mcommit 9bf7474a4d009fea5c6061835e7d71ab9dca961b[m
+Author: Promlert Lovichit <promlert@gmail.com>
+Date:   Fri Nov 29 16:27:31 2019 +0700
+
+    เพิ่ม resource สำหรับยโสธร, ปรับโค้ดให้เลือกใช้ resource ของ 2 จังหวัดได้ง่าย
+
+[33mcommit 5c9ffb83820af868e347fc207b5916501a3419f2[m
+Author: Promlert Lovichit <promlert@gmail.com>
+Date:   Thu Nov 28 17:48:57 2019 +0700
+
+    ควบคุมสถานะ bottom nav
+
+[33mcommit ee7cfd6cb8742e5ac70fdb57e38939b60e15c1ee[m
+Author: Promlert Lovichit <promlert@gmail.com>
+Date:   Thu Nov 28 14:29:24 2019 +0700
+
+    เพิ่ม header ในแถบ filter, refactor project structure
+
+[33mcommit 9ae54a3e0b703e15c652cb7e41f44ad481ecdc04[m
+Author: Promlert Lovichit <promlert@gmail.com>
+Date:   Wed Nov 27 18:02:13 2019 +0700
+
+    ดึงข้อมูล filter category จาก api จริง
+
+[33mcommit 19e7e2ab4cfcb4fdb0425541a7f96a3ea4d20819[m
+Author: Promlert Lovichit <promlert@gmail.com>
+Date:   Sat Nov 23 13:37:26 2019 +0700
+
+    ปรับหน้าตา filter checkbox, ควบคุมสถานะ filter checkbox, ควบคุมการเปิด/ปิด drawer ได้สมบูรณ์
+
+[33mcommit 7c5d160cc43de212b038f094c6f18a4e5b4e3f95[m
+Author: Promlert Lovichit <promlert@gmail.com>
+Date:   Fri Nov 22 17:41:00 2019 +0700
+
+    เพิ่ม checkbox สำหรับแสดง/ซ่อน marker
+
+[33mcommit 483493b0bc9f8d1b1010e3474a1a262127da4d2e[m
+Author: Promlert Lovichit <promlert@gmail.com>
+Date:   Wed Nov 20 17:29:53 2019 +0700
+
+    ย้ายการโหลด map data มาไว้หน้า home (เลือกจังหวัด)
+
+[33mcommit 1b47dd96e373dd8644d39124817c073b23e67b9e[m
+Author: Promlert Lovichit <promlert@gmail.com>
+Date:   Tue Nov 19 17:52:59 2019 +0700
+
+    ใช้ vuex เก็บ state
+
+[33mcommit 6624bdd2aee7e72cde72f762e406995c3d422a02[m
+Author: Promlert Lovichit <promlert@gmail.com>
+Date:   Wed Nov 6 18:18:50 2019 +0700
+
+    เพิ่มเมนู filter ด้านซ้าย
+
+[33mcommit c0f7777c3e85d5e25b164d7be4efb97b4deac7a5[m
+Author: Promlert Lovichit <promlert@gmail.com>
+Date:   Tue Oct 29 17:41:12 2019 +0700
+
+    หน้าแผนที่, bottom nav, app bar, search box
+
+[33mcommit 23501b552fe5bda3e032b108050ce2c1a954711b[m
+Author: Promlert Lovichit <promlert@gmail.com>
+Date:   Mon Oct 21 17:49:37 2019 +0700
+
+    เสร็จหน้า Home
+
+[33mcommit 995e06eb929455511e9e36d1705ccc75ae32b5c0[m
+Author: Promlert Lovichit <promlert@gmail.com>
+Date:   Fri Oct 18 15:56:18 2019 +0700
+
+    เสร็จหน้า splash
+
+[33mcommit 6905a55234e8747b2ae8dea6d324edfeef169bf6[m
+Author: Promlert Lovichit <promlert@gmail.com>
+Date:   Sat Oct 12 09:21:02 2019 +0700
+
+    แอพ BMI Calculator: เพิ่มการแสดงผลใน <text/> ด้วย
+
+[33mcommit 2e3615c93d716f4d7d76540e164e405fa170001e[m
+Author: Promlert Lovichit <promlert@gmail.com>
+Date:   Fri Oct 11 17:29:56 2019 +0700
+
+    แอพ BMI Calculator: เพิ่มข้อความบอกว่าน้ำหนักอยู่ในเกณฑ์ใด (ผอม, ปกติ, ท้วม, อ้วน)
+
+[33mcommit 5ec030e2d9487f2d973fe99f9875bd105eae74c6[m
+Author: Promlert Lovichit <promlert@gmail.com>
+Date:   Fri Oct 11 17:20:55 2019 +0700
+
+    แอพ BMI Calculator
+
+[33mcommit 7fc6b08804eef9194eac1bfae6328d17046a6437[m
+Author: Promlert Lovichit <promlert@gmail.com>
+Date:   Fri Oct 11 17:04:11 2019 +0700
+
+    Initial commit
