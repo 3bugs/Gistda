@@ -125,7 +125,7 @@
                 </marker>-->
 
                 <polyline
-                        v-if="!isMeasureToolOn && !isMarkerToolOn && marker.geometry.type === 'Linestring'"
+                        v-if="!isMeasureToolOn && !isMarkerToolOn && marker.geometry.type === 'Linestring' && !drawerOpen"
                         v-for="(marker, markerIndex) in markerList"
                         :coordinates="getPolylineCoordinates(marker.geometry.coordinates)"
                         :title="marker.properties.NAME_T"
@@ -136,7 +136,7 @@
                         :on-press="() => handlePressPolyline(marker)"/>
 
                 <w-m-s-tile
-                        v-if="!isMeasureToolOn && !isMarkerToolOn"
+                        v-if="!isMeasureToolOn && !isMarkerToolOn  && !drawerOpen"
                         v-for="(wms, wmsIndex) in wmsList"
                         :url-template="getWmsLink(wms)"
                         :_z-index="100"
@@ -1252,8 +1252,9 @@
             getWmsLink: function (wms) {
                 //layers: Layers to display on map. Value is a comma-separated list of layer names.
                 if (wms.layers && wms.layers.length > 0) {
-                    const allLayers = wms.layers.reduce((total, layer) => {
-                        return `${total},${layer}`;
+                    const allLayers = wms.layers.reduce((total, layer, index) => {
+                        const all = index === 1 ? encodeURI(total) : total;
+                        return `${all},${encodeURI(layer)}`;
                     });
                     const wmsUrl = `${wms.url.replace('GetCapabilities', 'GetMap')}&layers=${allLayers}&bbox={minX},{minY},{maxX},{maxY}&width={width}&height={height}&srs=EPSG:900913&format=image/png&transparent=true`;
                     //console.log('WMS URL: ', wmsUrl);
