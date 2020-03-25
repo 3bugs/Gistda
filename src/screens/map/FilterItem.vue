@@ -20,11 +20,11 @@
             </text>
             <check-box class="check"
                        :container-style="{
-                       marginTop: 0,
-                       marginBottom: 0,
-                       marginTop: 3,
-                       paddingTop: 5,
-                       paddingBottom: 5
+                           marginTop: 0,
+                           marginBottom: 0,
+                           marginTop: 3,
+                           paddingTop: 5,
+                           paddingBottom: 5
                        }"
                        :on-press="handleCheckChange"
                        :checked="visibilityValue">
@@ -62,11 +62,13 @@
                     :thumb-tint-color="SIDEBAR.sliderColor[province]"
                     :minimum-track-tint-color="SIDEBAR.sliderColor[province]"
                     :value="item.markerOpacity"
+                    :disabled="item.id === TRAFFIC_CATEGORY_ID"
                     :on-sliding-complete="handleSliderValueChange"/>
             <slider v-if="Platform.OS === 'ios'"
                     class="slider-ios"
                     :minimum-track-tint-color="SIDEBAR.sliderColor[province]"
                     :value="item.markerOpacity"
+                    :disabled="item.id === TRAFFIC_CATEGORY_ID"
                     :thumb-image="SIDEBAR.sliderThumb[province]"
                     :on-sliding-complete="handleSliderValueChange"/>
             <image :source="imageLightOn"
@@ -88,7 +90,7 @@
 <script>
     import store from '../../store';
     import {getLocalCategoryData, setLocalCategoryData} from '../../store/db';
-    import {DEBUG, SIDEBAR} from '../../constants';
+    import {DEBUG, SIDEBAR, TRAFFIC_CATEGORY_ID} from '../../constants';
 
     import {StyleSheet, Platform} from 'react-native';
     import Slider from '@react-native-community/slider';
@@ -132,6 +134,7 @@
         data: () => {
             return {
                 DEBUG, SIDEBAR, StyleSheet, Platform,
+                TRAFFIC_CATEGORY_ID,
                 imageLightOff, imageLightOn,
                 imageCheckOff, imageCheckOn,
                 visibilityValue: true,
