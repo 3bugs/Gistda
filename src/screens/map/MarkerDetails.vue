@@ -361,8 +361,11 @@
 
                 if (lat !== null && lng != null) {
                     const latLng = `${lat},${lng}`;
-                    const appleMapsUrl = `maps:0,0?q=${label}@${latLng}`;
-                    const googleMapsUrl = `geo:0,0?q=${latLng}(${label})`;
+                    //const appleMapsUrl = `maps:0,0?q=${label}@${latLng}`;
+                    //const iosUrl = `https://www.google.com/maps/search/?api=1&query=${label}&center=${lat},${lng}`;
+                    const iosGoogleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${latLng}&center=${latLng}`;
+                    const iosAppleMapsUrl = `maps:0,0?q=${label}@${latLng}`;
+                    const androidUrl = `geo:0,0?q=${latLng}(${label})`;
 
                     /*const scheme = Platform.select({
                         ios: 'maps:0,0?q=',
@@ -373,12 +376,21 @@
                         android: `${scheme}${latLng}(${label})`
                     });*/
 
-                    let url = appleMapsUrl;
-                    if (Platform.OS === 'android' || Linking.canOpenURL(googleMapsUrl)) {
-                        url = googleMapsUrl;
-                    }
+                    const url = Platform.select({
+                        ios: Linking.canOpenURL(`comgooglemaps://?center=${latLng}`) ? iosGoogleMapsUrl : iosAppleMapsUrl,
+                        android: androidUrl
+                    });
                     
-                    Linking.openURL(url);
+                    /*let url = appleMapsUrl;
+                    if (Platform.OS === 'android') {
+                        url = googleMapsUrl;
+                    }*/
+
+                    try {
+                        Linking.openURL(url);
+                    } catch (err) {
+                        Alert.alert('ผิดพลาด', JSON.stringify(err));
+                    }
                 } else {
                     Alert.alert('ผิดพลาด', 'ไม่สามารถนำทางได้');
                 }
