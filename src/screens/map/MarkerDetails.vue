@@ -360,16 +360,24 @@
                 }
 
                 if (lat !== null && lng != null) {
-                    const scheme = Platform.select({
+                    const latLng = `${lat},${lng}`;
+                    const appleMapsUrl = `maps:0,0?q=${label}@${latLng}`;
+                    const googleMapsUrl = `geo:0,0?q=${latLng}(${label})`;
+
+                    /*const scheme = Platform.select({
                         ios: 'maps:0,0?q=',
                         android: 'geo:0,0?q='
                     });
-                    const latLng = `${lat},${lng}`;
                     const url = Platform.select({
                         ios: `${scheme}${label}@${latLng}`,
                         android: `${scheme}${latLng}(${label})`
-                    });
+                    });*/
 
+                    let url = appleMapsUrl;
+                    if (Platform.OS === 'android' || Linking.canOpenURL(googleMapsUrl)) {
+                        url = googleMapsUrl;
+                    }
+                    
                     Linking.openURL(url);
                 } else {
                     Alert.alert('ผิดพลาด', 'ไม่สามารถนำทางได้');
