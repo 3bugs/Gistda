@@ -22,7 +22,7 @@
                     :callback="handleClickItem"/>
 
             <Menu :renderer="Popover"
-                  :rendererProps="{preferredPlacement: 'bottom'}">
+                  :rendererProps="{preferredPlacement: 'top'}">
                 <MenuTrigger :custom-styles="{TriggerTouchableComponent: TouchableOpacity}">
                     <!--<touchable-opacity class="item-container-touchable"
                                        :on-press="addIncidentReport">-->

@@ -5,8 +5,8 @@ import imageAlertYasothon from '../../assets/images/screen_map/ic_alert_yasothon
 
 import buttonAddNakhonPathom from '../../assets/images/bottom_nav/button_add_nakhon_pathom.png';
 import buttonAddYasothon from '../../assets/images/bottom_nav/button_add_yasothon.png';
-import bgBottomNavNakhonPathom from '../../assets/images/bottom_nav/bg_tab_bar_nakhon_pathom.png';
-import bgBottomNavYasothon from '../../assets/images/bottom_nav/bg_tab_bar_yasothon.png';
+import bgBottomNavNakhonPathom from '../../assets/images/bottom_nav/bg_tab_bar_nakhon_pathom_w1000.png';
+import bgBottomNavYasothon from '../../assets/images/bottom_nav/bg_tab_bar_yasothon_w1000.png';
 
 import imagePhoneNakhonPathom from '../../assets/images/screen_news/ic_phone_nakhon_pathom.png';
 import imagePhoneYasothon from '../../assets/images/screen_news/ic_phone_yasothon.png';

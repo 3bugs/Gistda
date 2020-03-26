@@ -205,7 +205,8 @@
                                 color: 'white',
                                 backgroundColor: 'red',
                                 fontSize: 22,
-                          }">{{alertText}}</text>
+                          }">{{alertText}}
+                    </text>
 
                     <image
                             v-if="staticMaps && !isLoadingStaticMaps"
@@ -230,26 +231,45 @@
                         </text>
                     </view>
 
-                    <touchable-opacity
-                            :on-press="handleClickShare"
-                            :active-opacity="0.4">
-                        <view :style="{
-                            backgroundColor: '#F0F6FF',
-                            paddingTop: 14,
-                            paddingBottom: 14,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            borderRadius: 28,
-                        }">
-                            <text :style="{
-                                fontFamily: 'DBHeavent-Med',
-                                fontSize: 22,
-                                color: '#435582',
-                            }">
-                                {{'แชร์'}}
-                            </text>
-                        </view>
-                    </touchable-opacity>
+                    <Menu
+                            ref="shareMenu"
+                            :renderer="Popover"
+                            :rendererProps="{preferredPlacement: 'top'}">
+                        <MenuTrigger :custom-styles="{TriggerTouchableComponent: TouchableOpacity}">
+                            <view
+                                    :style="{
+                                        backgroundColor: '#F0F6FF',
+                                        paddingTop: 18,
+                                        paddingBottom: 18,
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        borderRadius: 28,
+                                    }">
+                                <text
+                                        :style="{
+                                            fontFamily: 'DBHeavent-Med',
+                                            fontSize: 22,
+                                            color: '#435582',
+                                        }">
+                                    {{'แชร์'}}
+                                </text>
+                            </view>
+                        </MenuTrigger>
+                        <MenuOptions :style="{padding: 10}">
+                            <MenuOption
+                                    class="menu-option"
+                                    :on-select="() => handleClickShare(0)"
+                                    :custom-styles="{OptionTouchableComponent: TouchableOpacity}">
+                                <Text class="menu-option-text">Facebook</Text>
+                            </MenuOption>
+                            <MenuOption
+                                    class="menu-option"
+                                    :on-select="() => handleClickShare(1)"
+                                    :custom-styles="{OptionTouchableComponent: TouchableOpacity}">
+                                <Text class="menu-option-text">อื่นๆ</Text>
+                            </MenuOption>
+                        </MenuOptions>
+                    </Menu>
 
                     <text v-for="item in new Array(20)"
                           v-if="false"
@@ -285,16 +305,23 @@
     import {getCurrentLocation} from '../../constants/utils';
     import {doGetStaticMapsWithDirections, fetchCoordinates} from '../../store/fetch';
 
-    import {Dimensions, StyleSheet, Alert, Platform, Linking} from 'react-native';
+    import {Dimensions, StyleSheet, Alert, Platform, Linking, TouchableOpacity} from 'react-native';
     import CardView from 'react-native-cardview';
     import MapView, {PROVIDER_GOOGLE, Marker, Polyline} from 'react-native-maps';
     //import MapViewDirections from 'react-native-maps-directions';
     import Share from 'react-native-share';
+    import {LoginManager, ShareDialog, ShareApi} from 'react-native-fbsdk';
+    import {Menu, MenuProvider, MenuOptions, MenuOption, MenuTrigger, renderers} from 'react-native-popup-menu';
 
     import imageNavigate from '../../../assets/images/screen_map/ic_navigate_2.png';
 
+    const {Popover} = renderers;
+
     export default {
-        components: {FormHeader, CardView, Progress, MapView, Marker, Polyline, CustomMarker},
+        components: {
+            FormHeader, CardView, Progress, MapView, Marker, Polyline, CustomMarker,
+            Menu, MenuProvider, MenuOptions, MenuOption, MenuTrigger
+        },
         props: {
             navigation: {
                 type: Object
@@ -323,6 +350,7 @@
                 nearbyRiskPointList: [],
                 pathList: [],
                 isLoadingStaticMaps: false,
+                Popover, TouchableOpacity,
             };
         },
         methods: {
@@ -380,7 +408,7 @@
                         ios: Linking.canOpenURL(`comgooglemaps://?center=${latLng}`) ? iosGoogleMapsUrl : iosAppleMapsUrl,
                         android: androidUrl
                     });
-                    
+
                     /*let url = appleMapsUrl;
                     if (Platform.OS === 'android') {
                         url = googleMapsUrl;
@@ -395,7 +423,9 @@
                     Alert.alert('ผิดพลาด', 'ไม่สามารถนำทางได้');
                 }
             },
-            handleClickShare: function () {
+            handleClickShare: function (shareType) {
+                this.$refs['shareMenu'].close();
+
                 const markerName = this.marker.properties.NAME_T;
                 const markerDescription = this.marker.properties.DESCRIPTION_T;
                 const markerLocation = this.marker.properties.LOCATION_T;
@@ -418,23 +448,59 @@
                     ? ((message === '' ? '' : '\n\n') + `ตำแหน่ง:\n${markerLocation}`)
                     : '';
                 //message += markerLatLng === null ? '' : ((message === '' ? '' : '\n\n') + `${markerLatLng}`);
-                message += url === null ? '' : ((message === '' ? '' : '\n\n') + `${url}`);
+                if (shareType === 1) {
+                    message += url === null ? '' : ((message === '' ? '' : '\n\n') + `${url}`);
+                }
                 message += '\n\n-------------\nข้อมูลจากแอปพลิเคชัน SAFE SAFE โดยสำนักงานพัฒนาเทคโนโลยีอวกาศและภูมิสารสนเทศ (GISTDA)';
 
                 //https://www.google.com/maps/search/?api=1&query=47.5951518,-122.3316393
 
-                const shareOptions = {
-                    title: markerName,
-                    subject: markerName,
-                    message,
-                    //url,
-                };
+                if (shareType === 0) {
+                    const shareLinkContent = {
+                        contentType: 'link',
+                        quote: message,
+                        contentUrl: url,
+                        contentDescription: message,
+                    };
 
-                //alert('title: ' + markerName + '\n\nmessage: ' + message);
+                    ShareDialog.canShow(shareLinkContent)
+                        .then(
+                            function (canShow) {
+                                if (canShow) {
+                                    return ShareDialog.show(shareLinkContent);
+                                }
+                            }
+                        )
+                        .then(
+                            function (result) {
+                                if (result.isCancelled) {
+                                    console.log('Share cancelled');
+                                } else {
+                                    console.log('Share success with postId: ' + result.postId);
+                                }
+                            },
+                            function (error) {
+                                console.log('Share fail with error: ' + error);
+                            }
+                        );
+                } else if (shareType === 1) {
+                    const shareOptions = {
+                        title: markerName,
+                        subject: markerName,
+                        message,
+                        //url,
+                    };
 
-                Share.open(shareOptions)
-                    .then((res) => { console.log(res) })
-                    .catch((err) => { err && console.log(err); });
+                    //alert('title: ' + markerName + '\n\nmessage: ' + message);
+
+                    Share.open(shareOptions)
+                        .then((res) => {
+                            console.log(res)
+                        })
+                        .catch((err) => {
+                            err && console.log(err);
+                        });
+                }
             },
         },
         created: async function () {
@@ -505,5 +571,13 @@
         font-family: DBHeaventt-Light;
         font-size: 22;
         margin-top: 10;
+    }
+
+    .menu-option {
+    }
+
+    .menu-option-text {
+        font-family: DBHeavent;
+        font-size: 22;
     }
 </style>
