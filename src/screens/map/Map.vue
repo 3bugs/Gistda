@@ -163,14 +163,22 @@
 
                 <heatmap
                         v-if="!isMeasureToolOn && !isMarkerToolOn && heatMapPointListRisk.length > 0 && !drawerOpen /*HEATMAP_CATEGORY_ID_RISK === category.id && category.markerVisibility && heatMapPointListRisk.length > 0*/"
-                        :radius="heatMapRadius"
+                        :radius="20"
                         :opacity="heatMapOpacityRisk"
-                        :points="heatMapPointListRisk"/>
+                        :points="heatMapPointListRisk"
+                        :gradient="{
+                            colors: ['#8f0301', '#d1681a'],
+                            startPoints: [0, 0.5],
+                        }"/>
                 <heatmap
                         v-if="!isMeasureToolOn && !isMarkerToolOn && heatMapPointListDisease.length > 0 && !drawerOpen /*HEATMAP_CATEGORY_ID_DISEASE === category.id && category.markerVisibility && heatMapPointListDisease.length > 0*/"
-                        :radius="heatMapRadius"
+                        :radius="20"
                         :opacity="heatMapOpacityDisease"
-                        :points="heatMapPointListDisease"/>
+                        :points="heatMapPointListDisease"
+                        :gradient="{
+                            colors: ['#3c0044', '#aa1ed9'],
+                            startPoints: [0, 0.5],
+                        }"/>
 
                 <!--<view v-if="!isMeasureToolOn && !isMarkerToolOn"
                       v-for="(categoryType, categoryTypeIndex) in mapDataList">
@@ -694,7 +702,7 @@
                 )[0].markerOpacity;
             },
             heatMapRadius() {
-                const radius = PixelRatio.getPixelSizeForLayoutSize(10);
+                const radius = PixelRatio.getPixelSizeForLayoutSize(Platform.OS === 'android' ? 6 : 12);
                 return radius > 50 ? 50 : radius;
             },
             showsTraffic() {
