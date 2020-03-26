@@ -163,22 +163,30 @@
 
                 <heatmap
                         v-if="!isMeasureToolOn && !isMarkerToolOn && heatMapPointListRisk.length > 0 && !drawerOpen /*HEATMAP_CATEGORY_ID_RISK === category.id && category.markerVisibility && heatMapPointListRisk.length > 0*/"
-                        :radius="20"
+                        :radius="heatMapRadius"
                         :opacity="heatMapOpacityRisk"
                         :points="heatMapPointListRisk"
                         :gradient="{
-                            colors: ['#8f0301', '#d1681a'],
-                            startPoints: [0, 0.5],
+                            colors: ['#79BC6A', '#BBCF4C', '#EEC20B', '#F29305', '#E50000'],
+                            startPoints: [0.1, 0.25, 0.50, 0.75, 1],
                         }"/>
+                <!--:gradient="{
+                colors: ['#8f0301', '#d1681a'],
+                startPoints: [0, 0.5],
+                }"-->
                 <heatmap
                         v-if="!isMeasureToolOn && !isMarkerToolOn && heatMapPointListDisease.length > 0 && !drawerOpen /*HEATMAP_CATEGORY_ID_DISEASE === category.id && category.markerVisibility && heatMapPointListDisease.length > 0*/"
-                        :radius="20"
+                        :radius="heatMapRadius"
                         :opacity="heatMapOpacityDisease"
                         :points="heatMapPointListDisease"
                         :gradient="{
-                            colors: ['#3c0044', '#aa1ed9'],
-                            startPoints: [0, 0.5],
+                            colors: ['#00eef3', '#568df5', '#6900e3', '#762d8b', '#ff0c34'],
+                            startPoints: [0.1, 0.25, 0.50, 0.75, 1],
                         }"/>
+                <!--:gradient="{
+                colors: ['#3c0044', '#aa1ed9'],
+                startPoints: [0.1, 1],
+                }"-->
 
                 <!--<view v-if="!isMeasureToolOn && !isMarkerToolOn"
                       v-for="(categoryType, categoryTypeIndex) in mapDataList">
