@@ -169,6 +169,7 @@
                         :gradient="{
                             colors: ['#79BC6A', '#BBCF4C', '#EEC20B', '#F29305', '#E50000'],
                             startPoints: [0.1, 0.25, 0.50, 0.75, 1],
+                            colorMapSize: 256,
                         }"/>
                 <!--:gradient="{
                 colors: ['#8f0301', '#d1681a'],
@@ -182,6 +183,7 @@
                         :gradient="{
                             colors: ['#00eef3', '#568df5', '#6900e3', '#762d8b', '#ff0c34'],
                             startPoints: [0.1, 0.25, 0.50, 0.75, 1],
+                            colorMapSize: 256,
                         }"/>
                 <!--:gradient="{
                 colors: ['#3c0044', '#aa1ed9'],
