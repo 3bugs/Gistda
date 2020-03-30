@@ -92,6 +92,7 @@
                 </carousel>
             </view>
         </view>
+
         <Progress :showIf="loadingCoordinateCategories || loadingCoordinates"
                   :message="loadingMessage"
                   color="#fff"/>
@@ -104,6 +105,7 @@
 
     import store from '../../store';
     import Progress from '../../components/Progress';
+    import {PROVINCE_NAME_EN} from "../../constants";
 
     import {Dimensions, Alert} from 'react-native';
     import ViewPager from '@react-native-community/viewpager';
@@ -113,7 +115,6 @@
     import bgYasothon from '../../../assets/images/screen_province/bg_yasothon.jpg';
     import imageNakhonPathom from '../../../assets/images/screen_province/bg_card_nakhon_pathom_w480.png';
     import imageYasothon from '../../../assets/images/screen_province/bg_card_yasothon_w480.png';
-    import {PROVINCE_NAME_EN} from "../../constants";
 
     const provinceList = [
         {
@@ -150,8 +151,7 @@
                 provinceNameEn: provinceList[0].nameEn,
                 //status: provinceList[0].status,
 
-                imageNakhonPathom,
-                imageYasothon,
+                imageNakhonPathom, imageYasothon,
                 imageWidth: 0,
                 imageHeight: 0,
                 viewPagerMargin: 0,
@@ -263,7 +263,7 @@
                         }
                     });
                 }
-            }
+            },
         },
         created: function () {
             store.dispatch('GET_WEATHER', {

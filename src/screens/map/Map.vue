@@ -597,6 +597,8 @@
                 </view>
             </view>
         </view>
+
+        <intro-page/>
     </drawer>
 </template>
 
@@ -612,6 +614,7 @@
     import MeasureLabel from './MeasureLabel';
     import SearchBox from './SearchBox';
     import CustomMarker from './CustomMarker2';
+    import IntroPage from './IntroPage';
     //import MarkerDetails from '../map/MarkerDetails';
 
     import {Dimensions, StyleSheet, Alert, PermissionsAndroid, Platform, BackHandler, Linking, TouchableOpacity, PixelRatio} from 'react-native';
@@ -672,7 +675,7 @@
         components: {
             Fragment, MapView, Marker, Polyline, Polygon, WMSTile, Heatmap, MarkerAnimated,
             LinearGradient, CardView, Drawer, FilterPanel, Slider, BottomSheet,
-            SliderBox, MeasureLabel, SearchBox, CustomMarker,
+            SliderBox, MeasureLabel, SearchBox, CustomMarker, IntroPage,
             Menu, MenuProvider, MenuOptions, MenuOption, MenuTrigger,
         },
         props: {

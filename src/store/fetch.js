@@ -441,6 +441,11 @@ export async function fetchCoordinateCategories(province) {
     return await _fetch('GET', `coords/categories`, null);
 }
 
+export async function fetchSplash(province) {
+    const path = `splash/?province_code=${provinceCode[province]}`;
+    return await _fetch('GET', path, null);
+}
+
 export async function fetchCoordinates({province, idList, coordId = null, searchTerm, latLng}) {
     let paramIdList = '';
     let search = '';
