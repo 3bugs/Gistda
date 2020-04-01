@@ -673,6 +673,10 @@ export function SET_TEMPERATURE(state, {province, temperature, description}) {
     console.log(`Set temperature ${PROVINCE_NAME_EN[province]}: ${temperature}`);
 }
 
+export function SET_IS_SPLASH_SHOWING(state, {province, isShowing}) {
+    state.isSplashShowing[PROVINCE_NAME_EN[province]] = isShowing;
+}
+
 function logObjectProperties(objectName, object) {
     console.log(`Properties of ${objectName}:`);
     if (object) {

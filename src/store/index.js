@@ -171,6 +171,10 @@ const store = new Vuex.Store({
             [PROVINCE_NAME_EN[0]]: [],
             [PROVINCE_NAME_EN[1]]: [],
         },
+        isSplashShowing: {
+            [PROVINCE_NAME_EN[0]]: false,
+            [PROVINCE_NAME_EN[1]]: false,
+        },
     }
 });
 

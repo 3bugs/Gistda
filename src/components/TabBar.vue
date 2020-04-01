@@ -2,14 +2,16 @@
 
 <template>
     <!--<view :style="{position: 'absolute', width: '100%', height: '100%', justifyContent: 'flex-end'}">-->
-    <image-background :source="BOTTOM_NAV.background[province]"
-                      :style="{
-                                position: 'absolute',
-                                height: tabBarHeight,
-                                width: '100%',
-                                bottom: 0,
-                           }"
-                      resize-mode="cover">
+    <image-background
+            v-if="visible"
+            :source="BOTTOM_NAV.background[province]"
+            :style="{
+                position: 'absolute',
+                height: tabBarHeight,
+                width: '100%',
+                bottom: 0,
+            }"
+            resize-mode="cover">
         <view class="container"
               :style="{
                         paddingLeft: paddingHorizontal,
@@ -115,7 +117,7 @@
 
 <script>
     import store from '../store';
-    import {DEBUG, BOTTOM_NAV, DIMENSION} from '../constants';
+    import {DEBUG, BOTTOM_NAV, DIMENSION, PROVINCE_NAME_EN} from '../constants';
     import {setUser, getUser} from '../store/db';
 
     import {Dimensions, StyleSheet, TouchableOpacity, Alert} from 'react-native';
@@ -147,6 +149,9 @@
             },
             isLoggedIn() {
                 return store.state.userToken !== null
+            },
+            visible() {
+                return !store.state.isSplashShowing[PROVINCE_NAME_EN[this.province]]; // && !store.state.drawerOpen;
             },
         },
         data: () => {

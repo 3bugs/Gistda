@@ -151,7 +151,8 @@
 
     import {Dimensions, StyleSheet, Alert, PermissionsAndroid, Platform} from 'react-native';
     //import {PieChart} from 'react-native-svg-charts'
-    import {PieChart, BarChart} from "react-native-chart-kit";
+    //import {PieChart, BarChart} from "react-native-chart-kit";
+    import {PieChart, BarChart} from '../../modules/my-react-native-chart-kit';
     import RNFetchBlob from 'rn-fetch-blob';
     import Share from 'react-native-share';
 

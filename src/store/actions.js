@@ -692,6 +692,13 @@ export async function GET_REPORT_DOWNLOAD_LINK({commit, state}, {callback}) {
     }
 }
 
+export function SET_IS_SPLASH_SHOWING({commit, state}, {province, isShowing}) {
+    commit('SET_IS_SPLASH_SHOWING', {
+        province,
+        isShowing
+    });
+}
+
 /*
 export function SET_LOADING_MESSAGE({commit, state}, {message}) {
     commit('SET_LOADING_MESSAGE', {

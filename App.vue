@@ -41,6 +41,7 @@
     import IncidentForm from './src/screens/incident-report/IncidentForm';
     import SettingsScreen from './src/screens/map/SettingsScreen';
     import TabBar from './src/components/TabBar';
+    import FilterPanel from './src/screens/map/FilterPanel';
 
     import MapReact from './src/screens/_react/Map-React';
 
@@ -50,6 +51,7 @@
         createStackNavigator,
         createBottomTabNavigator,
         createMaterialTopTabNavigator,
+        createDrawerNavigator,
     } from "vue-native-router";
     import {Alert, Platform} from 'react-native';
     import {MenuProvider} from 'react-native-popup-menu';
@@ -121,6 +123,39 @@
             tabBarComponent: TabBar,
         }
     );
+
+    /*const bottomTabNavigator = createBottomTabNavigator(
+        {
+            BottomTabNavigatorMain: {
+                screen: bottomTabNavigatorMain,
+                navigationOptions: {
+                    header: null,
+                }
+            },
+        },
+        {
+            initialRouteName: 'BottomTabNavigatorMain',
+        }
+    );*/
+
+    /*const drawerNavigator = createDrawerNavigator(
+        {
+            BottomTabNavigator: {
+                screen: bottomTabNavigator,
+                navigationOptions: {
+                    header: null,
+                }
+            },
+        },
+        {
+            initialRouteName: 'BottomTabNavigator',
+            contentComponent: FilterPanel,
+            /!*contentOptions: {
+                activeTintColor: '#000000',
+                activeBackgroundColor: '#e6e6e6',
+            },*!/
+        }
+    );*/
 
     const stackNavigator = createStackNavigator(
         {

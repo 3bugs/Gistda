@@ -54,6 +54,10 @@
         methods: {
             handleCloseIntro: function () {
                 this.visible = false;
+                store.dispatch('SET_IS_SPLASH_SHOWING', {
+                    province: this.province,
+                    isShowing: false,
+                });
             },
         },
         mounted: async function () {
@@ -68,6 +72,10 @@
 
                         this.INTRO_DISPLAY_HEIGHT = this.imageHeight * INTRO_DISPLAY_WIDTH / this.imageWidth;
                         this.visible = true;
+                        store.dispatch('SET_IS_SPLASH_SHOWING', {
+                            province: this.province,
+                            isShowing: true,
+                        });
                     },
                     (error) => {
                         console.log('Error get splash image dimension: ' + error);
