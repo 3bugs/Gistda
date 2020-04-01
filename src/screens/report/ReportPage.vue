@@ -347,21 +347,21 @@
                     let extension = this.getExtension(url);
                     extension = "." + extension[0];
                     const {config, fs} = RNFetchBlob;
-                    const dir = fs.dirs.DocumentDir;
+                    const dir = fs.dirs.CacheDir;
                     const path = dir + "/report_" + Math.floor(date.getTime() + date.getSeconds() / 2) + extension;
                     let options = {
                         path: path,
                         fileCache: true,
-                        addAndroidDownloads: {
-                            useDownloadManager: true,
+                        /*addAndroidDownloads: {
+                            useDownloadManager: false,
                             notification: true,
                             path: path,
                             description: 'รายงานสรุปการแจ้งเหตุ'
-                        }
+                        }*/
                     };
                     config(options).fetch('GET', url)
                         .then(res => {
-                            if (Platform.OS === 'ios') {
+                            if (true /*Platform.OS === 'ios'*/) {
                                 //Alert.alert('สำเร็จ', 'ดาวน์โหลดสำเร็จ: ' + path);
                                 const shareOptions = {
                                     title: 'รายงานสรุปการแจ้งเหตุ',
